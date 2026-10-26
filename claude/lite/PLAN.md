@@ -1,0 +1,82 @@
+# autoMCCD-lite: plan
+
+Built from `autoMCCD` by copy-and-prune (DECISIONS.md L19). Each milestone
+ends with a stated check; the user approves each milestone and its commit
+(commit skill: STE + Conventional Commits, one commit per change, no
+trailer). Nothing is committed without being asked.
+
+Sources: `C:\Users\kevsa\Desktop\VitalStrategies\autoMCCD` at `229b480`
+(code, prompts, schema, data, tests, runs/headline_m5_baseline for parity);
+the PoC at `...\VitalStrategies\poc` only for `data/code_cache.json` shape.
+
+## Target tree
+
+```
+autoMCCD-lite/
+├── claude/lite/{DECISIONS,PLAN}.md
+├── config/default.yaml            # prompt, draft, revise, code (same keys as full)
+├── prompts/mccd/v4.7.md, prompts/schemas/mccd.schema.json
+├── data/
+│   ├── gold/S01..S24.json, scenarios.json, eval_sets.json, ucod_attributions.json, demographics.json
+│   ├── robust_sample.json         # ~30 cases, 2 per variant type + handwritten/PMC, tagged
+│   ├── records/{S01,S02,S05}.json # POST /certify bodies
+│   └── code_cache.json            # autocode cache, adjudicated flags
+├── docker/compose.yml, docker/Dockerfile
+├── scripts/smoke_test.sh
+├── src/automccd_lite/
+│   ├── models.py      Record, Draft, DraftValidation, CodedDraft, Route(auto|review), Decision, Certificate
+│   ├── config.py      settings(): YAML by stage + Env
+│   ├── log.py         JSON logs, ALLOWLIST, NOISY_LOGGERS
+│   ├── prompt.py      build_prompt, system_prompt, sha1
+│   ├── draft.py       draft_certificate (openai client, strict json_schema, statuses)
+│   ├── validate.py    V1-V10, validate_schema, validate_draft, pre_icd_route
+│   ├── revise.py      revise_draft (rules) + revise_terms (terminology, FM-24 guard)
+│   ├── code.py        IcdClient (autocode, doris, codedit), FileCodeCache, code_draft
+│   ├── route.py       route_draft: auto | review + reason codes
+│   ├── certificate.py generate_certificate, coding_summary, versions, as_response
+│   ├── storage.py     BlobStorage (connection string), blob_name with time prefix
+│   ├── db.py          engine from PG*, CertificateRow, create_all, insert_certificate
+│   ├── pipeline.py    certify_record(record, deps)
+│   ├── api.py         FastAPI: POST /certify, /healthz, /readyz; Deps at startup
+│   └── eval.py        mini harness: headline + robust sample
+├── notebooks/how-to-guide.ipynb, notebooks/mccd_guide.ipynb, notebooks/_helpers.py
+├── tests/test_validate.py, test_route.py, test_gold.py
+├── docs/ (docs skill output)
+├── Makefile, pyproject.toml, .env.example, .gitignore, .dockerignore, README.md
+```
+
+## Milestones
+
+### LM0 — Scaffold
+- Repo, pyproject (`automccd_lite`, deps: fastapi, uvicorn, pydantic, pyyaml, sqlalchemy, psycopg, httpx, openai, azure-storage-blob, jsonschema, python-dotenv; dev: pytest, ruff; groups: notebooks (jupyter, matplotlib, graphviz), docs (sphinx, myst-parser, sphinx-design, sphinx-copybutton, furo)), Makefile, `.env.example`, `.gitignore` (`.env`, `runs/`, `docs/_build/`, `.ipynb_checkpoints/`), `.dockerignore`, README skeleton.
+- Copy prompts, schema, config, data (gold, scenarios, sets, attributions, demographics, 3 records); build `data/robust_sample.json` from the full corpus (2 per variant, tagged `stress`).
+- Check: `uv sync`, `uv run ruff check .` clean; `pytest` collects nothing yet.
+
+### LM1 — Pipeline port
+- Copy and prune core: `models.py` (Route two values), `prompt.py`, `draft.py`, `validate.py`, `revise.py` (both revisions, `scoped_to_terms`), `code.py` (`FileCodeCache` keyed like full's `cache_key`, `adjudicated: false`), `route.py` (two routes, `assessment:*` reasons), `certificate.py`, `pipeline.py`, `config.py`, `log.py`.
+- Tests: `test_validate.py` (full's `tests/unit/core/rules/test_validators.py` ported), `test_route.py` (two-route table).
+- Check: unit tests pass; `certify_record` on S01/S02/S05 against the live model and the icd-api container returns schema-valid certificates with routes and reasons; prompt sha1 == `d051044cd4a12f9a46085b23869a4ed70623719e`.
+
+### LM2 — API, persistence, compose
+- `db.py` (create_all on startup), `storage.py` (Azurite connection string, time-prefixed name), `api.py` (`POST /certify` → certify_one in one transaction; `/readyz` probes postgres, icd-api, blob, model config), `docker/Dockerfile`, `docker/compose.yml` (api 127.0.0.1:8000, icd-api :8082 published, postgres :5433, azurite :10000), `scripts/smoke_test.sh` (readyz → /certify S01 → blob exists → row exists).
+- Check: `make up && make smoke` → SMOKE OK from a clean clone with only `.env` filled.
+
+### LM3 — Mini evaluation harness
+- `eval.py`: loads headline (17) and the robust sample; runs `certify_record` in-process with `FileCodeCache`; prints validator-clean first pass/final, auto share, UCOD exact vs gold (gold coded through the same `code_draft`), behaviour on the robust sample; writes `runs/<set>_<hhmmss>Z/{results.json,summary.md}`; `test_gold.py` (G1–G4).
+- Check (acceptance, L32): headline run vs `autoMCCD/runs/headline_m5_baseline/results.json` case by case: same rules fired, same routes modulo the two-route mapping, same UCOD codes; differences explained by model noise only.
+
+### LM4 — Notebooks
+- `notebooks/_helpers.py`: `render_mccd(cert)` (HTML WHO form), `highlight_spans(record, cert)`, `flow_diagram(cert)` (graphviz, PNG fallback), `charts(results)`.
+- `how-to-guide.ipynb`: setup check (`/readyz`), one record in → certificate out, the four visuals, the stored row and blob, the eval charts.
+- `mccd_guide.ipynb`: N3 order with S01 throughout; N4 per-function situations → expected outcomes, each stated before the run; teacher voice, docs-skill prose rules.
+- `make notebooks` executes both in place; check: both run clean against the stack, outputs saved.
+
+### LM5 — Docs and hand-over
+- Docs skill on the lite package (`/docs automccd_lite` or per-module as the skill detects); README final (10-minute run, eval, notebooks).
+- Check: Sphinx builds clean; a fresh clone follows the README to SMOKE OK; parity report from LM3 attached to PLAN.md.
+
+## Open items to settle during the build (ask as MCQs when reached)
+- Whether `FileCodeCache` lives at `data/code_cache.json` (tracked, with adjudicated flags) or under `runs/`.
+- The robust-sample selection rule beyond "2 per variant" (which parents; include the 6 held-out out-of-scope parents?).
+- `/readyz` component list for lite.
+- Whether `make notebooks` needs the eval run first (charts cell) or runs the eval itself.
