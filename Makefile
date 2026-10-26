@@ -38,10 +38,11 @@ eval:
 	uv run python -m automccd_lite.eval --set $(EVAL_SET) $(EVAL_ARGS)
 
 # Executes both notebooks against the running stack and saves their outputs.
+# --inexact keeps the other group installed, so docs and notebooks do not evict each other.
 notebooks:
-	uv sync --extra dev --group notebooks
-	uv run jupyter nbconvert --execute --inplace --ExecutePreprocessor.timeout=1800 notebooks/how-to-guide.ipynb notebooks/mccd_guide.ipynb
+	uv sync --inexact --extra dev --group notebooks
+	uv run jupyter nbconvert --execute --inplace --ExecutePreprocessor.timeout=1800 \n		--ExecutePreprocessor.kernel_name=python3 notebooks/how-to-guide.ipynb notebooks/mccd_guide.ipynb
 
 docs:
-	uv sync --extra dev --group docs
+	uv sync --inexact --extra dev --group docs
 	uv run sphinx-build -b html docs docs/_build

@@ -101,4 +101,14 @@ whose own record is `...\aeras\training_data\images\VitalStrategies\outputs\auto
 | `automccd-lite` | `pyproject.toml` project name | distribution name; the import name stays `automccd_lite` |
 | `data/robust_sample.json` | data | `{corpus_version, rule, n, cases}`; `rule` states the selection in words |
 | `stress` | tag on every sampled robust case | marks a case as a stress sample, not a headline case |
+| `FileCodeCache`, `CACHE_PATH` | `code.py` | the JSON autocode cache at `data/code_cache.json`; `_save` merges what another writer added, then rewrites the file whole |
+| `DATA_DIR` | `config.py` | `ROOT / "data"`, next to `PROMPTS_DIR` |
+| `Runtime` | `api.py` | the collaborators built once at startup (`from_env`, `certify_one`, `readiness`); full's `core/runtime.py` + `api/service.py` folded into one class |
+| `Readiness` | `api.py` | the `/readyz` body: `ready` and the four components postgres, icd_api, storage, model_configured |
+| `create_all`, `PostgresCertificateStore`, `session_scope` | `db.py` | one module for the engine, the row and the store |
+| `blob_name(record_id, now)` | `storage.py` | `{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json` |
+| `headline_cases`, `robust_cases`, `load_cases` | `eval.py` | the 17 `<parent>-clean` records built from scenarios + demographics, and the 34 stress cases |
+| `Reference.ucod`, `ucod_match` | `eval.py` | the gold coded through `code_draft`; three match kinds (exact, same_stem, different) instead of full's six |
+| `score`, `summarize`, `report`, `run`, `default_deps`, `must_not_violations`, `norm` | `eval.py` | the harness in one file; `run()` is what the notebook calls in-process |
+| `make notebooks`, `make docs` use `uv sync --inexact` | Makefile | the two groups do not evict each other |
 | `make docs`, `make notebooks` | Makefile | `docs` syncs the `docs` group and runs sphinx-build; `notebooks` syncs the `notebooks` group and executes both notebooks in place |
