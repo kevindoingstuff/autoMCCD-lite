@@ -1,0 +1,91 @@
+"""Runtime settings: config/default.yaml merged with the environment.
+
+Tuning lives in YAML, nested by stage. Endpoints and secrets come only from
+environment variables, using the names the vendor SDKs already read, so
+nothing secret is ever written to a file this package owns.
+"""
+
+from __future__ import annotations
+
+import os
+from functools import lru_cache
+from pathlib import Path
+from typing import Any
+
+import yaml
+from dotenv import load_dotenv
+from pydantic import BaseModel, Field
+
+ROOT = Path(__file__).resolve().parents[2]
+CONFIG_PATH = ROOT / "config" / "default.yaml"
+PROMPTS_DIR = ROOT / "prompts"
+DATA_DIR = ROOT / "data"
+
+
+class PromptCfg(BaseModel):
+    version: str
+    schema_name: str = Field(alias="schema")
+
+    model_config = {"populate_by_name": True}
+
+
+class DraftCfg(BaseModel):
+    model: str
+    temperature: float | None = None  # None: do not send (reasoning models reject it)
+    seed: int | None = None
+    reasoning_effort: str | None = None  # None: do not send (non-reasoning models)
+    max_completion_tokens: int = 8000
+    timeout_s: float = 120
+    max_retries: int = 4
+
+
+class ReviseCfg(BaseModel):
+    max_attempts: int = 1
+    term_max_attempts: int = 1
+
+
+class CodeCfg(BaseModel):
+    icd_release: str
+    linearization: str = "mms"
+    min_match_score: float = 0.5
+    timeout_s: float = 30
+    max_retries: int = 2
+
+
+class Env(BaseModel):
+    """Only what is read from the environment. Values are never logged."""
+
+    openai_base_url: str | None
+    openai_api_key: str | None
+    icd_api_url: str
+    azure_storage_connection_string: str | None
+    azure_storage_container: str
+
+
+class Settings(BaseModel):
+    prompt: PromptCfg
+    draft: DraftCfg
+    revise: ReviseCfg
+    code: CodeCfg
+    env: Env
+
+
+def _load_yaml(path: Path) -> dict[str, Any]:
+    with path.open(encoding="utf-8") as f:
+        return yaml.safe_load(f) or {}
+
+
+@lru_cache(maxsize=1)
+def settings(path: Path = CONFIG_PATH) -> Settings:
+    load_dotenv(ROOT / ".env")  # the api, the eval and the notebooks all read the same file
+    raw = _load_yaml(path)
+    if model := os.environ.get("LLM_MODEL"):
+        raw.setdefault("draft", {})["model"] = model
+    raw["env"] = {
+        "openai_base_url": os.environ.get("OPENAI_BASE_URL"),
+        "openai_api_key": os.environ.get("OPENAI_API_KEY"),
+        "icd_api_url": os.environ.get("ICD_API_URL", "http://localhost:8082"),
+        "azure_storage_connection_string": os.environ.get("AZURE_STORAGE_CONNECTION_STRING"),
+        "azure_storage_container": os.environ.get("AZURE_STORAGE_CONTAINER", "certificates"),
+    }
+    return Settings.model_validate(raw)
