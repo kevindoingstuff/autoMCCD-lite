@@ -1,1 +1,794 @@
-{}
+{
+  "36 weeks into pregnancy": {
+    "adjudicated": false,
+    "code": "JA80.Z",
+    "match_score": 0.018040474481479975,
+    "matched_text": "Multiple pregnancy NOS",
+    "query": "36 weeks into pregnancy",
+    "uri": "http://id.who.int/icd/entity/1520349216"
+  },
+  "abruptio placenta": {
+    "adjudicated": false,
+    "code": "JA8C.Z",
+    "match_score": 1,
+    "matched_text": "Abruptio placentae NOS",
+    "query": "Abruptio placenta",
+    "uri": "http://id.who.int/icd/entity/1153253585"
+  },
+  "acquired immunodeficiency syndrome": {
+    "adjudicated": false,
+    "code": "1C62.3Z",
+    "match_score": 1,
+    "matched_text": "Acquired Immune Deficiency Syndrome",
+    "query": "Acquired immunodeficiency syndrome",
+    "uri": "http://id.who.int/icd/entity/1871736427"
+  },
+  "acute anterior myocardial infarction": {
+    "adjudicated": false,
+    "code": "BA41.Z&XA7RE3",
+    "match_score": 0.8438859657829285,
+    "matched_text": "Acute myocardial infarction[anterior wall NOS]",
+    "query": "Acute Anterior Myocardial Infarction",
+    "uri": "http://id.who.int/icd/entity/1334938734 & http://id.who.int/icd/entity/660512363"
+  },
+  "acute exacerbation of chronic obstructive airway disease": {
+    "adjudicated": false,
+    "code": "CA22.Z",
+    "match_score": 0.6730699295403701,
+    "matched_text": "chronic obstructive airway disease, unspecified",
+    "query": "Acute exacerbation of chronic obstructive airway disease",
+    "uri": "http://id.who.int/icd/entity/133207228"
+  },
+  "acute exacerbation of chronic pancreatitis": {
+    "adjudicated": false,
+    "code": "DC31.5",
+    "match_score": 1,
+    "matched_text": "Acute exacerbation of chronic pancreatitis",
+    "query": "Acute exacerbation of chronic pancreatitis",
+    "uri": "http://id.who.int/icd/entity/1965759338"
+  },
+  "acute hepatic failure": {
+    "adjudicated": false,
+    "code": "DB91.Z",
+    "match_score": 1,
+    "matched_text": "acute hepatic failure",
+    "query": "Acute hepatic failure",
+    "uri": "http://id.who.int/icd/entity/1973223737"
+  },
+  "acute myocardial infarction": {
+    "adjudicated": false,
+    "code": "BA41.Z",
+    "match_score": 1,
+    "matched_text": "Acute myocardial infarction",
+    "query": "Acute myocardial infarction",
+    "uri": "http://id.who.int/icd/entity/1334938734"
+  },
+  "acute myocardial infarction of the anterior wall": {
+    "adjudicated": false,
+    "code": "BA41.Z&XA7RE3",
+    "match_score": 1,
+    "matched_text": "Acute myocardial infarction[anterior wall NOS]",
+    "query": "Acute myocardial infarction of the anterior wall",
+    "uri": "http://id.who.int/icd/entity/1334938734 & http://id.who.int/icd/entity/660512363"
+  },
+  "acute pancreatitis": {
+    "adjudicated": false,
+    "code": "DC31.Z",
+    "match_score": 1,
+    "matched_text": "Acute pancreatitis",
+    "query": "Acute pancreatitis",
+    "uri": "http://id.who.int/icd/entity/698285441"
+  },
+  "acute pulmonary embolism": {
+    "adjudicated": false,
+    "code": "BB00.0",
+    "match_score": 1,
+    "matched_text": "acute pulmonary embolism",
+    "query": "Acute pulmonary embolism",
+    "uri": "http://id.who.int/icd/entity/74279006"
+  },
+  "acute renal failure": {
+    "adjudicated": false,
+    "code": "GB60.Z",
+    "match_score": 1,
+    "matched_text": "Acute kidney failure",
+    "query": "Acute renal failure",
+    "uri": "http://id.who.int/icd/entity/476391827"
+  },
+  "advanced age": {
+    "adjudicated": false,
+    "code": "MG2A",
+    "match_score": 1,
+    "matched_text": "advanced age",
+    "query": "Advanced age",
+    "uri": "http://id.who.int/icd/entity/835503193"
+  },
+  "aids": {
+    "adjudicated": false,
+    "code": "1C62.3Z",
+    "match_score": 1,
+    "matched_text": "AIDS - [acquired immunodeficiency syndrome]",
+    "query": "AIDS",
+    "uri": "http://id.who.int/icd/entity/1871736427"
+  },
+  "alcohol dependence": {
+    "adjudicated": false,
+    "code": "6C40.2Z",
+    "match_score": 1,
+    "matched_text": "Alcohol dependence",
+    "query": "Alcohol dependence",
+    "uri": "http://id.who.int/icd/entity/1580466198"
+  },
+  "alcohol use disorder": {
+    "adjudicated": false,
+    "code": "6C40.Z",
+    "match_score": 1,
+    "matched_text": "Disorders due to use of alcohol",
+    "query": "Alcohol use disorder",
+    "uri": "http://id.who.int/icd/entity/1676588433"
+  },
+  "alcoholic chronic pancreatitis": {
+    "adjudicated": false,
+    "code": "DC32.3",
+    "match_score": 0.8933120070848669,
+    "matched_text": "Chronic alcohol-induced pancreatitis",
+    "query": "Alcoholic chronic pancreatitis",
+    "uri": "http://id.who.int/icd/entity/1074519974"
+  },
+  "anemia": {
+    "adjudicated": false,
+    "code": "3A9Z",
+    "match_score": 1,
+    "matched_text": "Anaemia, unspecified",
+    "query": "Anemia",
+    "uri": "http://id.who.int/icd/entity/224336967"
+  },
+  "anemia due to chronic disease or iron deficiency?": {
+    "adjudicated": false,
+    "code": "3A00.Z",
+    "match_score": 0.8026308349716046,
+    "matched_text": "Iron deficiency anaemia",
+    "query": "Anemia due to chronic disease or iron deficiency?",
+    "uri": "http://id.who.int/icd/entity/1577750667"
+  },
+  "angina pectoris": {
+    "adjudicated": false,
+    "code": "BA40.Z",
+    "match_score": 1,
+    "matched_text": "Angina pectoris",
+    "query": "Angina pectoris",
+    "uri": "http://id.who.int/icd/entity/718946808"
+  },
+  "arteriosclerosis": {
+    "adjudicated": false,
+    "code": "BD40.Z",
+    "match_score": 1,
+    "matched_text": "arteriosclerosis, NOS",
+    "query": "Arteriosclerosis",
+    "uri": "http://id.who.int/icd/entity/109367356"
+  },
+  "arteriosclerotic cerebral infarction": {
+    "adjudicated": false,
+    "code": "6D81/8B11.5Z",
+    "match_score": 0.6212788918876321,
+    "matched_text": "arteriosclerotic dementia[cerebral infarct]",
+    "query": "Arteriosclerotic cerebral infarction",
+    "uri": "http://id.who.int/icd/entity/1365258270 / http://id.who.int/icd/entity/1614716959"
+  },
+  "arteriosclerotic heart disease": {
+    "adjudicated": false,
+    "code": "BA52.Z&XS8U",
+    "match_score": 0.8327094756974835,
+    "matched_text": "cardiac arteriosclerosis[Multiple vessel disease]",
+    "query": "Arteriosclerotic Heart Disease",
+    "uri": "http://id.who.int/icd/entity/1280712786 & http://id.who.int/icd/entity/2106647780"
+  },
+  "bedridden status": {
+    "adjudicated": false,
+    "code": "MB44.3",
+    "match_score": 0.8330753280145409,
+    "matched_text": "bed ridden",
+    "query": "Bedridden status",
+    "uri": "http://id.who.int/icd/entity/1839464738"
+  },
+  "carcinoma of the sigmoid colon": {
+    "adjudicated": false,
+    "code": "2B90.3Z",
+    "match_score": 1,
+    "matched_text": "carcinoma of sigmoid colon",
+    "query": "Carcinoma of the sigmoid colon",
+    "uri": "http://id.who.int/icd/entity/1717786596"
+  },
+  "cardiac arrest": {
+    "adjudicated": false,
+    "code": "MC82.Z",
+    "match_score": 1,
+    "matched_text": "Cardiac arrest",
+    "query": "Cardiac arrest",
+    "uri": "http://id.who.int/icd/entity/395422191"
+  },
+  "cecal carcinoma": {
+    "adjudicated": false,
+    "code": "2E61.0",
+    "match_score": -0.6563205638705225,
+    "matched_text": "carcinoma in situ of ileocecal valve",
+    "query": "Cecal carcinoma",
+    "uri": "http://id.who.int/icd/entity/1958429829"
+  },
+  "cerebral infarction": {
+    "adjudicated": false,
+    "code": "8B11.5Z",
+    "match_score": 1,
+    "matched_text": "cerebral infarct",
+    "query": "Cerebral infarction",
+    "uri": "http://id.who.int/icd/entity/1614716959"
+  },
+  "chronic alcohol use": {
+    "adjudicated": false,
+    "code": "6D72.10/6C40.2Z",
+    "match_score": 0.5413053361294863,
+    "matched_text": "Amnestic disorder due to use of alcohol[Chronic alcoholism]",
+    "query": "Chronic alcohol use",
+    "uri": "http://id.who.int/icd/entity/988431240 / http://id.who.int/icd/entity/1580466198"
+  },
+  "chronic alcoholism": {
+    "adjudicated": false,
+    "code": "6C40.2Z",
+    "match_score": 1,
+    "matched_text": "Chronic alcoholism",
+    "query": "Chronic Alcoholism",
+    "uri": "http://id.who.int/icd/entity/1580466198"
+  },
+  "chronic bronchitis": {
+    "adjudicated": false,
+    "code": "CA20.1Z",
+    "match_score": 1,
+    "matched_text": "Chronic bronchitis",
+    "query": "Chronic Bronchitis",
+    "uri": "http://id.who.int/icd/entity/290835130"
+  },
+  "chronic ischemic heart disease": {
+    "adjudicated": false,
+    "code": "BA5Z",
+    "match_score": 1,
+    "matched_text": "Ischaemic heart disease (chronic) NOS",
+    "query": "Chronic ischemic heart disease",
+    "uri": "http://id.who.int/icd/entity/1221742343"
+  },
+  "chronic obstructive pulmonary disease": {
+    "adjudicated": false,
+    "code": "CA22.Z",
+    "match_score": 1,
+    "matched_text": "Chronic obstructive pulmonary disease",
+    "query": "Chronic obstructive pulmonary disease",
+    "uri": "http://id.who.int/icd/entity/133207228"
+  },
+  "chronic pancreatitis": {
+    "adjudicated": false,
+    "code": "DC32.Z",
+    "match_score": 1,
+    "matched_text": "Chronic pancreatitis",
+    "query": "Chronic pancreatitis",
+    "uri": "http://id.who.int/icd/entity/1758007371"
+  },
+  "congenital cystic fibrosis": {
+    "adjudicated": false,
+    "code": "GB8Y",
+    "match_score": -6.434930132119528,
+    "matched_text": "Neonatal diabetes - congenital hypothyroidism - congenital glaucoma - hepatic fibrosis - polycystic kidneys",
+    "query": "Congenital cystic fibrosis",
+    "uri": "http://id.who.int/icd/entity/1920151776"
+  },
+  "congestive cardiac failure": {
+    "adjudicated": false,
+    "code": "BD10",
+    "match_score": 1,
+    "matched_text": "Congestive heart failure",
+    "query": "Congestive Cardiac Failure",
+    "uri": "http://id.who.int/icd/entity/2136808878"
+  },
+  "congestive heart failure": {
+    "adjudicated": false,
+    "code": "BD10",
+    "match_score": 1,
+    "matched_text": "Congestive heart failure",
+    "query": "Congestive heart failure",
+    "uri": "http://id.who.int/icd/entity/2136808878"
+  },
+  "coronary arteriosclerosis": {
+    "adjudicated": false,
+    "code": "BA52.Z",
+    "match_score": 0.9099181280050214,
+    "matched_text": "coronary arteriosclerotic disease",
+    "query": "Coronary arteriosclerosis",
+    "uri": "http://id.who.int/icd/entity/1280712786"
+  },
+  "cystic fibrosis": {
+    "adjudicated": false,
+    "code": "CA25.Z",
+    "match_score": 1,
+    "matched_text": "Cystic fibrosis",
+    "query": "Cystic fibrosis",
+    "uri": "http://id.who.int/icd/entity/514403112"
+  },
+  "deep vein thrombosis": {
+    "adjudicated": false,
+    "code": "BD71",
+    "match_score": 1,
+    "matched_text": "Deep vein thrombosis",
+    "query": "Deep vein thrombosis",
+    "uri": "http://id.who.int/icd/entity/925320484"
+  },
+  "deep venous thrombosis in left thigh": {
+    "adjudicated": false,
+    "code": "BB00.Z&XK8G",
+    "match_score": 0.4861380431337093,
+    "matched_text": "deep lung venous thrombosis[Left]",
+    "query": "Deep venous thrombosis in left thigh",
+    "uri": "http://id.who.int/icd/entity/1014964218 & http://id.who.int/icd/entity/271422288"
+  },
+  "deep venous thrombosis of left thigh": {
+    "adjudicated": false,
+    "code": "BB00.Z&XK8G",
+    "match_score": 0.4861380431337093,
+    "matched_text": "deep lung venous thrombosis[Left]",
+    "query": "Deep venous thrombosis of left thigh",
+    "uri": "http://id.who.int/icd/entity/1014964218 & http://id.who.int/icd/entity/271422288"
+  },
+  "diabetes mellitus": {
+    "adjudicated": false,
+    "code": "5A14",
+    "match_score": 1,
+    "matched_text": "diabetes mellitus NOS",
+    "query": "Diabetes Mellitus",
+    "uri": "http://id.who.int/icd/entity/1697306310"
+  },
+  "diabetes mellitus type 2": {
+    "adjudicated": false,
+    "code": "5A11",
+    "match_score": 1,
+    "matched_text": "Type 2 diabetes mellitus",
+    "query": "Diabetes mellitus type 2",
+    "uri": "http://id.who.int/icd/entity/119724091"
+  },
+  "disseminated intravascular coagulation": {
+    "adjudicated": false,
+    "code": "3B20",
+    "match_score": 1,
+    "matched_text": "Disseminated intravascular coagulation",
+    "query": "Disseminated intravascular coagulation",
+    "uri": "http://id.who.int/icd/entity/1622289887"
+  },
+  "disseminated intravascular coagulopathy": {
+    "adjudicated": false,
+    "code": "3B20",
+    "match_score": 1,
+    "matched_text": "disseminated intravascular coagulopathy",
+    "query": "Disseminated intravascular coagulopathy",
+    "uri": "http://id.who.int/icd/entity/1622289887"
+  },
+  "duodenal ulcer": {
+    "adjudicated": false,
+    "code": "DA63.Z",
+    "match_score": 1,
+    "matched_text": "Duodenal ulcer",
+    "query": "Duodenal ulcer",
+    "uri": "http://id.who.int/icd/entity/553678663"
+  },
+  "escherichia coli meningitis": {
+    "adjudicated": false,
+    "code": "1D01.0Y&XN6P4",
+    "match_score": 1,
+    "matched_text": "Meningitis due to Escherichia coli",
+    "query": "Escherichia coli meningitis",
+    "uri": "http://id.who.int/icd/entity/1855224446"
+  },
+  "failure to thrive": {
+    "adjudicated": false,
+    "code": "MG44.11",
+    "match_score": 1,
+    "matched_text": "failure to thrive NOS",
+    "query": "Failure to thrive",
+    "uri": "http://id.who.int/icd/entity/1232517390"
+  },
+  "fallot ’s tetralogy": {
+    "adjudicated": false,
+    "code": "LA88.2Z",
+    "match_score": 1,
+    "matched_text": "Tetralogy of Fallot",
+    "query": "Fallot ’s tetralogy",
+    "uri": "http://id.who.int/icd/entity/90973426"
+  },
+  "gestational hypertension": {
+    "adjudicated": false,
+    "code": "JA23",
+    "match_score": 1,
+    "matched_text": "Gestational hypertension",
+    "query": "Gestational hypertension",
+    "uri": "http://id.who.int/icd/entity/2118553363"
+  },
+  "hemorrhagic shock": {
+    "adjudicated": false,
+    "code": "MG40.1",
+    "match_score": 1,
+    "matched_text": "haemorrhagic shock",
+    "query": "Hemorrhagic shock",
+    "uri": "http://id.who.int/icd/entity/284999005"
+  },
+  "hepatocellular carcinoma": {
+    "adjudicated": false,
+    "code": "2C12.02",
+    "match_score": 1,
+    "matched_text": "Hepatocellular carcinoma",
+    "query": "Hepatocellular carcinoma",
+    "uri": "http://id.who.int/icd/entity/1294035808"
+  },
+  "hiv infection": {
+    "adjudicated": false,
+    "code": "1C62.Z",
+    "match_score": 1,
+    "matched_text": "HIV infection",
+    "query": "HIV infection",
+    "uri": "http://id.who.int/icd/entity/1508081745"
+  },
+  "hyperosmolar hyperglycaemic state": {
+    "adjudicated": false,
+    "code": "5A20.0",
+    "match_score": 1,
+    "matched_text": "hyperglycaemic hyperosmolar state NOS",
+    "query": "Hyperosmolar hyperglycaemic state",
+    "uri": "http://id.who.int/icd/entity/1322661241"
+  },
+  "hyperosmolar non - ketotic coma": {
+    "adjudicated": false,
+    "code": "5A20.1",
+    "match_score": 0.4910910567674926,
+    "matched_text": "Hyperosmolar hyperglycaemic state with coma",
+    "query": "Hyperosmolar non - ketotic coma",
+    "uri": "http://id.who.int/icd/entity/1796958395"
+  },
+  "hypertension": {
+    "adjudicated": false,
+    "code": "BA00.Z",
+    "match_score": 1,
+    "matched_text": "hypertension NOS",
+    "query": "Hypertension",
+    "uri": "http://id.who.int/icd/entity/761947693"
+  },
+  "hypoproteinemia": {
+    "adjudicated": false,
+    "code": "5C56.2Y",
+    "match_score": 1,
+    "matched_text": "Hypoproteinaemia",
+    "query": "Hypoproteinemia",
+    "uri": "http://id.who.int/icd/entity/1180782913"
+  },
+  "hypostatic pneumonia": {
+    "adjudicated": false,
+    "code": "CA40.Z",
+    "match_score": 1,
+    "matched_text": "hypostatic pneumonia",
+    "query": "Hypostatic pneumonia",
+    "uri": "http://id.who.int/icd/entity/1575436458"
+  },
+  "hypotension": {
+    "adjudicated": false,
+    "code": "BA2Z",
+    "match_score": 1,
+    "matched_text": "hypotension NOS",
+    "query": "Hypotension",
+    "uri": "http://id.who.int/icd/entity/1663360295"
+  },
+  "in-dwelling bladder catheter": {
+    "adjudicated": false,
+    "code": "GC01.Z",
+    "match_score": 0.21317160379359662,
+    "matched_text": "Disorder of bladder, unspecified",
+    "query": "In-dwelling bladder catheter",
+    "uri": "http://id.who.int/icd/entity/1468065226"
+  },
+  "ischaemic heart disease": {
+    "adjudicated": false,
+    "code": "BA6Z",
+    "match_score": 1,
+    "matched_text": "Ischaemic heart disease NOS",
+    "query": "Ischaemic heart disease",
+    "uri": "http://id.who.int/icd/entity/1964269418"
+  },
+  "klebsiella pneumonia": {
+    "adjudicated": false,
+    "code": "CA40.03",
+    "match_score": 1,
+    "matched_text": "Pneumonia due to Klebsiella pneumoniae",
+    "query": "Klebsiella pneumonia",
+    "uri": "http://id.who.int/icd/entity/1250089989"
+  },
+  "left hemiparesis": {
+    "adjudicated": false,
+    "code": "6B60.6",
+    "match_score": 0.8834466064659168,
+    "matched_text": "Hemiparesis",
+    "query": "Left hemiparesis",
+    "uri": "http://id.who.int/icd/entity/292596552"
+  },
+  "malabsorption": {
+    "adjudicated": false,
+    "code": "DA96.0Z",
+    "match_score": 1,
+    "matched_text": "malabsorption",
+    "query": "Malabsorption",
+    "uri": "http://id.who.int/icd/entity/1526938195"
+  },
+  "moderately differentiated hepatocellular carcinoma": {
+    "adjudicated": false,
+    "code": "2C12.02",
+    "match_score": 0.7717742921303158,
+    "matched_text": "Hepatocellular carcinoma",
+    "query": "Moderately differentiated hepatocellular carcinoma",
+    "uri": "http://id.who.int/icd/entity/1294035808"
+  },
+  "myocardial infarction": {
+    "adjudicated": false,
+    "code": "BA41.Z",
+    "match_score": 1,
+    "matched_text": "myocardial infarct NOS",
+    "query": "Myocardial infarction",
+    "uri": "http://id.who.int/icd/entity/1334938734"
+  },
+  "niddm": {
+    "adjudicated": false,
+    "code": "5A11",
+    "match_score": 1,
+    "matched_text": "NIDDM - [non insulin dependent diabetes mellitus]",
+    "query": "NIDDM",
+    "uri": "http://id.who.int/icd/entity/119724091"
+  },
+  "non-insulin-dependent diabetes mellitus": {
+    "adjudicated": false,
+    "code": "5A11",
+    "match_score": 1,
+    "matched_text": "non-insulin dependent diabetes mellitus",
+    "query": "Non-insulin-dependent diabetes mellitus",
+    "uri": "http://id.who.int/icd/entity/119724091"
+  },
+  "obesity": {
+    "adjudicated": false,
+    "code": "5B81.Z",
+    "match_score": 1,
+    "matched_text": "Obesity",
+    "query": "Obesity",
+    "uri": "http://id.who.int/icd/entity/149403041"
+  },
+  "occult gastrointestinal bleeding": {
+    "adjudicated": false,
+    "code": "ME24.9Z",
+    "match_score": 0.7999904342937313,
+    "matched_text": "Gastrointestinal bleeding",
+    "query": "Occult gastrointestinal bleeding",
+    "uri": "http://id.who.int/icd/entity/2044414353"
+  },
+  "old cerebrovascular accident": {
+    "adjudicated": false,
+    "code": "8B25.4",
+    "match_score": 1,
+    "matched_text": "old cerebrovascular accident",
+    "query": "Old cerebrovascular accident",
+    "uri": "http://id.who.int/icd/entity/557175275"
+  },
+  "perforated duodenal ulcer": {
+    "adjudicated": false,
+    "code": "DA63.Y",
+    "match_score": 1,
+    "matched_text": "Perforated duodenal ulcer",
+    "query": "Perforated duodenal ulcer",
+    "uri": "http://id.who.int/icd/entity/1982276025"
+  },
+  "peritonitis due to perforated duodenal ulcer": {
+    "adjudicated": false,
+    "code": "DC50.Z",
+    "match_score": 0.5747594387914344,
+    "matched_text": "Acute perforative peritonitis",
+    "query": "Peritonitis due to perforated duodenal ulcer",
+    "uri": "http://id.who.int/icd/entity/1307641658"
+  },
+  "pneumocystis carinii pneumonia": {
+    "adjudicated": false,
+    "code": "CA40.20",
+    "match_score": 1,
+    "matched_text": "pneumonia due to Pneumocystis carinii",
+    "query": "Pneumocystis carinii pneumonia",
+    "uri": "http://id.who.int/icd/entity/1526046317"
+  },
+  "pneumocystis pneumonia": {
+    "adjudicated": false,
+    "code": "CA40.20",
+    "match_score": 1,
+    "matched_text": "Pneumonia due to pneumocystis",
+    "query": "Pneumocystis pneumonia",
+    "uri": "http://id.who.int/icd/entity/1229452918"
+  },
+  "pneumonia": {
+    "adjudicated": false,
+    "code": "CA40.Z",
+    "match_score": 1,
+    "matched_text": "Pneumonia",
+    "query": "Pneumonia",
+    "uri": "http://id.who.int/icd/entity/142052508"
+  },
+  "pneumonia due to klebsiella pneumoniae": {
+    "adjudicated": false,
+    "code": "CA40.03",
+    "match_score": 1,
+    "matched_text": "Pneumonia due to Klebsiella pneumoniae",
+    "query": "Pneumonia due to Klebsiella pneumoniae",
+    "uri": "http://id.who.int/icd/entity/1250089989"
+  },
+  "prematurity": {
+    "adjudicated": false,
+    "code": "KA21.4Z",
+    "match_score": 1,
+    "matched_text": "Prematurity NOS",
+    "query": "Prematurity",
+    "uri": "http://id.who.int/icd/entity/1726201225"
+  },
+  "protein losing enteropathy": {
+    "adjudicated": false,
+    "code": "DA96.1",
+    "match_score": 1,
+    "matched_text": "Protein-losing enteropathy",
+    "query": "Protein losing enteropathy",
+    "uri": "http://id.who.int/icd/entity/1821383469"
+  },
+  "pseudomonas aeruginosa sepsis": {
+    "adjudicated": false,
+    "code": "1C41/1G40&XN5L6",
+    "match_score": 1,
+    "matched_text": "sepsis due to Pseudomonas aeruginosa NOS",
+    "query": "Pseudomonas aeruginosa sepsis",
+    "uri": "http://id.who.int/icd/entity/1983664632"
+  },
+  "pseudomonas aeruginosa urinary tract infection": {
+    "adjudicated": false,
+    "code": "GC08.Y&XN5L6",
+    "match_score": 0.8580927445867598,
+    "matched_text": "Urinary tract infection, site not specified, due to Pseudomonas aeruginosa",
+    "query": "Pseudomonas aeruginosa urinary tract infection",
+    "uri": "http://id.who.int/icd/entity/1873982884"
+  },
+  "pseudomonas sepsis": {
+    "adjudicated": false,
+    "code": "1C41/1G40&XN5L6",
+    "match_score": 0.8129381368916297,
+    "matched_text": "sepsis due to Pseudomonas aeruginosa NOS",
+    "query": "Pseudomonas sepsis",
+    "uri": "http://id.who.int/icd/entity/1983664632"
+  },
+  "pulmonary embolism": {
+    "adjudicated": false,
+    "code": "BB00.Z",
+    "match_score": 1,
+    "matched_text": "pulmonary emboli",
+    "query": "Pulmonary embolism",
+    "uri": "http://id.who.int/icd/entity/1014964218"
+  },
+  "renal transplant": {
+    "adjudicated": false,
+    "code": "NE84",
+    "match_score": 0.8229119143082283,
+    "matched_text": "failed kidney transplant",
+    "query": "Renal transplant",
+    "uri": "http://id.who.int/icd/entity/1598788412"
+  },
+  "respiratory distress syndrome": {
+    "adjudicated": false,
+    "code": "CB00",
+    "match_score": 0.7453013120943597,
+    "matched_text": "Acute respiratory distress syndrome",
+    "query": "Respiratory distress syndrome",
+    "uri": "http://id.who.int/icd/entity/1189702844"
+  },
+  "right sub-phrenic abscess": {
+    "adjudicated": false,
+    "code": "DC50.2",
+    "match_score": 0.8705333432069194,
+    "matched_text": "Subphrenic abscess",
+    "query": "Right sub-phrenic abscess",
+    "uri": "http://id.who.int/icd/entity/196539238"
+  },
+  "rupture of l/ventricle": {
+    "adjudicated": false,
+    "code": "LA89.Z",
+    "match_score": 0.10145127679758474,
+    "matched_text": "Common ventricle",
+    "query": "Rupture of L/ventricle",
+    "uri": "http://id.who.int/icd/entity/5417233"
+  },
+  "rupture of left ventricle following coronary artery bypass grafting": {
+    "adjudicated": false,
+    "code": "QB50.1",
+    "match_score": 0.5076834489503554,
+    "matched_text": "Presence of coronary artery bypass graft",
+    "query": "Rupture of left ventricle following coronary artery bypass grafting",
+    "uri": "http://id.who.int/icd/entity/1510701822"
+  },
+  "sepsis": {
+    "adjudicated": false,
+    "code": "1G40",
+    "match_score": 1,
+    "matched_text": "Unspecified sepsis",
+    "query": "Sepsis",
+    "uri": "http://id.who.int/icd/entity/1891465458"
+  },
+  "sepsis due to abdominal infection": {
+    "adjudicated": false,
+    "code": "1A09.Z",
+    "match_score": 0.619181111011574,
+    "matched_text": "salmonella infection with sepsis",
+    "query": "Sepsis due to abdominal infection",
+    "uri": "http://id.who.int/icd/entity/1070977756"
+  },
+  "sepsis due to pseudomonas aeruginosa infection": {
+    "adjudicated": false,
+    "code": "1C41/1G41&XN5L6",
+    "match_score": 0.5956076805710853,
+    "matched_text": "Sepsis due to Pseudomonas aeruginosa infection with septic shock",
+    "query": "Sepsis due to Pseudomonas aeruginosa infection",
+    "uri": "http://id.who.int/icd/entity/1300051267"
+  },
+  "septic shock": {
+    "adjudicated": false,
+    "code": "1G41",
+    "match_score": 1,
+    "matched_text": "septic shock NOS",
+    "query": "Septic shock",
+    "uri": "http://id.who.int/icd/entity/1683090852"
+  },
+  "severe acute renal failure": {
+    "adjudicated": false,
+    "code": "GB60.Z&XS25",
+    "match_score": 1,
+    "matched_text": "Acute kidney failure[Severe]",
+    "query": "Severe acute renal failure",
+    "uri": "http://id.who.int/icd/entity/476391827 & http://id.who.int/icd/entity/1201187093"
+  },
+  "staphylococcus aureus meningitis": {
+    "adjudicated": false,
+    "code": "1B54",
+    "match_score": 1,
+    "matched_text": "Meningitis due to Staphylococcus aureus",
+    "query": "Staphylococcus aureus meningitis",
+    "uri": "http://id.who.int/icd/entity/240293267"
+  },
+  "staphylococcus aureus sepsis": {
+    "adjudicated": false,
+    "code": "1B5Z",
+    "match_score": 1,
+    "matched_text": "sepsis due to Staphylococcus aureus NOS",
+    "query": "Staphylococcus aureus sepsis",
+    "uri": "http://id.who.int/icd/entity/460403634"
+  },
+  "subphrenic abscess": {
+    "adjudicated": false,
+    "code": "DC50.2",
+    "match_score": 1,
+    "matched_text": "Subphrenic abscess",
+    "query": "Subphrenic abscess",
+    "uri": "http://id.who.int/icd/entity/196539238"
+  },
+  "tachycardia": {
+    "adjudicated": false,
+    "code": "MC81.0",
+    "match_score": 1,
+    "matched_text": "Tachycardia, unspecified",
+    "query": "Tachycardia",
+    "uri": "http://id.who.int/icd/entity/515681918"
+  },
+  "type 2 diabetes mellitus": {
+    "adjudicated": false,
+    "code": "5A11",
+    "match_score": 1,
+    "matched_text": "Type 2 diabetes mellitus",
+    "query": "Type 2 diabetes mellitus",
+    "uri": "http://id.who.int/icd/entity/119724091"
+  }
+}
