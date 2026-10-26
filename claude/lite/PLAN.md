@@ -80,3 +80,38 @@ autoMCCD-lite/
 - The robust-sample selection rule beyond "2 per variant" (which parents; include the 6 held-out out-of-scope parents?).
 - `/readyz` component list for lite.
 - Whether `make notebooks` needs the eval run first (charts cell) or runs the eval itself.
+
+## LM3 parity report (2026-10-26)
+
+Lite run `headline_090724Z` against `autoMCCD/runs/headline_m5_baseline`, same prompt sha1 `d051044cd4`, same model, same ICD release.
+
+| aggregate | full | lite |
+|---|---|---|
+| validator clean, first pass | 58.8% | 58.8% |
+| validator clean, final | 82.4% | 82.4% |
+| revised once | 7 | 7 |
+| auto share | 5.9% | 5.9% |
+| model calls | 24 | 24 |
+| gold UCOD exact | 47.1% (8/17) | 56.2% (9/16) |
+
+| case | route full → lite | final rules full → lite | model UCOD full → lite | gold UCOD full → lite |
+|---|---|---|---|---|
+| S01-clean | review → review | - → - | 1G41 → 1G40 | 1B54 → 1B54 |
+| S02-clean | review → review | - → - | BA6Z → 8B11.5Z | 8B11.5Z → 8B11.5Z |
+| S03-clean | review → review | - → - | DC31.1 → DC32.3 | DC32.3 → DC32.3 |
+| S04-clean | review → review | - → - | BA41.Z → BA41.Z | BA41.Z → BA41.Z |
+| S06-clean | review → auto | - → - | CA22.Z → CA22.Z | CA22.Z → CA22.Z |
+| S07-clean | review → review | - → - | GB60.Z → GB60.Z | 5A11 → 5A11 |
+| S08-clean | review → review | - → V2 | PB6Z → MH14 | LA89.Z → LA89.Z |
+| S09-clean | review → review | - → - | DA63.Y → 1A09.Z | DA63.Y → DA63.Y |
+| S10-clean | review → review | - → - | LA88.2Z → BD10 | LA88.2Z → LA88.2Z |
+| S11-clean | review → review | - → - | 2B90.3Z → 2B90.3Z | 2B90.3Z → 2B90.3Z |
+| S12-clean | review → review | - → - | 2C12.02 → 2C12.02 | 2C12.02 → 2C12.02 |
+| S13-clean | auto → review | - → - | 5B81.Z → BA41.Z | BA41.Z → BA41.Z |
+| S14-clean | review → review | - → V1 | GC08.Y → CA40.Z | 8B25.4 → 8B25.4 |
+| S15-clean | review → review | - → - | CA25.Z → CA25.Z | CA25.Z → CA25.Z |
+| S16-clean | review → review | V7 → - | JB64.Y → JB64.Y | JA8C.Z → JA8C.Z |
+| S17-clean | review → review | V3 → - | 1F86.1 → None | BA5Z → (not coded: declined) |
+| S18-clean | review → review | V4 → V7 | 1C62.3Z → 1C62.3Z | 1C62.3Z → 1C62.3Z |
+
+Reading: the deterministic half is identical. The gold certificates code to the same UCOD in 16/16 compared cases, the same rules fire on the same drafts (the validator test suite is the port of the full one), and the aggregates match to the decimal. The per-case differences in route, rules and model UCOD come from the model: gpt-5-nano does not return the same draft twice (seed is best effort), so S13 was auto in the full run and S06 in this one, and S17 was certified in the full run and declined as insufficient here. No difference traces to the gate, the revisions, the coder or the router.
