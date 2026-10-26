@@ -1,0 +1,71 @@
+[project]
+name = "automccd-lite"
+version = "0.1.0"
+description = "Answer key for the MCCD PoC: clinical record text -> WHO MCCD -> ICD-11 coded certificate with a rule gate and a route."
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "fastapi>=0.115",
+    "uvicorn[standard]>=0.30",
+    "pydantic>=2.7",
+    "pyyaml>=6.0",
+    "sqlalchemy>=2.0",
+    "psycopg[binary]>=3.2",
+    "httpx>=0.27",
+    "openai>=1.50",
+    "azure-storage-blob>=12.20",
+    "jsonschema>=4.22",
+    "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.2",
+    "ruff>=0.5",
+]
+
+[dependency-groups]
+notebooks = [
+    "jupyter",
+    "matplotlib",
+    "graphviz",
+]
+docs = [
+    "sphinx",
+    "myst-parser",
+    "sphinx-design",
+    "sphinx-copybutton",
+    "furo",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/automccd_lite"]
+
+[tool.ruff]
+line-length = 100
+target-version = "py312"
+src = ["src", "tests"]
+extend-exclude = ["notebooks"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "N", "S", "BLE"]
+ignore = [
+    "S101",  # assert in tests
+    "N818",  # exception names kept as in autoMCCD (ICDUnavailable)
+]
+
+[tool.ruff.lint.per-file-ignores]
+"tests/**" = ["S105", "S106"]
+"tests/test_validate.py" = ["E501"]  # one validator case per line
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = [
+    "integration: needs the icd-api container, Postgres or Azurite",
+    "llm: needs OPENAI_BASE_URL and OPENAI_API_KEY; costs tokens",
+]
+addopts = "-m 'not integration and not llm'"

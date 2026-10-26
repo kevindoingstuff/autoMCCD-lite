@@ -1,0 +1,26 @@
+# Pipeline tuning, one section per stage. Secrets and endpoints come from the
+# environment, never from here.
+
+prompt:
+  version: "4.7"            # prompts/mccd/v<version>.md
+  schema: "mccd"            # prompts/schemas/<schema>.schema.json
+
+draft:
+  model: "gpt-5-nano-2025-08-07"   # LLM_MODEL env overrides
+  temperature: null         # reasoning models reject anything but the default
+  seed: 20251023            # best effort; not deterministic on this model
+  reasoning_effort: minimal # minimal = 0 reasoning tokens, ~3 s; low = ~1500, ~12 s
+  max_completion_tokens: 8000  # must cover hidden reasoning; 2000 returned nothing
+  timeout_s: 120
+  max_retries: 4            # SDK retries on 429 / 5xx
+
+revise:
+  max_attempts: 1           # validator repair calls per record
+  term_max_attempts: 1      # terminology repair calls per record
+
+code:
+  icd_release: "2026-01"
+  linearization: "mms"
+  min_match_score: 0.5
+  timeout_s: 30
+  max_retries: 2
