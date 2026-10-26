@@ -219,11 +219,15 @@ class FileCodeCache:
         return self.data[key]
 
     def _save(self) -> None:
+        # The api container, the eval and the notebooks all write this file;
+        # merge what another writer added since we loaded it, then rewrite.
+        if self.path.exists():
+            on_disk = json.loads(self.path.read_text(encoding="utf-8") or "{}")
+            self.data = {**on_disk, **self.data}
         tmp = self.path.with_suffix(".json.tmp")
-        tmp.write_text(
-            json.dumps(self.data, ensure_ascii=False, indent=2, sort_keys=True) + "\n",
-            encoding="utf-8",
-        )
+        with tmp.open("w", encoding="utf-8", newline="\n") as f:  # LF on Windows too
+            json.dump(self.data, f, ensure_ascii=False, indent=2, sort_keys=True)
+            f.write("\n")
         os.replace(tmp, self.path)  # a crash mid-write leaves the old file intact
 
 
