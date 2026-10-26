@@ -1,0 +1,13 @@
+{
+  "record_id": "S01",
+  "sex": "male",
+  "age": 49,
+  "age_unit": "years",
+  "context": null,
+  "notes": [
+    {
+      "name": "case_narrative",
+      "text": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+    }
+  ]
+}

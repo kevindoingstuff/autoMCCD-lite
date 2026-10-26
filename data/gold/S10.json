@@ -1,0 +1,25 @@
+{
+  "id": "S10",
+  "gold_source": "text_sequence",
+  "forward_chain": [
+    "Fallot \u2019s tetralogy",
+    "Congestive Cardiac Failure"
+  ],
+  "part1": [
+    {
+      "line": "1a",
+      "certified_term": "Congestive Cardiac Failure",
+      "interval": null
+    },
+    {
+      "line": "1b",
+      "certified_term": "Fallot \u2019s tetralogy",
+      "interval": null
+    }
+  ],
+  "part2": [],
+  "part2_structured": false,
+  "part2_note": "Note:\nThe child had a history of\nFallot\n\u2019s tetralogy and the surgery was delayed due to lack of consent from the parents. This lead the patient to the condition of congestive cardiac failure leading to death.",
+  "has_intervals": false,
+  "chain_truncated": false
+}

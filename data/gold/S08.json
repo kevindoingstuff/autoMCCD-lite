@@ -1,0 +1,31 @@
+{
+  "id": "S08",
+  "gold_source": "text_sequence",
+  "forward_chain": [
+    "Coronary arteriosclerosis",
+    "Acute myocardial infarction",
+    "Rupture of L/ventricle"
+  ],
+  "part1": [
+    {
+      "line": "1a",
+      "certified_term": "Rupture of L/ventricle",
+      "interval": null
+    },
+    {
+      "line": "1b",
+      "certified_term": "Acute myocardial infarction",
+      "interval": null
+    },
+    {
+      "line": "1c",
+      "certified_term": "Coronary arteriosclerosis",
+      "interval": null
+    }
+  ],
+  "part2": [],
+  "part2_structured": false,
+  "part2_note": "Note:\nIn this case, IDDM, cigarette smoking, hypertension, hypercholesterolemia and obesity would all be considered factors that contributed to the death. However, they would not be in the direct causal sequence of Part I, so they would be placed in Part II.",
+  "has_intervals": false,
+  "chain_truncated": false
+}

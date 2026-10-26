@@ -1,0 +1,13 @@
+{
+  "record_id": "S05",
+  "sex": "female",
+  "age": 74,
+  "age_unit": "years",
+  "context": null,
+  "notes": [
+    {
+      "name": "case_narrative",
+      "text": "A 74-year-old female with a temperature of 102.6° F was admitted to the hospital from a nursing home. She first became a resident of the nursing home 2 years earlier following a cerebrovascular accident, which left her with a residual left hemiparesis. Over the next year, she became increasingly dependent on others to help with her activities of daily living, eventually requiring an in-dwelling bladder catheter 8 months before the current admission. For the 3 days prior to admission, she was noted to have lost her appetite and to have become increasingly withdrawn. On admission to the hospital her leukocyte count was 19,250 and she had pyuria. Intravenous Ampicillin and gentamicin were administered but her condition did not improve. On third day of admission blood cultures were done and was positive for Pseudomonas aeruginosa , which was resistant to ampicillin and gentamicin. Antibiotic therapy was changed to ticarcillin clavulanate , to which the organism was sensitive. Despite the antibiotics and intravenous fluid support, the patient’s fever persisted. On the fourth hospital day, she became hypotensive and died."
+    }
+  ]
+}

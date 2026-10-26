@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aisingapore.org/aicod/schemas/mccd/v1.1",
+  "title": "WHO-format Medical Certificate of Cause of Death",
+  "description": "Output contract for the conversion module. Written to stay inside the limits of Anthropic constrained decoding: no recursion, no numeric or string constraints, no external $ref, additionalProperties false everywhere, array minItems only 0 or 1. Anything those would have enforced is checked in src/validate.py instead, which can explain a violation where a schema can only reject one.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["record_id", "assessment", "decline_reason", "part1", "part2", "review"],
+  "properties": {
+    "record_id": {
+      "type": "string",
+      "description": "Identifier of the record being certified, copied verbatim from the input."
+    },
+    "assessment": {
+      "type": "string",
+      "description": "certifiable: the record supports a cause-of-death chain. insufficient_information: it does not, and guessing would be worse than declining. out_of_scope: an external cause, an undetermined manner of death, or a case needing forensic expertise.",
+      "enum": ["certifiable", "insufficient_information", "out_of_scope"]
+    },
+    "decline_reason": {
+      "type": ["string", "null"],
+      "description": "Required when assessment is not certifiable; null otherwise.",
+      "enum": [null, "record_too_sparse", "illegible_or_truncated", "external_cause",
+               "manner_of_death_undetermined", "forensic_expertise_required",
+               "conflicting_diagnoses"]
+    },
+    "part1": {
+      "type": "array",
+      "description": "The causal chain. Index 0 is line 1a, the immediate cause; the last entry is the originating condition and sits on the lowest used line. One condition per line, most immediate first. Empty when assessment is not certifiable.",
+      "items": { "$ref": "#/$defs/condition" }
+    },
+    "part2": {
+      "type": "array",
+      "description": "Other significant conditions contributing to death but not part of the Part I sequence.",
+      "items": { "$ref": "#/$defs/condition" }
+    },
+    "review": { "$ref": "#/$defs/review" }
+  },
+  "$defs": {
+    "condition": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["certified_term", "evidence_field", "evidence_span", "basis", "interval"],
+      "properties": {
+        "certified_term": {
+          "type": "string",
+          "description": "The condition as it should appear on the certificate: a specific, unabbreviated diagnosis. Not a mode of dying."
+        },
+        "evidence_field": {
+          "type": "string",
+          "description": "Which input field the evidence came from. Use case_narrative for the simulated teaching scenarios, which arrive as a single narrative rather than the 14-field record structure. Use none only when basis is clinical_inference or absent.",
+          "enum": ["case_narrative", "diagnoses", "presenting_complaint_hpi",
+                   "past_medical_history", "past_surgical_history", "medication_history",
+                   "laboratory", "imaging_investigations", "clinical_examination",
+                   "procedures", "treatment_medications", "progress_notes",
+                   "discharge_diagnosis", "cause_of_death_information", "dates_timeline",
+                   "none"]
+        },
+        "evidence_span": {
+          "type": "string",
+          "description": "A VERBATIM fragment of the named field supporting this condition. Copied exactly, not paraphrased; it is checked by string comparison against the input. Empty string only when basis is clinical_inference or absent."
+        },
+        "basis": {
+          "type": "string",
+          "description": "How the condition was established. explicit_diagnosis: stated as a diagnosis in the record. clinical_inference: not stated, concluded from findings. medication_implied: inferred from a prescription. reported_by_family: stated by a relative rather than clinically documented. absent: named because the chain requires it but the record does not support it.",
+          "enum": ["explicit_diagnosis", "clinical_inference", "medication_implied",
+                   "reported_by_family", "absent"]
+        },
+        "interval": { "$ref": "#/$defs/interval" }
+      }
+    },
+    "interval": {
+      "type": "object",
+      "description": "Approximate interval between onset of this condition and death. Must be non-decreasing going down the chain: the immediate cause on 1a began most recently.",
+      "additionalProperties": false,
+      "required": ["value", "unit", "certainty"],
+      "properties": {
+        "value": {
+          "type": ["number", "null"],
+          "description": "Null when a duration is implied but no number can be supported."
+        },
+        "unit": {
+          "type": "string",
+          "enum": ["minutes", "hours", "days", "weeks", "months", "years", "unknown"]
+        },
+        "certainty": {
+          "type": "string",
+          "description": "documented: a duration or dates appear in the record. estimated: inferred from the clinical course. unknown: not determinable.",
+          "enum": ["documented", "estimated", "unknown"]
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["confidence", "flags", "note"],
+      "properties": {
+        "confidence": { "type": "string", "enum": ["high", "moderate", "low"] },
+        "flags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["conflicting_diagnoses", "no_terminal_event_documented",
+                     "chronic_conditions_only", "interval_undocumented",
+                     "possible_external_cause", "specialist_input_needed",
+                     "record_illegible_or_truncated", "unused_findings_in_record",
+                     "record_contains_other_patient"]
+          }
+        },
+        "note": {
+          "type": "string",
+          "description": "One sentence for the reviewing physician: what is uncertain and what would resolve it. Length capped by the validator, not here."
+        }
+      }
+    }
+  }
+}

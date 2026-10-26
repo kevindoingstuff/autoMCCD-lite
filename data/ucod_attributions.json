@@ -1,0 +1,48 @@
+{
+  "gold_rule_conflicts": {
+    "S07": "gold writes the abbreviation 'NIDDM'",
+    "S08": "gold writes 'Rupture of L/ventricle' (abbreviation and slash)"
+  },
+  "divergences": [
+    {
+      "case": "S08",
+      "gold": "LA89.Z",
+      "model": null,
+      "model_term": null,
+      "kind": "gold defect",
+      "why": "gold's `Rupture of L/ventricle` autocodes to LA89.Z *Common ventricle*, a congenital malformation, at match score 0.10, so no correct certificate can match it. The rule about writing terms out in full is not cosmetic."
+    },
+    {
+      "case": "S11",
+      "gold": "2B90.3Z",
+      "model": "JB64.Y",
+      "model_term": "Postoperative deep vein thrombosis",
+      "kind": "autocode defect on compliant output",
+      "why": "the model's `Postoperative deep vein thrombosis` autocodes to JB41.1, an obstetric code, on a male decedent. CoDEdit caught it (FER-CE-873). The certified term is correct; the coding stage broke it."
+    },
+    {
+      "case": "S14",
+      "gold": "8B25.4",
+      "model": "6B60.6",
+      "model_term": "Cerebrovascular accident with residual left hemiparesis",
+      "kind": "model violation the gate already caught",
+      "why": "the model put two conditions on one line (`Cerebrovascular accident with residual left hemiparesis`); V3 fired before any coding, and autocode then matched only *Hemiparesis* at 0.59 -> 6B60.6. The deterministic gate flagged the exact line that miscoded."
+    },
+    {
+      "case": "S16",
+      "gold": "JA8C.Z",
+      "model": "JA23",
+      "model_term": "Gestational hypertension",
+      "kind": "clinical disagreement",
+      "why": "the model certifies gestational hypertension as the originating condition where the teaching answer certifies abruptio placentae."
+    },
+    {
+      "case": "S17",
+      "gold": "BA5Z",
+      "model": "8B11.5Z",
+      "model_term": "Cerebral infarction",
+      "kind": "clinical disagreement",
+      "why": "the model builds a cerebral-infarction chain where the teaching answer builds a cardiac one."
+    }
+  ]
+}

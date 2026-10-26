@@ -1,0 +1,48 @@
+{
+  "id": "S13",
+  "gold_source": "certificate_image",
+  "source_image": "slide28_image11.png",
+  "template": "US_NCHS",
+  "transcribed": true,
+  "part1": [
+    {
+      "line": "1a",
+      "certified_term": "Pulmonary embolism",
+      "interval": {
+        "value": 1,
+        "unit": "hours",
+        "certainty": "documented",
+        "display": "1 hour"
+      }
+    },
+    {
+      "line": "1b",
+      "certified_term": "Acute myocardial infarction",
+      "interval": {
+        "value": 7,
+        "unit": "days",
+        "certainty": "documented",
+        "display": "7 days"
+      }
+    },
+    {
+      "line": "1c",
+      "certified_term": "Chronic ischemic heart disease",
+      "interval": {
+        "value": 8,
+        "unit": "years",
+        "certainty": "documented",
+        "display": "8 years"
+      }
+    }
+  ],
+  "part2": [
+    "Non-insulin-dependent diabetes mellitus",
+    "Obesity",
+    "Hypertension",
+    "Congestive heart failure"
+  ],
+  "part2_structured": true,
+  "has_intervals": true,
+  "exceeds_who_lines": false
+}

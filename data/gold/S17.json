@@ -1,0 +1,36 @@
+{
+  "id": "S17",
+  "gold_source": "certificate_image",
+  "source_image": "slide36_image15.png",
+  "template": "US_NCHS",
+  "transcribed": true,
+  "part1": [
+    {
+      "line": "1a",
+      "certified_term": "Congestive heart failure",
+      "interval": {
+        "value": 7,
+        "unit": "years",
+        "certainty": "documented",
+        "display": "7 years"
+      }
+    },
+    {
+      "line": "1b",
+      "certified_term": "Coronary heart disease",
+      "interval": {
+        "value": 25,
+        "unit": "years",
+        "certainty": "documented",
+        "display": "25 years"
+      }
+    }
+  ],
+  "part2": [
+    "Hypertension",
+    "Atrial fibrillation"
+  ],
+  "part2_structured": true,
+  "has_intervals": true,
+  "exceeds_who_lines": false
+}

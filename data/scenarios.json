@@ -1,0 +1,194 @@
+[
+  {
+    "id": "S01",
+    "number": 1,
+    "narrative": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back.",
+    "answer_note": "Type II diabetes and renal transplant contributed to death and hence included in Part II of the death certificate.\nSequence of events:\nStaphylococcus aureus meningitis- > Staphylococcus aureus sepsis-> Septic shock -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S02",
+    "number": 2,
+    "narrative": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years.",
+    "answer_note": "As the arteriosclerosis was the condition beginning the sequence of morbid events, this will be selected as the underlying cause of death. Ischaemic heart disease and alcohol addiction contributed to death but was not related to the condition that led him to death and hence included in Part II of the death certificate.\nSequence of events:\nArteriosclerosis -> Cerebral infarction ->\nKlebsiella\npneumonia -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S03",
+    "number": 3,
+    "narrative": "Shortly after dinner on the day prior to admission to the hospital, this 48-year-old male developed a cramping, epigastric pain, which radiated to his back, followed by nausea and vomiting. The pain was not relieved by positional changes or antacids. The pain persisted, and 24 hours after its onset, the patient sought medical attention. He had a 10-year history of excessive alcohol consumption and a 2-year history of frequent episodes of similar epigastric pain. The patient denied diarrhoea, constipation, hematemesis, or melena. The patient was admitted to the hospital with a diagnosis of an acute exacerbation of chronic pancreatitis. Radiological findings included a duodenal ileus and pancreatic calcification. Serum amylase was 4,032 units per litre. The day after admission, the patient seemed to improve. However, that evening he became disoriented, restless, and hypotensive. Despite intravenous fluids and vasopressors, the patient remained hypotensive and died. Autopsy findings revealed many areas of fibrosis in the pancreas with the remaining areas showing multiple foci of acute inflammation and necrosis.",
+    "answer_note": "Sequence of events:\nChronic Alcoholism -> Chronic pancreatitis-> Acute exacerbation of chronic pancreatitis -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S04",
+    "number": 4,
+    "narrative": "This 75-year-old male was admitted to the hospital complaining of severe chest pain. He had a 10-year history of arteriosclerotic heart disease with ECG findings of myocardial ischemia and several episodes of congestive heart failure controlled by digitalis preparations and diuretics. Five months before this admission, the patient was found to be anaemic, with a haematocrit of 17, and to have occult blood in the stool. A barium enema revealed a large polypoid mass in the cecum diagnosed as carcinoma by biopsy. Because of the patient’s cardiac status, he was not considered to be a surgical candidate. Instead, he was treated with a 5-week course of radiation therapy and periodic packed red cell transfusions. He completed this course 3 months before this hospital admission. On this admission the ECG was diagnostic of an acute anterior wall myocardial infarction. He expired 2 days later.",
+    "answer_note": "Note:\nCarcinoma of cecum is listed in Part II because it caused anaemia and weakened the patient, but it did not cause arteriosclerotic heart disease. Congestive heart failure is also listed in Part II because it also weakened the patient. Although it was caused by the arteriosclerotic heart disease, it was not part of the causal sequence leading to the acute myocardial infarction.\nSequence of events:\nArteriosclerotic Heart Disease -> Acute Anterior Myocardial Infarction -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S05",
+    "number": 5,
+    "narrative": "A 74-year-old female with a temperature of 102.6° F was admitted to the hospital from a nursing home. She first became a resident of the nursing home 2 years earlier following a cerebrovascular accident, which left her with a residual left hemiparesis. Over the next year, she became increasingly dependent on others to help with her activities of daily living, eventually requiring an in-dwelling bladder catheter 8 months before the current admission. For the 3 days prior to admission, she was noted to have lost her appetite and to have become increasingly withdrawn. On admission to the hospital her leukocyte count was 19,250 and she had pyuria. Intravenous Ampicillin and gentamicin were administered but her condition did not improve. On third day of admission blood cultures were done and was positive for Pseudomonas aeruginosa , which was resistant to ampicillin and gentamicin. Antibiotic therapy was changed to ticarcillin clavulanate , to which the organism was sensitive. Despite the antibiotics and intravenous fluid support, the patient’s fever persisted. On the fourth hospital day, she became hypotensive and died.",
+    "answer_note": "Note:\nAs cerebrovascular accident and resultant hemiparesis lead to the insertion of an indwelling urinary catheter contributed for the UTI, cerebrovascular accident was selected as the underlying cause of death.\nSequence of events:\nOld cerebrovascular accident -> Left hemiparesis -> Pseudomonas aeruginosa Urinary Tract Infection -> Pseudomonas aeruginosa sepsis -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S06",
+    "number": 6,
+    "narrative": "A 75-year-old male had a 10-year history of chronic bronchitis associated with smoking two packs of cigarettes a day for more than 40 years. When seen by his physician approximately 2 years prior to his terminal episode, he had moderately reduced FEV1 and FVC with no response to bronchodilators. During his last year, he required corticosteroids to prevent wheezing and coughing at night; however, he was unable to reduce his smoking to less than one pack of cigarettes per day. When seen 3 months prior to his terminal episode, he had significantly reduced FEV1 and FVC with no response to bronchodilators. He awoke one evening complaining to his wife about coughing and worsening shortness of breath. He was taken to the emergency room where he was found to have an acute exacerbation of chronic obstructive airway disease. He was admitted to the hospital. At the patient’s request, no mechanical ventilation was employed, and he died 12 hours later in respiratory arrest.",
+    "answer_note": "Note:\nIn this case, respiratory arrest is considered a mode of death, and therefore it was not listed as the immediate Cause of Death. As cigarette smoking contributed significantly to his illness it is included in Part II of the death certificate.\nSequence of events:\nChronic Bronchitis -> Acute exacerbation of chronic obstructive airway disease -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S07",
+    "number": 7,
+    "narrative": "A 75-year-old female had a 15-year history of non-insulin-dependent diabetes mellitus (NIDDM), a 13-year history of mild hypertension treated with thiazide diuretics, and an uncomplicated myocardial infarction 6 years prior to the present illness. She was found disoriented in her apartment and brought to the hospital. On admission she was noted to be unresponsive, without focal neurologic signs, and severely dehydrated with a blood pressure of 90/60. Initial laboratory tests disclosed severe hyperglycaemia, hyperosmolarity , azotaemia, and mild ketosis without acidosis. A diagnosis of hyperosmolar non - ketotic coma was made. The patient was vigorously treated with fluids, electrolytes, insulin, and broad-spectrum antibiotics, although no source for infection was documented. Within 72 hours, the patient’s hyperosmolar, hyperglycaemic state was resolved. However, she remained anuric with progressive azotaemia . Attempts at renal dialysis were unsuccessful, and the patient died on the 8th hospital day in severe acute renal failure.",
+    "answer_note": "In this case, hypertension and a previous myocardial infarction would both be considered factors that contributed to the death. However, they would not be in the direct causal sequence of Part I, so they were placed in Part II.\nSequence of events:\nNIDDM -> Hyperosmolar non -\nketotic\ncoma -> Acute renal failure -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S08",
+    "number": 8,
+    "narrative": "This 53-year-old male was admitted to the hospital following 2 days of intermittent mid epigastric and left-sided chest pain. The pain radiated to his left arm and was accompanied by nausea and vomiting. He gave a history that included 2 years of occasional chest discomfort, a near syncopal episode 6 months prior, hypertension, a 30-year history of one-pack per-day cigarette smoking, congenital blindness, and insulin-dependent diabetes mellitus. He was noted to be markedly obese and to have severe hypercholesterolemia. At the time of admission, his enzyme studies were normal, but the ECG suggested myocardial ischemia. Two days later, he experienced an episode of severe chest pain that did not respond to nitro-glycerine and was accompanied by ST-segment elevation. A cardiac catheterization demonstrated severe multi-vessel coronary artery stenosis. He underwent quadruple coronary artery bypass surgery. Shortly, after being taken off the cardiopulmonary bypass machine, he went into cardiac arrest. As resuscitation was being attempted by open cardiac massage, a rupture developed in his left ventricular wall that resulted in rapid exsanguination and death.",
+    "answer_note": "Note:\nIn this case, IDDM, cigarette smoking, hypertension, hypercholesterolemia and obesity would all be considered factors that contributed to the death. However, they would not be in the direct causal sequence of Part I, so they would be placed in Part II.\nSequence of events:\nCoronary arteriosclerosis -> Acute myocardial infarction -> Rupture of L/ventricle -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S09",
+    "number": 9,
+    "narrative": "A 36 year old man with chronic alcoholism for 10 years had a previous history of duodenal ulcer with antacids treatment for 3 years. On the day of admission he had symptoms of acute abdominal pain with high fever. Initial chest X-rays showed free air under both domes of diaphragm. The patient was diagnosed as having peritonitis from peptic ulcer perforation. Emergency exploratory laparotomy was performed on the 1st day of admission. The surgeon found perforated duodenal ulcer size 2cm at anterior wall of first part duodenum. Five days later, the patient had high fever with chills, his abdominal ultrasound revealed sub-phrenic abscess under the right diaphragm. A revision exploratory laparotomy was planned. However the patient suddenly showed signs of septic shock that night and had a sudden cardiac arrest and the patient died within 2 hours of septic shock.",
+    "answer_note": "Note:\nChronic alcoholism contributed, but not directly related to the death therefore recorded in Part II of the certificate. The term “cardiac arrest” is a mode of dying and should not be written in the certificate.\nThe sequence of events:\nDuodenal ulcer -> Perforated duodenal ulcer -> Right sub-phrenic abscess -> Septic shock -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S10",
+    "number": 10,
+    "narrative": "A 3 year old boy was brought to the hospital with a history of difficulty in breathing and cough. On examination he was dyspnoeic with a respiratory rate of 52 per minute. He had tachycardia, peripheral cyanosis and the face was puffy. The child had a history of Fallot’s Tetralogy and the surgery was delayed due to lack of consent from the parents. The diagnosis of congestive cardiac failure was made and the boy was treated with inhaled oxygen, Digoxin and Frusemide. Despite treatment the child died on the second day of admission.",
+    "answer_note": "Note:\nThe child had a history of\nFallot\n’s tetralogy and the surgery was delayed due to lack of consent from the parents. This lead the patient to the condition of congestive cardiac failure leading to death.\nSequence of events:\nFallot\n’s tetralogy -> Congestive Cardiac Failure -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S11",
+    "number": 11,
+    "narrative": "A male aged 54 years admitted to hospital for surgery to remove the colon due to carcinoma of the sigmoid colon. The patient developed a postoperative deep vein thrombosis. A pulmonary embolism later developed and the patient died shortly after. He was diagnosed as having arteriosclerosis and ischaemic heart disease for the last 5 years.",
+    "answer_note": "Note:\nAs the carcinoma of the sigmoid colon was the condition necessitating the surgery, this will be selected as the underlying cause of death. As ischaemic heart disease and arteriosclerosis was not directly related to death but may have contributed they will be documented in Part II of the certificate.\nSequence of events:\nCarcinoma of the sigmoid colon -> Deep vein thrombosis -> Pulmonary embolism -> Death",
+    "answer_has_image": false,
+    "in_scope": true
+  },
+  {
+    "id": "S12",
+    "number": 12,
+    "narrative": "A 68-year-old male was admitted to the hospital with progressive right lower quadrant pain of several weeks’ duration. The patient had lost approximately 40 pounds, with progressive weakness and malaise. On physical examination, the patient had an enlarged liver span that was four finger breadths below the right costal margin. Rectal examination was normal and stool was negative for occult blood. Routine laboratory studies were within normal limits.A chestx ray and barium enema were negative. His EKG showed a right bundle branch block. CT scan showed numerous masses within both lobes of the liver. A needle biopsy of the liver was diagnostic of moderately differentiated hepatocellular carcinoma, and the patient was started on chemotherapy. Three months after the diagnosis, the patient developed sharp diminution of liver function as well as a deep venous thrombosis of his left thigh, and he was admitted to the hospital. On his third day, the patient developed a pulmonary embolism and died 30 minutes later",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": true
+  },
+  {
+    "id": "S13",
+    "number": 13,
+    "narrative": "A 68-year-old female was admitted to the ICU with dyspnea and moderate retrosternal pain of 5-hours duration, which did not respond to nitroglycerin . There was a past history of obesity, noninsulin-dependent diabetes mellitus, hypertension, and episodes of non exertional chest pain, diagnosed as angina pectoris, for 8 years. Over the first 72 hours, she developed a significant elevation of the MB isoenzyme of creatine phosphokinase, confirming an acute myocardial infarction. A Type II second-degree AV block developed, and a temporary pacemaker was put in place. She subsequently developed dyspnoea with fluid retention and cardiomegaly on chest radiograph. She improved with diuretics. On the seventh hospital day, during ambulation, she suddenly developed chest pain and increased dyspnoea. An acute pulmonary embolism was suspected and intravenous heparin was started. The diagnosis of pulmonary embolism was confirmed by a ventilation/perfusion scan as well as arterial blood gas measurements. One hour later, she became unresponsive and resuscitation efforts were unsuccessful.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": true
+  },
+  {
+    "id": "S14",
+    "number": 14,
+    "narrative": "A 78-year-old female with a temperature of 102.6° F was admitted to the hospital from a nursing home. She first became a resident of the nursing home 2 years earlier following a cerebrovascular accident, which left her with a residual left hemiparesis. Over the next year, she became increasingly dependent on others to help with her activities of daily living, eventually requiring an in-dwelling bladder catheter 6 months before the current admission. For the 3 days prior to admission, she was noted to have lost her appetite and to have become increasingly withdrawn. On admission to the hospital her leukocyte count was 19,700, she had pyuria, and gram-negative rods were seen on a gram stain of urine. Ampicillin and gentamicin were administered intravenously. On the third hospital day, admission blood cultures turned positive for Pseudomonas aeruginosa, which was resistant to ampicillin and gentamicin. Antibiotic therapy was changed to ticarcillin clavulanate , to which the organism was sensitive. Despite the antibiotics and intravenous fluid support, the pa- tient’s fever persisted. On the fourth hospital day, she became hypotensive and died.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": true
+  },
+  {
+    "id": "S15",
+    "number": 15,
+    "narrative": "A 1,480-gram male infant was born at 32-weeks gestation to a 20-year-old primiparous woman. Newborn screening found elevated levels of immunoreactive trypsinogen in the blood. The infant developed respiratory dis- tress syndrome and required mechanical ventilation for 7 days. Despite receiving adequate calories for growth, the infant gained weight poorly and had persistent diarrhoea. Steatorrhea was confirmed upon microscopic examination. Results from a sweat chloride test given on the 21st day after birth were negative, but the patient had an elevated sweat chloride con- centration of 85 millimoles per liter when the test was repeated at 35 days of age. On the 37th day after birth, the infant became lethargic and was noted to be oedematous. Escherichia coli was cultured from the infant’s cerebral spinal fluid, total serum proteins were reported to be low, and clotting studies were prolonged. The infant died at 45 days of age despite appropriate life-saving efforts. Gross autopsy confirmed the clinical impression of cystic fibrosis.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": true
+  },
+  {
+    "id": "S16",
+    "number": 16,
+    "narrative": "A 30-year-old, gravida-six, para-five, with a history of gestational hyper-tension, reported to the emergency room at 36 weeks gestation with com- plaints of abdominal cramping and light vaginal bleeding during the past 12 hours. At time of first assessment, foetal heart tones were detected. The uterus was tense, irritable, and tender. The mother was hypotensive with tachycardia. A presumptive diagnosis of abruptio placenta was made, and an emergency caesarean section was performed under general anaesthesia. The baby was stillborn. The mother continued to bleed from her uterus and phlebotomy sites and went into profound shock secondary to disseminated intravascular coagulation. Despite administration of blood and clot- ting factors, intravascular pressure could not be maintained, and the mother died on the operating table. Maternal autopsy confirmed the clinical diagnosis.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": true
+  },
+  {
+    "id": "S17",
+    "number": 17,
+    "narrative": "A 102-year-old female was brought to the hospital because her word combinations were not comprehensible. However, at admission, her sentences were lucid. She was placed on blood anticoagulants. She had a history of arthritis, hypertension, blocked arteries, coronary thrombosis (25 years before), stroke (10 years before), periodic TIAs (8-year period), and congestive heart failure (hospitalized 6 years before). On the fourth day in the hospital, a colonoscopy indicated internal bleeding, so the anticoagulant was discontinued. She was released from the hospital after 7 days. After discharge, language and motor skills were impaired although functioning was better earlier in the day; moreover, her leg coloration started changing. After a week at home, the woman was re-admitted to the hospital following a spell of vomiting. Vascular imaging indicated that circulation was blocked at the groin, there was no improvement in language, ability to eat and keep food down deteriorated, and heart rate periodically was arrhythmic with periods of third-degree heart block. After a week of hospitalization, she was sent home under hospice care and died 2 days later. Her attending physician completed the death certificate.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": true
+  },
+  {
+    "id": "S18",
+    "number": 18,
+    "narrative": "A 34-year-old male was admitted to the hospital with severe shortness of breath. He had a 9-month history of unintentional weight loss, night sweats, and diarrhoea. The patient had no history of any medical condition that would cause immunodeficiency. An Elisa test and confirmatory West- ern Blot test for human immunodeficiency virus (HIV) were positive. T-lymphocyte tests indicated a low T helper -suppressor ratio. A lung biopsy was positive for pneumocystis carinii pneumonia (PCP), indicating a diagnosis of acquired immunodeficiency syndrome (AIDS). The patient’s pneumonia responded to pentamidine therapy, and the patient was discharged. The patient had two additional admissions for PCP. Seventeen months after the patient was first discovered to be HIV positive, he again developed PCP but did not respond to therapy. He died 2 weeks later.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": true
+  },
+  {
+    "id": "S19",
+    "number": 19,
+    "narrative": "On May 15, 2003, a 49-year-old male gardener was brought to the emergency room with an infected wound of the right foot. Because of repeated convulsions, he was admitted to the hospital. The examining physician made a diagnosis of tetanus. His wife reported that while employed as a gardener on April 1, 2003, he stepped on a garden rake. He treated the laceration himself. Patient died of asphyxia during convulsions May 16, 2003. Autopsy supported diagnosis.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": false
+  },
+  {
+    "id": "S20",
+    "number": 20,
+    "narrative": "On May 10, 2003, a 25-year-old male was admitted to the hospital with a gunshot wound to the head. He had been at home in his study cleaning his gun when the shot was fired at approximately 9 p.m. He died at 11:05 p.m. on the same day. Autopsy showed contact gunshot wound of right temple.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": false
+  },
+  {
+    "id": "S21",
+    "number": 21,
+    "narrative": "On January 12, 2003, a 2-year-old female was admitted to the hospital with salicylate poisoning. She had been under treatment for tonsillitis and upper respiratory infection. She had been given multiple excessive doses of aspirin (adult rather than baby tablets). She died on January 13, 2003.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": false
+  },
+  {
+    "id": "S22",
+    "number": 22,
+    "narrative": "On May 5, 2003, a 54-year-old male was found dead from carbon monoxide poisoning in an automobile in a closed garage. A hose, running into the passenger compartment of the car, was attached to the exhaust pipe. The deceased had been despondent for some time as a result of a malignancy, and letters found in the car indicated intent to take his own life.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": false
+  },
+  {
+    "id": "S23",
+    "number": 23,
+    "narrative": "A 32-year-old male was admitted to the hospital on August 23, 2003, with several stab wounds. He had been found in an alley off Smith Street at 4 a.m. by the police. No weapon was discovered. He died at 6:30 p.m. on the same day. Autopsy revealed that the intrathoracic hemorrhage due to the stab wound of the lung could be considered fatal.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": false
+  },
+  {
+    "id": "S24",
+    "number": 24,
+    "narrative": "On July 26, 2003, a 32-year-old male was found along a roadway lying in some brambles. He was thrashing about and grinding his teeth. His body temperature was 103° F. He steadily went into full arrest and later died in the emergency room at a medical center . He had a history of cocaine and cannabis abuse. Toxicological examination revealed that he died of co­caine toxicity.",
+    "answer_note": "",
+    "answer_has_image": true,
+    "in_scope": false
+  }
+]

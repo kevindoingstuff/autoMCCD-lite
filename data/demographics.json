@@ -1,0 +1,267 @@
+{
+  "S01": {
+    "age_iso": "P49Y",
+    "age_unit": "years",
+    "age_value": 49,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 2
+    },
+    "verified": true
+  },
+  "S02": {
+    "age_iso": "P64Y",
+    "age_unit": "years",
+    "age_value": 64,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 4
+    },
+    "verified": true
+  },
+  "S03": {
+    "age_iso": "P48Y",
+    "age_unit": "years",
+    "age_value": 48,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 3
+    },
+    "verified": true
+  },
+  "S04": {
+    "age_iso": "P75Y",
+    "age_unit": "years",
+    "age_value": 75,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 3
+    },
+    "verified": true
+  },
+  "S05": {
+    "age_iso": "P74Y",
+    "age_unit": "years",
+    "age_value": 74,
+    "sex": "female",
+    "sex_evidence": {
+      "female_terms": 7,
+      "male_terms": 0
+    },
+    "verified": true
+  },
+  "S06": {
+    "age_iso": "P75Y",
+    "age_unit": "years",
+    "age_value": 75,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 10
+    },
+    "verified": true
+  },
+  "S07": {
+    "age_iso": "P75Y",
+    "age_unit": "years",
+    "age_value": 75,
+    "sex": "female",
+    "sex_evidence": {
+      "female_terms": 4,
+      "male_terms": 0
+    },
+    "verified": true
+  },
+  "S08": {
+    "age_iso": "P53Y",
+    "age_unit": "years",
+    "age_value": 53,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 5
+    },
+    "verified": true
+  },
+  "S09": {
+    "age_iso": "P36Y",
+    "age_unit": "years",
+    "age_value": 36,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 3
+    },
+    "verified": true
+  },
+  "S10": {
+    "age_iso": "P3Y",
+    "age_unit": "years",
+    "age_value": 3,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 4
+    },
+    "verified": true
+  },
+  "S11": {
+    "age_iso": "P54Y",
+    "age_unit": "years",
+    "age_value": 54,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 2
+    },
+    "verified": true
+  },
+  "S12": {
+    "age_iso": "P68Y",
+    "age_unit": "years",
+    "age_value": 68,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 2
+    },
+    "verified": true
+  },
+  "S13": {
+    "age_iso": "P68Y",
+    "age_unit": "years",
+    "age_value": 68,
+    "sex": "female",
+    "sex_evidence": {
+      "female_terms": 3,
+      "male_terms": 0
+    },
+    "verified": true
+  },
+  "S14": {
+    "age_iso": "P78Y",
+    "age_unit": "years",
+    "age_value": 78,
+    "sex": "female",
+    "sex_evidence": {
+      "female_terms": 7,
+      "male_terms": 0
+    },
+    "verified": true
+  },
+  "S15": {
+    "age_iso": "P45D",
+    "age_unit": "days",
+    "age_value": 45,
+    "correction": "regex took the mother (20y, female); decedent is the 1,480g male infant who died at 45 days of age",
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 2,
+      "male_terms": 1
+    },
+    "verified": true
+  },
+  "S16": {
+    "age_iso": "P30Y",
+    "age_unit": "years",
+    "age_value": 30,
+    "sex": "female",
+    "sex_evidence": {
+      "female_terms": 4,
+      "male_terms": 0
+    },
+    "verified": true
+  },
+  "S17": {
+    "age_iso": "P102Y",
+    "age_unit": "years",
+    "age_value": 102,
+    "sex": "female",
+    "sex_evidence": {
+      "female_terms": 6,
+      "male_terms": 0
+    },
+    "verified": true
+  },
+  "S18": {
+    "age_iso": "P34Y",
+    "age_unit": "years",
+    "age_value": 34,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 2
+    },
+    "verified": true
+  },
+  "S19": {
+    "age_iso": "P49Y",
+    "age_unit": "years",
+    "age_value": 49,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 5
+    },
+    "verified": true
+  },
+  "S20": {
+    "age_iso": "P25Y",
+    "age_unit": "years",
+    "age_value": 25,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 5
+    },
+    "verified": true
+  },
+  "S21": {
+    "age_iso": "P2Y",
+    "age_unit": "years",
+    "age_value": 2,
+    "sex": "female",
+    "sex_evidence": {
+      "female_terms": 4,
+      "male_terms": 0
+    },
+    "verified": true
+  },
+  "S22": {
+    "age_iso": "P54Y",
+    "age_unit": "years",
+    "age_value": 54,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 2
+    },
+    "verified": true
+  },
+  "S23": {
+    "age_iso": "P32Y",
+    "age_unit": "years",
+    "age_value": 32,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 3
+    },
+    "verified": true
+  },
+  "S24": {
+    "age_iso": "P32Y",
+    "age_unit": "years",
+    "age_value": 32,
+    "sex": "male",
+    "sex_evidence": {
+      "female_terms": 0,
+      "male_terms": 7
+    },
+    "verified": true
+  }
+}

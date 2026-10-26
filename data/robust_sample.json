@@ -1,0 +1,976 @@
+{
+  "corpus_version": "r5",
+  "rule": "2 per variant type (parents S01 and S02), 2 handwritten, 2 PMC; scored on behaviour only",
+  "n": 34,
+  "cases": [
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-clean",
+      "parent": "S01",
+      "variant": "clean",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "clean"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-clean",
+      "parent": "S02",
+      "variant": "clean",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "clean"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-ocr",
+      "parent": "S01",
+      "variant": "ocr",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "ocr"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 49 years was admitted to hospital with a history of fever, \ndisorientation and drowsiness f0r the last 2 day5.Focal neurclogical fi-\nndin9s were identified on phy5ical examination ancl a provisional diagno-\nsis of mening1tis was made. A diagnostic lumber puncture was \nperformed for CSF examination. Staphyloeoccus aureus organism w es isolafe-\nd from CSF arid thc provisional diagnosis was confirmed as \nStaphyloc0ccu5 aurcus meningitis. Despite IV antibiotic \nadmiriistration his condition worsened and on 3rd ofadmission \nblood cultureswere also positive for Sfaphylococcu5 aureusand the pat-\nient expired on4th doy of admission due to septic shock. \nHe was a diagnosed case of type II diabetes forthe last \n1O years and has had a renal transplant 6 years back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-ocr",
+      "parent": "S02",
+      "variant": "ocr",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "ocr"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 ycars admittcd to hospital with an arteriosclerotic \ncerebral infarcticn. He was transferred to rehabllifation \ntwo months later where he developed hypostatic pneumonia. In\nICU sputum cultured Klebsiella pneumoniae and the patient \nd1ed 2 days after adm1ss1on to the ICU. He was also addicted \nto alcohol for the pa5t 20 years and on regular meclication for \nIscheemicheart diseese for thc last 10 vcar5."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-shorthand",
+      "parent": "S01",
+      "variant": "shorthand",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "shorthand"
+      ],
+      "fields": {
+        "case_narrative": "M aged 49 yrs adm c h/o fever, disorientation & drowsiness for last 2 days. Focal neurological findings identified on physical examination & provisional Dx of meningitis made. diagnostic lumber puncture performed for CSF examination. Staphylococcus aureus organism isolated from CSF & provisional Dx confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened & on 3rd of admission blood cultures also positive for Staphylococcus aureus & pt expired on 4th day of admission due to septic shock. He Dx case of type II DM for last 10 yrs & has had renal transplant 6 yrs back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-shorthand",
+      "parent": "S02",
+      "variant": "shorthand",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "shorthand"
+      ],
+      "fields": {
+        "case_narrative": "M aged 64 yrs adm c arteriosclerotic CVA. He transferred to rehabilitation two mths later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae & pt died 2 days after admission to ICU. He also addicted to alcohol for past 20 yrs & on regular medication for IHD for last 10 yrs."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-combo",
+      "parent": "S01",
+      "variant": "combo",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "combo"
+      ],
+      "fields": {
+        "case_narrative": "M aged 49 yrs adm c h/o fever, disorientation & drowsiness for \nlast 2 days. Focal neurological findings iclentified on physical examinat-\nion & provisional Dx of meuingitis rnade. diagnostic lvmb cr puncture \nperformed for CSF examination. Stephyloccccus aureus organism \ni5olated from CSF & prcvisional Dx conflrmed as Staphylococcus aureu5 menin-\ng1tis. Despite IV antibiotic administration hi5 condition worsened & \non 3rd of admission blood cultures also positive for 5taphylococcus aureus-\n & pf expired on 4th day of admissiori due to septic shock. He Dx ca5e \nof type II DM for last 10 yrs & has had renal transplaut \n6 yrs back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-combo",
+      "parent": "S02",
+      "variant": "combo",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "combo"
+      ],
+      "fields": {
+        "case_narrative": "M aged 64 yrs adm c arteriosclerotic CVA. He transferred torehabilitation two mths \nlater where he developed hypostaticpneumonia, In ICU sputum \ncultured Klebsiella pneumoniae & pf died 2 days after admission \nto ICU. He also addicted to alcohol for past 20 yrs & on reguIar \nmedication for IHD for last 10 yrs."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-fields",
+      "parent": "S01",
+      "variant": "fields",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "fields"
+      ],
+      "fields": {
+        "past_medical_history": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back.",
+        "progress_notes": "Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis.",
+        "cause_of_death_information": "Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-fields",
+      "parent": "S02",
+      "variant": "fields",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "fields"
+      ],
+      "fields": {
+        "presenting_complaint_hpi": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction.",
+        "progress_notes": "He was transferred to rehabilitation two months later where he developed hypostatic pneumonia.",
+        "cause_of_death_information": "In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU.",
+        "treatment_medications": "He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-trunc_tail",
+      "parent": "S01",
+      "variant": "trunc_tail",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "trunc_tail"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was"
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-trunc_tail",
+      "parent": "S02",
+      "variant": "trunc_tail",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "trunc_tail"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In"
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-trunc_head",
+      "parent": "S01",
+      "variant": "trunc_head",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "trunc_head"
+      ],
+      "fields": {
+        "case_narrative": "was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-trunc_head",
+      "parent": "S02",
+      "variant": "trunc_head",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "trunc_head"
+      ],
+      "fields": {
+        "case_narrative": "pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": "No medical records were found. This is the family's account, recorded by the registrar.",
+      "id": "S01-lay",
+      "parent": "S01",
+      "variant": "lay",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "lay"
+      ],
+      "fields": {
+        "cause_of_death_information": "My husband was 49. He had sugar for about ten years, and six years ago he got a new kidney from a donor. For two days he had fever and became drowsy and confused, not knowing where he was. We took him to hospital eke. The doctors did a test with a needle in his back and told us it was an infection in the brain covering. They gave him drips of medicine, but he kept getting worse. On the third day they said the infection had gone into his blood. On the fourth day he died. The doctors said it was an infection in the blood that made his body fail."
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": "No medical records were found. This is the family's account, recorded by the registrar.",
+      "id": "S02-lay",
+      "parent": "S02",
+      "variant": "lay",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "lay"
+      ],
+      "fields": {
+        "cause_of_death_information": "My father was 64. He used to drink arrack every day for about twenty years, and for ten years he took tablets for his heart. One day he had a stroke and we rushed him to hospital. He stayed there nearly two months, then they moved him to another place for exercises and care. He was mostly lying in bed there. After some time he got a chest infection, with fever and breathing trouble. They took him to the ICU, and the doctors said it was an infection in the chest. He died two days later. Thaththa never came home again."
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-typos",
+      "parent": "S01",
+      "variant": "typos",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "typos"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 49 years was admited to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of menengitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus menengitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetis for the last 10 years and has had a renal transplant 6 years back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": [],
+      "forbidden_terms": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-typos",
+      "parent": "S02",
+      "variant": "typos",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "typos"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 years admited to hospital with an arteriosclerotic cerebral infraction. He was transferred to rehabilitation two months later where he developed hypostatic neumonia. In ICU sputum cultured Klebsiella neumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for ischemik heart disease for the last 10 years."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": [],
+      "forbidden_terms": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-negation",
+      "parent": "S01",
+      "variant": "negation",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "negation"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Dengue NS1 and IgM negative. CT brain - no evidence of stroke or haemorrhage. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": [
+        "negated_term"
+      ],
+      "forbidden_terms": [
+        "dengue",
+        "stroke",
+        "cerebral infarction",
+        "intracerebral haemorrhage"
+      ]
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-negation",
+      "parent": "S02",
+      "variant": "negation",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "negation"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. ? Malaria - smear negative, excluded. No h/o TB. Sputum AFB negative. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": [
+        "negated_term"
+      ],
+      "forbidden_terms": [
+        "malaria",
+        "tuberculosis"
+      ]
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-old_injury",
+      "parent": "S01",
+      "variant": "old_injury",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "old_injury"
+      ],
+      "fields": {
+        "case_narrative": "Past history: dog bite to the right hand in 2009, anti-rabies vaccine completed, healed. A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": [],
+      "forbidden_terms": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-old_injury",
+      "parent": "S02",
+      "variant": "old_injury",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "old_injury"
+      ],
+      "fields": {
+        "case_narrative": "Remote history: road traffic accident 1998, laceration to scalp sutured, no sequelae. A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": [],
+      "forbidden_terms": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-form",
+      "parent": "S01",
+      "variant": "form",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "form"
+      ],
+      "fields": {
+        "progress_notes": "BED HEAD TICKET  No: 1284/23   Ward: 18   Unit: Medical\nName: ______________  Address: ______________  Tel (next of kin): 0761243033\nReligion: [ ] B [ ] H [ ] I [ ] C   Civil status: ____\nAllergies: NKDA   Blood group: ____\n\nHISTORY / NOTES:\nA male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back.",
+        "diagnoses": "Diagnosis on discharge: ________________________",
+        "dates_timeline": "Date of admission: __/__/____   Date of discharge/death: __/__/____"
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": [],
+      "forbidden_terms": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-form",
+      "parent": "S02",
+      "variant": "form",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "form"
+      ],
+      "fields": {
+        "progress_notes": "BED HEAD TICKET  No: 7700/20   Ward: 10   Unit: Medical\nName: ______________  Address: ______________  Tel (next of kin): 0769425806\nReligion: [ ] B [ ] H [ ] I [ ] C   Civil status: ____\nAllergies: NKDA   Blood group: ____\n\nHISTORY / NOTES:\nA male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years.",
+        "diagnoses": "Diagnosis on discharge: ________________________",
+        "dates_timeline": "Date of admission: __/__/____   Date of discharge/death: __/__/____"
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": [],
+      "forbidden_terms": []
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-ocr_heavy",
+      "parent": "S01",
+      "variant": "ocr_heavy",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "ocr_heavy"
+      ],
+      "fields": {
+        "case_narrative": "A malc ogccl 49 year5 was admitfed to hospital with a liistory cf fever, disor1ent-\nation and drowsiness for the last 2 days. Focal nenrologicol \nfindings wcre identified on physicaI examlnation ond a provlsional \ndiagnosi5 of mening1tis wos nnade, A diagnostic Iurnber puricture \nwas performed f orCSF examination  Sfaphylococcus aureus organi5m was i-\nsolated from C5F and thc provisional diagnosis was confirmed \nas Sfaphylococcusaureus meningifis. De5pite IV antibiotic admini5trotion \nhis condltion worsened and on 3rd of edrnissiori bloocl culfurcs were also \nposifive for Staphylococcus oureus and the patient ex pired on 4th \nclay of edmission clne toseptic shock. He wos a diagnosed case of type II \ndiabetes for the le5t 10 year5 and has had a renal transplant 6 \nyearsback."
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": [
+        "auto"
+      ],
+      "intruder": null
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-ocr_heavy",
+      "parent": "S02",
+      "variant": "ocr_heavy",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "ocr_heavy"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 years admlttedto hcspital with an arteriosclerotic \nccrebral iufarction. H e was transferred to rehabilltafion fwo\nmonths later where he cleveloped hypostaticpnevmonia. Iri ICU sputum cultur-\ncdKlebsiella pneumoniae ancl the potient died 2 days oftcr aclmission to \nthe ICU. He was oIso addicted to alcohol for the pest 20 years and on re-\ngular medicatioriforIschacmic heart clisea5c for the last 10 year s"
+      },
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": [
+        "auto"
+      ],
+      "intruder": null
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-wrong_patient",
+      "parent": "S01",
+      "variant": "wrong_patient",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "wrong_patient"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back.\n\n[page 2]\nA 75-year-old female had a 15-year history of non-insulin-dependent diabetes mellitus (NIDDM), a 13-year history of mild hypertension treated with thiazide diuretics, and an uncomplicated myocardial infarction 6 years prior to the present illness. She was found disoriented in her apartment and brought to the hospital. On admission she was noted to be unresponsive, without focal neurologic signs, and severely dehydrated with a blood pressure of 90/60. Initial laboratory tests disclosed severe hyperglycaemia, hyperosmolarity , azotaemia, and mild ketosis without acidosis. A diagnosis of hyperosmolar non - ketotic coma was made. The patient was vigorously treated with fluids, electrolytes, insulin, and broad-spectrum antibiotics, although no source for infection was documented. Within 72 hours, the patient’s hyperosmolar, hyperglycaemic state was resolved. However, she remained anuric with progressive azotaemia . Attempts at renal dialysis were unsuccessful, and the patient died on the 8th hospital day in severe acute renal failure."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": [
+        "auto"
+      ],
+      "intruder": "S07"
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-wrong_patient",
+      "parent": "S02",
+      "variant": "wrong_patient",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "wrong_patient"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years.\n\n[page 2]\nA 75-year-old female had a 15-year history of non-insulin-dependent diabetes mellitus (NIDDM), a 13-year history of mild hypertension treated with thiazide diuretics, and an uncomplicated myocardial infarction 6 years prior to the present illness. She was found disoriented in her apartment and brought to the hospital. On admission she was noted to be unresponsive, without focal neurologic signs, and severely dehydrated with a blood pressure of 90/60. Initial laboratory tests disclosed severe hyperglycaemia, hyperosmolarity , azotaemia, and mild ketosis without acidosis. A diagnosis of hyperosmolar non - ketotic coma was made. The patient was vigorously treated with fluids, electrolytes, insulin, and broad-spectrum antibiotics, although no source for infection was documented. Within 72 hours, the patient’s hyperosmolar, hyperglycaemic state was resolved. However, she remained anuric with progressive azotaemia . Attempts at renal dialysis were unsuccessful, and the patient died on the 8th hospital day in severe acute renal failure."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": [
+        "auto"
+      ],
+      "intruder": "S07"
+    },
+    {
+      "sex": "male",
+      "age_iso": "P49Y",
+      "context": null,
+      "id": "S01-dup_pages",
+      "parent": "S01",
+      "variant": "dup_pages",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "dup_pages"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back.\n\n[page 2]\nA male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Septic shock",
+        "Staphylococcus aureus sepsis",
+        "Staphylococcus aureus meningitis"
+      ],
+      "ref_ucod": "Staphylococcus aureus meningitis",
+      "acceptable_ucod": [
+        "Staphylococcus aureus meningitis"
+      ],
+      "must_not": [],
+      "intruder": null
+    },
+    {
+      "sex": "male",
+      "age_iso": "P64Y",
+      "context": null,
+      "id": "S02-dup_pages",
+      "parent": "S02",
+      "variant": "dup_pages",
+      "source": "vs_scenarios",
+      "tags": [
+        "stress",
+        "dup_pages"
+      ],
+      "fields": {
+        "case_narrative": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years.\n\n[page 2]\nA male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      },
+      "expected": "certifiable",
+      "gold_chain": [
+        "Klebsiella pneumonia",
+        "Cerebral infarction",
+        "Arteriosclerosis"
+      ],
+      "ref_ucod": "Arteriosclerosis",
+      "acceptable_ucod": [
+        "Arteriosclerosis"
+      ],
+      "must_not": [],
+      "intruder": null
+    },
+    {
+      "id": "H01",
+      "parent": "H01",
+      "variant": "handwritten",
+      "source": "handwritten",
+      "tags": [
+        "stress",
+        "chronic_only",
+        "clinic_book",
+        "home_death"
+      ],
+      "fields": {
+        "past_medical_history": "Medical Clinic BH Kegalle. k/c/o DM 15 yrs, HTN 8 yrs.",
+        "progress_notes": "12/01 FBS 186. BP 150/90. On Metformin 500mg bd, Gliclazide 80mg bd, Losartan 50mg mane, Atorvastatin 20mg nocte. Adv diet. Review 2/12.\n15/03 c/o burning feet. FBS 201. BP 140/90. Cont same. Add vit B. Review 2/12.\n20/05 c/o occasional chest tightness on walking. ECG - ? old changes. Refer cardiology clinic. Cont same."
+      },
+      "context": "Death occurred at home. This clinic book is the only medical record available. Family report he became unwell at night and died before reaching hospital.",
+      "sex": "male",
+      "age_iso": "P63Y",
+      "expected": "certifiable_or_insufficient",
+      "gold_chain": null,
+      "ref_ucod": null,
+      "acceptable_ucod": [
+        "Type 2 diabetes mellitus",
+        "Ischaemic heart disease",
+        "Hypertension"
+      ],
+      "must_not": [
+        "auto"
+      ],
+      "forbidden_terms": []
+    },
+    {
+      "id": "H02",
+      "parent": "H02",
+      "variant": "handwritten",
+      "source": "handwritten",
+      "tags": [
+        "stress",
+        "brought_dead",
+        "etu",
+        "shorthand"
+      ],
+      "fields": {
+        "presenting_complaint_hpi": "ETU BH Matale 0640hrs. 68M BROUGHT DEAD by relatives. Hx from son: c/o chest pain & sweating ~2hrs at home, then collapsed.",
+        "past_medical_history": "k/c/o IHD 5 yrs, on aspirin 75mg, ISMN 30mg.",
+        "clinical_examination": "No pulse. No resp effort. Pupils fixed & dilated.",
+        "imaging_investigations": "ECG - asystole.",
+        "cause_of_death_information": "Pronounced dead 0650hrs. Inform police for inquest? - discussed with JMO, natural death suspected."
+      },
+      "context": null,
+      "sex": "male",
+      "age_iso": "P68Y",
+      "expected": "certifiable",
+      "gold_chain": null,
+      "ref_ucod": "Ischaemic heart disease",
+      "acceptable_ucod": [
+        "Ischaemic heart disease",
+        "Acute myocardial infarction",
+        "Chronic ischaemic heart disease"
+      ],
+      "must_not": [
+        "auto",
+        "mode_of_dying_1a"
+      ],
+      "forbidden_terms": []
+    },
+    {
+      "id": "PMC3959027_1",
+      "parent": "PMC3959027_1",
+      "variant": "real",
+      "source": "pmc_patients",
+      "tags": [
+        "stress",
+        "external"
+      ],
+      "fields": {
+        "case_narrative": "Mrs. SM, an 80-year-old woman admitted to the surgical unit for a gluteal abscess, was referred for psychiatric evaluation. The referring physician said that the patient believed that her deceased son was still alive. She had two sons and a daughter, who provided the psychiatric history. The deceased son was her favorite, but her relationship with other family members was depleted. When he was in his twenties, he was accused of fraud at his workplace, following which he developed depressive symptoms. At 10 days later he committed suicide by consuming poison, leaving separate notes for his mother and sister. When taken to the morgue, the patient claimed that he was not dead. The suicide note was not shown to her.\\nOver the next few months, the patient displayed behaviors indicating that she believed her son was alive. She maintained his room and belongings exactly as before. She often rushed up to the terrace at the sound of airplanes and would say that her son was returning home. The above behaviors persisted for the next 35 years. Her self-care, sleep and appetite were unchanged. Her daughter reported that during the current admission the patient had been looking for her son among the medical interns.\\nPatient was an emotionally restrained person who was not demonstrative about her affection for her children. There was a family history of suicide in her paternal uncle, sister and her son as described above and depression in her grandson.\\nOn mental status examination, her higher mental functions were intact. When asked about her son she said she could not talk about him, but requested us to arrange for his return.\\nBased on the history and examination, we considered differential diagnoses of delusional disorder and atypical bereavement. The family refused any psychiatric intervention for her. She passed away 2 months later. Her daughter subsequently presented to us with depression."
+      },
+      "context": null,
+      "sex": "female",
+      "age_iso": "P80Y",
+      "expected": "insufficient_information",
+      "gold_chain": [],
+      "ref_ucod": null,
+      "acceptable_ucod": [],
+      "must_not": [
+        "certify",
+        "auto"
+      ],
+      "silver": true
+    },
+    {
+      "id": "PMC6708822_1",
+      "parent": "PMC6708822_1",
+      "variant": "real",
+      "source": "pmc_patients",
+      "tags": [
+        "stress",
+        "external"
+      ],
+      "fields": {
+        "case_narrative": "The patient was a 56-year-old man with a past medical history significant for gout and chronic kidney disease. After eating and drinking wine late at night, he felt discomfort in his right knee, with local redness and swelling, and ingested 12 colchicine tablets (1 mg per tablet, a total of 12 mg; weight 70 kg, 0.17 mg/kg) for pain relief. Approximately 12 hours later, the patient experienced acute abdominal symptoms, including severe abdominal pain, nausea, frequent diarrhea, and vomiting. He attended the local community hospital where he was diagnosed with acute gastroenteritis and admitted to receive infusion therapy. When he came to the emergency department of our hospital, it had been nearly 40 hours after ingesting colchicine, his symptoms had progressed to scleral yellow stain, chest tightness, shortness of breath, and difficulty breathing. Oliguria, peripheral cyanosis, low body temperature (35.9 °C), low blood pressure (77/55 mmHg), and rapid heart rate (113 bpm) were indicative of shock. Emergency blood tests showed a 20.1 × 109/L white blood cell count, 92.6% neutrophils, 162 g/L hemoglobin, 123 × 109/L platelet count, 90.9 seconds activated partial thromboplastin time, and 70932 μg/L fibrinogen equivalent units D-dimer levels. Blood gas analysis indicated severe metabolic acidosis (pH 7.12) and respiratory alkalosis. Whole body computerized tomography scan displayed bilateral lung inflammation with a small amount of pleural effusion, kidney stones, right renal cyst, and cholecystitis. He was diagnosed with colchicine overdose, multiple organ failure, metabolic acidosis, and respiratory alkalosis.\\nWe performed a gastric lavage despite the 40-hour interval since colchicine ingestion, but the patient's condition did not improve. He rapidly progressed to abdominal pain, respiratory insufficiency, circulatory failure, acute liver failure, acute renal failure, and coagulopathy. His creatine kinase levels continued to rise. Considering his acute renal failure and unstable circulation, we treated the patient with continuous renal replacement therapy, norepinephrine, frozen plasma, proton-pump inhibitors, adenosylmethionine, antibiotics, granulocyte colony stimulating factor, and total parenteral nutrition. The patient developed complete hematopoietic inhibition and cardiac damage at 32 hours post-admission (Tables and ). After 60 hours of active treatment, the patient required tracheal intubation for progressive deterioration of respiratory function. Seventy-two hours after admission, the patient's cardiovascular circulatory function deteriorated further, and he was treated with noradrenaline (80 μg/min) and adrenaline (18.67 μg/min) to maintain adequate blood pressure. The patient developed additional comorbidities, including worsening hepatic dysfunction, rhabdomyolysis, and systemic inflammatory response syndrome. His condition continued to deteriorate, and he died approximately 132 hours after admission."
+      },
+      "context": null,
+      "sex": "male",
+      "age_iso": "P56Y",
+      "expected": "out_of_scope",
+      "gold_chain": [],
+      "ref_ucod": null,
+      "acceptable_ucod": [],
+      "must_not": [
+        "certify",
+        "auto"
+      ],
+      "silver": true
+    }
+  ]
+}

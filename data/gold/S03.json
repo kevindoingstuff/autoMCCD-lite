@@ -1,0 +1,31 @@
+{
+  "id": "S03",
+  "gold_source": "text_sequence",
+  "forward_chain": [
+    "Chronic Alcoholism",
+    "Chronic pancreatitis",
+    "Acute exacerbation of chronic pancreatitis"
+  ],
+  "part1": [
+    {
+      "line": "1a",
+      "certified_term": "Acute exacerbation of chronic pancreatitis",
+      "interval": null
+    },
+    {
+      "line": "1b",
+      "certified_term": "Chronic pancreatitis",
+      "interval": null
+    },
+    {
+      "line": "1c",
+      "certified_term": "Chronic Alcoholism",
+      "interval": null
+    }
+  ],
+  "part2": [],
+  "part2_structured": false,
+  "part2_note": "",
+  "has_intervals": false,
+  "chain_truncated": false
+}

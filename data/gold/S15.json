@@ -1,0 +1,38 @@
+{
+  "id": "S15",
+  "gold_source": "certificate_image",
+  "source_image": "slide32_image13.png",
+  "template": "US_NCHS",
+  "transcribed": true,
+  "part1": [
+    {
+      "line": "1a",
+      "certified_term": "Escherichia coli meningitis",
+      "interval": {
+        "value": 7,
+        "unit": "days",
+        "certainty": "documented",
+        "display": "7 days"
+      }
+    },
+    {
+      "line": "1b",
+      "certified_term": "Cystic fibrosis",
+      "interval": {
+        "value": 45,
+        "unit": "days",
+        "certainty": "documented",
+        "display": "45 days"
+      }
+    }
+  ],
+  "part2": [
+    "Prematurity",
+    "Malabsorption",
+    "Respiratory distress syndrome",
+    "Failure to thrive"
+  ],
+  "part2_structured": true,
+  "has_intervals": true,
+  "exceeds_who_lines": false
+}
