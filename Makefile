@@ -1,10 +1,7 @@
-# One stack: api + icd-api + postgres + azurite (docker/compose.yml).
-# The full autoMCCD dev stack uses the same host ports; `make down` there first.
-COMPOSE = docker compose -f docker/compose.yml --env-file .env
-API_PORT ?= $(shell sed -n 's/^API_PORT=//p' .env 2>/dev/null)
-API_URL ?= http://localhost:$(or $(API_PORT),8000)
+# Thin aliases over the `automccd-lite` command (src/automccd_lite/cli.py).
+# The WHO icd-api is the only container; `serve` starts it through Docker.
 
-.PHONY: install lint test up down logs ps smoke eval notebooks docs
+.PHONY: install lint test run smoke eval notebooks docs
 
 install:
 	uv sync --extra dev
@@ -16,28 +13,21 @@ lint:
 test:
 	uv run pytest
 
-up:
-	$(COMPOSE) up -d --build
+# Starts the icd-api container if needed, creates the store, runs the api on 127.0.0.1:8000.
+run:
+	uv run automccd-lite serve
 
-down:
-	$(COMPOSE) down
-
-logs:
-	$(COMPOSE) logs -f --tail=100 api
-
-ps:
-	$(COMPOSE) ps
-
+# Against a running `make run`: readyz -> /certify S01 -> the row -> the file.
 smoke:
-	API_URL=$(API_URL) sh scripts/smoke_test.sh
+	uv run automccd-lite smoke
 
-# The mini harness runs in-process: it needs .env and icd-api published on the host.
-# EVAL_SET=robust make eval
+# The mini harness runs in-process: it needs .env and the icd-api container
+# (`uv run automccd-lite icd start`). EVAL_SET=robust make eval
 EVAL_SET ?= headline
 eval:
-	uv run python -m automccd_lite.eval --set $(EVAL_SET) $(EVAL_ARGS)
+	uv run automccd-lite eval --set $(EVAL_SET) $(EVAL_ARGS)
 
-# Executes both notebooks against the running stack and saves their outputs.
+# Executes both notebooks against a running `make run` and saves their outputs.
 # --inexact keeps the other group installed, so docs and notebooks do not evict each other.
 notebooks:
 	uv sync --inexact --extra dev --group notebooks
