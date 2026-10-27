@@ -1,5 +1,5 @@
 ---
-generated_from: b2aed6e58b774579e8edde78fda2d4af3af32b5e
+generated_from: df3b4722789f32f68be49485dea6282a496e39ae
 generated_at: 2026-10-27
 ---
 
@@ -71,7 +71,7 @@ autoMCCD-lite/
 
 | Module | Purpose | Doc | Generated from |
 |---|---|---|---|
-| automccd_lite | The package turns one clinical record into a WHO Medical Certificate of Cause of Death coded in ICD-11, and tells you whether a human must look at it before it counts. | [automccd_lite.md](automccd_lite.md) | `b2aed6e` |
+| automccd_lite | The package turns one clinical record into a WHO Medical Certificate of Cause of Death coded in ICD-11, and tells you whether a human must look at it before it counts. | [automccd_lite.md](automccd_lite.md) | `df3b472` |
 
 ```{toctree}
 :caption: Modules
