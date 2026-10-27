@@ -21,8 +21,6 @@ autoMCCD-lite/
 │   ├── robust_sample.json         # ~30 cases, 2 per variant type + handwritten/PMC, tagged
 │   ├── records/{S01,S02,S05}.json # POST /certify bodies
 │   └── code_cache.json            # autocode cache, adjudicated flags
-├── docker/compose.yml, docker/Dockerfile
-├── scripts/smoke_test.sh
 ├── src/automccd_lite/
 │   ├── models.py      Record, Draft, DraftValidation, CodedDraft, Route(auto|review), Decision, Certificate
 │   ├── config.py      settings(): YAML by stage + Env
@@ -34,15 +32,16 @@ autoMCCD-lite/
 │   ├── code.py        IcdClient (autocode, doris, codedit), FileCodeCache, code_draft
 │   ├── route.py       route_draft: auto | review + reason codes
 │   ├── certificate.py generate_certificate, coding_summary, versions, as_response
-│   ├── storage.py     BlobStorage (connection string), blob_name with time prefix
-│   ├── db.py          engine from PG*, CertificateRow, create_all, insert_certificate
+│   ├── storage.py     FileStorage: store/certificates/{date}/{time}Z_{record_id}.json
+│   ├── db.py          SQLite engine under store/, CertificateRow, create_all, insert_certificate
 │   ├── pipeline.py    certify_record(record, deps)
 │   ├── api.py         FastAPI: POST /certify, /healthz, /readyz; Deps at startup
+│   ├── cli.py         automccd-lite serve | icd | smoke | eval (the one container, the store, uvicorn)
 │   └── eval.py        mini harness: headline + robust sample
 ├── notebooks/how-to-guide.ipynb, notebooks/mccd_guide.ipynb, notebooks/_helpers.py
 ├── tests/test_validate.py, test_route.py, test_gold.py
 ├── docs/ (docs skill output)
-├── Makefile, pyproject.toml, .env.example, .gitignore, .dockerignore, README.md
+├── Makefile, pyproject.toml, .env.example, .gitignore, README.md
 ```
 
 ## Milestones
@@ -50,7 +49,7 @@ autoMCCD-lite/
 Status 2026-10-27: LM0 to LM5 built, checked and committed. The LM5 check passed: a fresh clone with only `.env` copied in ran `make up` and `make smoke` to `SMOKE OK`; the Sphinx site builds clean; `make notebooks` executes both notebooks against the stack.
 
 ### LM0 — Scaffold
-- Repo, pyproject (`automccd_lite`, deps: fastapi, uvicorn, pydantic, pyyaml, sqlalchemy, psycopg, httpx, openai, azure-storage-blob, jsonschema, python-dotenv; dev: pytest, ruff; groups: notebooks (jupyter, matplotlib, graphviz), docs (sphinx, myst-parser, sphinx-design, sphinx-copybutton, furo)), Makefile, `.env.example`, `.gitignore` (`.env`, `runs/`, `docs/_build/`, `.ipynb_checkpoints/`), `.dockerignore`, README skeleton.
+- Repo, pyproject (`automccd_lite`, deps: fastapi, uvicorn, pydantic, pyyaml, sqlalchemy, httpx, openai, jsonschema, python-dotenv; dev: pytest, ruff; groups: notebooks (jupyter, matplotlib, graphviz), docs (sphinx, myst-parser, sphinx-design, sphinx-copybutton, furo)), Makefile, `.env.example`, `.gitignore` (`.env`, `runs/`, `store/`, `docs/_build/`, `.ipynb_checkpoints/`), README skeleton.
 - Copy prompts, schema, config, data (gold, scenarios, sets, attributions, demographics, 3 records); build `data/robust_sample.json` from the full corpus (2 per variant, tagged `stress`).
 - Check: `uv sync`, `uv run ruff check .` clean; `pytest` collects nothing yet.
 
@@ -59,9 +58,9 @@ Status 2026-10-27: LM0 to LM5 built, checked and committed. The LM5 check passed
 - Tests: `test_validate.py` (full's `tests/unit/core/rules/test_validators.py` ported), `test_route.py` (two-route table).
 - Check: unit tests pass; `certify_record` on S01/S02/S05 against the live model and the icd-api container returns schema-valid certificates with routes and reasons; prompt sha1 == `d051044cd4a12f9a46085b23869a4ed70623719e`.
 
-### LM2 — API, persistence, compose
-- `db.py` (create_all on startup), `storage.py` (Azurite connection string, time-prefixed name), `api.py` (`POST /certify` → certify_one in one transaction; `/readyz` probes postgres, icd-api, blob, model config), `docker/Dockerfile`, `docker/compose.yml` (api 127.0.0.1:8000, icd-api :8082 published, postgres :5433, azurite :10000), `scripts/smoke_test.sh` (readyz → /certify S01 → blob exists → row exists).
-- Check: `make up && make smoke` → SMOKE OK from a clean clone with only `.env` filled.
+### LM2 — API, persistence, the serve command
+- `db.py` (SQLite under `store/`, create_all on startup), `storage.py` (local folder, time-prefixed name), `api.py` (`POST /certify` → certify_one in one transaction; `/readyz` probes icd-api, store, model config), `cli.py` (`serve`: ensure `.env`, start the pinned icd-api container by name, wait for health, create the store, run uvicorn on 127.0.0.1:8000; `icd start|stop|status`; `smoke`: readyz → /certify S01 → the row → the file).
+- Check: `uv run automccd-lite serve`, then `uv run automccd-lite smoke` → SMOKE OK from a clean clone with only `.env` filled and Docker running.
 
 ### LM3 — Mini evaluation harness
 - `eval.py`: loads headline (17) and the robust sample; runs `certify_record` in-process with `FileCodeCache`; prints validator-clean first pass/final, auto share, UCOD exact vs gold (gold coded through the same `code_draft`), behaviour on the robust sample; writes `runs/<set>_<hhmmss>Z/{results.json,summary.md}`; `test_gold.py` (G1–G4).
@@ -69,9 +68,9 @@ Status 2026-10-27: LM0 to LM5 built, checked and committed. The LM5 check passed
 
 ### LM4 — Notebooks
 - `notebooks/_helpers.py`: `render_mccd(cert)` (HTML WHO form), `highlight_spans(record, cert)`, `flow_diagram(cert)` (graphviz, PNG fallback), `charts(results)`.
-- `how-to-guide.ipynb`: setup check (`/readyz`), one record in → certificate out, the four visuals, the stored row and blob, the eval charts.
+- `how-to-guide.ipynb`: setup check (`/readyz`), one record in → certificate out, the four visuals, the stored row and file, the eval charts.
 - `mccd_guide.ipynb`: N3 order with S01 throughout; N4 per-function situations → expected outcomes, each stated before the run; teacher voice, docs-skill prose rules.
-- `make notebooks` executes both in place; check: both run clean against the stack, outputs saved.
+- `make notebooks` executes both in place; check: both run clean against the running api, outputs saved.
 
 ### LM5 — Docs and hand-over
 - Docs skill on the lite package (`/docs automccd_lite` or per-module as the skill detects); README final (10-minute run, eval, notebooks).
