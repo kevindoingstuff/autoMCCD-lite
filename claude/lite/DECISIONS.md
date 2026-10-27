@@ -112,6 +112,11 @@ whose own record is `...\aeras\training_data\images\VitalStrategies\outputs\auto
 | `headline_cases`, `robust_cases`, `load_cases` | `eval.py` | the 17 `<parent>-clean` records built from scenarios + demographics, and the 34 stress cases |
 | `Reference.ucod`, `ucod_match` | `eval.py` | the gold coded through `code_draft`; three match kinds (exact, same_stem, different) instead of full's six |
 | `score`, `summarize`, `report`, `run`, `default_deps`, `must_not_violations`, `norm` | `eval.py` | the harness in one file; `run()` is what the notebook calls in-process |
+| `icd_client()` | `api.py` | the `IcdClient` built from settings, shared by the api and the cli |
+| `db_path()`, `DB_NAME` | `db.py` | `STORE_DIR/certificates.sqlite` |
+| `file_path` (column) | `db.py` | the certificate JSON path relative to `STORE_DIR`, in the `certificates` row |
+| `CERTIFICATES_DIR` | `storage.py` | the `certificates/` folder under `STORE_DIR` |
+| `ICD_WAIT_S` | `cli.py` | how long `serve` waits for the container to answer (240 s) |
 | `make run` | Makefile | alias of `uv run automccd-lite serve` |
 | `make notebooks`, `make docs` use `uv sync --inexact` | Makefile | the two groups do not evict each other |
 | `notebooks/_helpers.py`: `load_record`, `load_gold`, `show_json`, `render_mccd`, `highlight_spans`, `flow_diagram`, `charts`, `timings_chart`, `reason_table` | notebooks | display only; `render_mccd` draws the WHO form with the ICD code per line, `highlight_spans` uses V1's own folding so what it highlights is what V1 accepted, `flow_diagram` needs `dot` and falls back to text |
