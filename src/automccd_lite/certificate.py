@@ -1,13 +1,13 @@
 """generate_certificate: the Certificate, and where it goes.
 
 Builds the response object from everything the stages produced. When a
-storage and a store are passed it also writes the JSON to Blob and inserts
-the certificates row; the eval passes neither and only builds.
+storage and a store are passed it also writes the JSON file and inserts the
+certificates row; the eval passes neither and only builds.
 """
 
 from __future__ import annotations
 
-from typing import Any, Protocol
+from typing import TYPE_CHECKING, Any
 
 from automccd_lite import __version__
 from automccd_lite.config import settings
@@ -25,13 +25,9 @@ from automccd_lite.models import (
 )
 from automccd_lite.prompt import system_prompt
 
-
-class Storage(Protocol):
-    def put_certificate(self, certificate: Certificate) -> str: ...
-
-
-class CertificateStore(Protocol):
-    def insert_certificate(self, certificate: Certificate, blob_path: str | None) -> None: ...
+if TYPE_CHECKING:
+    from automccd_lite.db import SqliteCertificateStore
+    from automccd_lite.storage import FileStorage
 
 
 def coding_summary(coded: CodedDraft | None) -> CodingSummary | None:
@@ -72,8 +68,8 @@ def generate_certificate(
     decision: Decision,
     usage: Usage,
     timings_ms: dict[str, int],
-    storage: Storage | None = None,
-    store: CertificateStore | None = None,
+    storage: FileStorage | None = None,
+    store: SqliteCertificateStore | None = None,
 ) -> Certificate:
     status: DraftStatus = draft.status
     cert = Certificate(
@@ -90,11 +86,11 @@ def generate_certificate(
         coded=coded,
         icd_error=icd_error,
     )
-    blob_path: str | None = None
+    file_path: str | None = None
     if storage is not None:
-        blob_path = storage.put_certificate(cert)  # Blob first; the row records its path
+        file_path = storage.put_certificate(cert)  # the file first; the row records its path
     if store is not None:
-        store.insert_certificate(cert, blob_path)
+        store.insert_certificate(cert, file_path)
     return cert
 
 

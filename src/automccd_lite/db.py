@@ -1,9 +1,9 @@
-"""Postgres: the certificates table, one provenance row per certified record.
+"""The certificates table: one provenance row per certified record, in a
+SQLite file under the store folder (`STORE_DIR/certificates.sqlite`).
 
-The connection comes from the libpq environment (PGHOST, PGPORT, PGDATABASE,
-PGUSER, PGPASSWORD), which psycopg reads when the URL names no host, so no
-secret is built into a string this package logs. The table is created at
-startup with `create_all`; there are no migrations.
+The table is created at startup with `create_all`; there are no migrations.
+SQLAlchemy's JSON type keeps the row shape the same as a Postgres JSONB
+table would, so the same model works against Postgres later.
 """
 
 from __future__ import annotations
@@ -12,15 +12,20 @@ from collections.abc import Iterator
 from contextlib import contextmanager
 from datetime import datetime
 from functools import lru_cache
+from pathlib import Path
 from typing import Any
 
-from sqlalchemy import DateTime, Engine, Integer, String, create_engine, func
-from sqlalchemy.dialects.postgresql import JSONB
+from sqlalchemy import JSON, DateTime, Engine, Integer, String, create_engine, func
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
+from automccd_lite.config import settings
 from automccd_lite.models import Certificate
 
-URL = "postgresql+psycopg://"
+DB_NAME = "certificates.sqlite"
+
+
+def db_path() -> Path:
+    return settings().env.store_dir / DB_NAME
 
 
 class Base(DeclarativeBase):
@@ -36,21 +41,23 @@ class CertificateRow(Base):
         DateTime(timezone=True), nullable=False, server_default=func.now()
     )
     route: Mapped[str] = mapped_column(String(16), nullable=False)
-    reasons: Mapped[list[str]] = mapped_column(JSONB, nullable=False)
+    reasons: Mapped[list[str]] = mapped_column(JSON, nullable=False)
     draft_status: Mapped[str] = mapped_column(String(16), nullable=False)
-    versions: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
-    certificate: Mapped[dict[str, Any] | None] = mapped_column(JSONB)  # the MCCD; PHI
-    validation: Mapped[dict[str, Any] | None] = mapped_column(JSONB)  # rules, revisions; PHI
-    coding: Mapped[dict[str, Any] | None] = mapped_column(JSONB)  # autocode, DORIS, CoDEdit
+    versions: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    certificate: Mapped[dict[str, Any] | None] = mapped_column(JSON)  # the MCCD; PHI
+    validation: Mapped[dict[str, Any] | None] = mapped_column(JSON)  # rules, revisions; PHI
+    coding: Mapped[dict[str, Any] | None] = mapped_column(JSON)  # autocode, DORIS, CoDEdit
     icd_error: Mapped[str | None] = mapped_column(String(32))
-    usage: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
-    timings_ms: Mapped[dict[str, Any]] = mapped_column(JSONB, nullable=False)
-    blob_path: Mapped[str | None] = mapped_column(String(256))
+    usage: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    timings_ms: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    file_path: Mapped[str | None] = mapped_column(String(256))  # the JSON copy, under STORE_DIR
 
 
 @lru_cache(maxsize=1)
 def engine() -> Engine:
-    return create_engine(URL, pool_pre_ping=True, future=True)
+    path = db_path()
+    path.parent.mkdir(parents=True, exist_ok=True)
+    return create_engine(f"sqlite:///{path.as_posix()}", future=True)
 
 
 @lru_cache(maxsize=1)
@@ -76,11 +83,11 @@ def create_all() -> None:
     Base.metadata.create_all(engine())
 
 
-class PostgresCertificateStore:
+class SqliteCertificateStore:
     def __init__(self, session: Session):
         self.session = session
 
-    def insert_certificate(self, cert: Certificate, blob_path: str | None) -> None:
+    def insert_certificate(self, cert: Certificate, file_path: str | None) -> None:
         self.session.add(
             CertificateRow(
                 record_id=cert.record_id,
@@ -94,6 +101,6 @@ class PostgresCertificateStore:
                 icd_error=cert.icd_error,
                 usage=cert.usage.model_dump(mode="json"),
                 timings_ms=cert.timings_ms,
-                blob_path=blob_path,
+                file_path=file_path,
             )
         )

@@ -16,5 +16,6 @@ build/
 
 # generated
 /runs/
+/store/
 docs/_build/
 docs/reference/generated/

@@ -12,13 +12,15 @@ from __future__ import annotations
 import time
 from dataclasses import dataclass
 
-from automccd_lite.certificate import CertificateStore, Storage, generate_certificate
+from automccd_lite.certificate import generate_certificate
 from automccd_lite.code import CodeCache, IcdClient, IcdError, ICDUnavailable, code_draft
 from automccd_lite.config import settings
+from automccd_lite.db import SqliteCertificateStore
 from automccd_lite.draft import Ask, draft_certificate
 from automccd_lite.models import Certificate, CodedDraft, DraftValidation, Record
 from automccd_lite.revise import needs_revision, revise_draft, revise_terms
 from automccd_lite.route import route_draft
+from automccd_lite.storage import FileStorage
 from automccd_lite.validate import validate_draft
 
 
@@ -27,8 +29,8 @@ class Deps:
     ask: Ask
     icd: IcdClient
     cache: CodeCache
-    storage: Storage | None = None
-    store: CertificateStore | None = None
+    storage: FileStorage | None = None
+    store: SqliteCertificateStore | None = None
 
 
 class Timer:

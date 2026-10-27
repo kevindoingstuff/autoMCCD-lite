@@ -58,8 +58,8 @@ class Env(BaseModel):
     openai_base_url: str | None
     openai_api_key: str | None
     icd_api_url: str
-    azure_storage_connection_string: str | None
-    azure_storage_container: str
+    store_dir: Path  # the SQLite file and the certificate JSON files live here
+    api_port: int
 
 
 class Settings(BaseModel):
@@ -85,7 +85,7 @@ def settings(path: Path = CONFIG_PATH) -> Settings:
         "openai_base_url": os.environ.get("OPENAI_BASE_URL"),
         "openai_api_key": os.environ.get("OPENAI_API_KEY"),
         "icd_api_url": os.environ.get("ICD_API_URL", "http://localhost:8082"),
-        "azure_storage_connection_string": os.environ.get("AZURE_STORAGE_CONNECTION_STRING"),
-        "azure_storage_container": os.environ.get("AZURE_STORAGE_CONTAINER", "certificates"),
+        "store_dir": Path(os.environ.get("STORE_DIR") or ROOT / "store"),
+        "api_port": int(os.environ.get("API_PORT", "8000")),
     }
     return Settings.model_validate(raw)

@@ -1,50 +1,46 @@
-"""Blob storage for certificate JSON.
+"""The certificate JSON files: one per certified record, under the store folder.
 
-Blob name inside the container: {yyyy-mm-dd}/{hhmmss}Z_{record_id}.json. The
-time prefix means a re-run of the same record never collides with the first.
-Azurite locally through AZURE_STORAGE_CONNECTION_STRING; the same adapter
-works against Azure Blob Storage with a real connection string.
+File name: `certificates/{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json` relative to
+`STORE_DIR`. The time prefix means a re-run of the same record never
+collides with the first. The body is the api response, pretty-printed, so a
+downstream system can pick it up without the database.
 """
 
 from __future__ import annotations
 
 import json
 from datetime import UTC, datetime
+from pathlib import Path
 
-from azure.core.exceptions import ResourceExistsError
-from azure.storage.blob import BlobServiceClient, ContentSettings
-
-from automccd_lite.certificate import as_response
-from automccd_lite.config import Settings, settings
+from automccd_lite.config import settings
 from automccd_lite.models import Certificate
 
+CERTIFICATES_DIR = "certificates"
 
-def blob_name(record_id: str, now: datetime | None = None) -> str:
+
+def certificate_path(record_id: str, now: datetime | None = None) -> str:
     now = now or datetime.now(UTC)
-    return f"{now:%Y-%m-%d}/{now:%H%M%S}Z_{record_id}.json"
+    return f"{CERTIFICATES_DIR}/{now:%Y-%m-%d}/{now:%H%M%S}Z_{record_id}.json"
 
 
-class BlobStorage:
-    def __init__(self, cfg: Settings | None = None):
-        cfg = cfg or settings()
-        env = cfg.env
-        if not env.azure_storage_connection_string:
-            raise RuntimeError("set AZURE_STORAGE_CONNECTION_STRING")
-        service = BlobServiceClient.from_connection_string(env.azure_storage_connection_string)
-        self.container = service.get_container_client(env.azure_storage_container)
-        try:
-            self.container.create_container()
-        except ResourceExistsError:
-            pass
+class FileStorage:
+    def __init__(self, store_dir: Path | None = None):
+        self.store_dir = store_dir or settings().env.store_dir
+        (self.store_dir / CERTIFICATES_DIR).mkdir(parents=True, exist_ok=True)
 
     def put_certificate(self, cert: Certificate) -> str:
-        name = blob_name(cert.record_id)
-        body = json.dumps(as_response(cert), ensure_ascii=False, indent=2).encode("utf-8")
-        self.container.upload_blob(
-            name, body, overwrite=True, content_settings=ContentSettings("application/json")
-        )
-        return f"{self.container.container_name}/{name}"
+        from automccd_lite.certificate import as_response  # the file holds the response body
 
-    def exists(self, path: str) -> bool:
-        name = path.split("/", 1)[1] if "/" in path else path
-        return self.container.get_blob_client(name).exists()
+        rel = certificate_path(cert.record_id)
+        path = self.store_dir / rel
+        path.parent.mkdir(parents=True, exist_ok=True)
+        with path.open("w", encoding="utf-8", newline="\n") as f:
+            json.dump(as_response(cert), f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        return rel
+
+    def exists(self, rel: str) -> bool:
+        return (self.store_dir / rel).is_file()
+
+    def read(self, rel: str) -> dict:
+        return json.loads((self.store_dir / rel).read_text(encoding="utf-8"))

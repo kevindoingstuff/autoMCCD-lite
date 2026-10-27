@@ -1,21 +1,20 @@
 """The api: POST /certify, GET /healthz, GET /readyz.
 
-One record per request, run in this request, in one transaction: the Blob is
-written first, then the row commits; a ModelUnavailable rolls everything
-back, so nothing is stored and the caller gets a 503 to retry.
+One record per request, run in this request, in one transaction: the JSON
+file is written first, then the row commits; a ModelUnavailable rolls the
+row back, so nothing is stored and the caller gets a 503 to retry.
 
-    python -m automccd_lite.api      (or: uvicorn automccd_lite.api:app)
+Start it with `automccd-lite serve` (cli.py), which also starts the WHO
+icd-api container; `uvicorn automccd_lite.api:app` works once that runs.
 """
 
 from __future__ import annotations
 
 import logging
-import os
 from contextlib import asynccontextmanager
 from dataclasses import dataclass
 from typing import Any
 
-import uvicorn
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import JSONResponse
 from pydantic import BaseModel
@@ -25,12 +24,12 @@ from automccd_lite import __version__
 from automccd_lite.certificate import as_response
 from automccd_lite.code import FileCodeCache, IcdClient
 from automccd_lite.config import Settings, settings
-from automccd_lite.db import PostgresCertificateStore, create_all, session_scope
+from automccd_lite.db import SqliteCertificateStore, create_all, session_scope
 from automccd_lite.draft import Ask, ModelUnavailable, asker, make_client
-from automccd_lite.log import configure_logging, log_event
+from automccd_lite.log import log_event
 from automccd_lite.models import Certificate, Record
 from automccd_lite.pipeline import Deps, certify_record
-from automccd_lite.storage import BlobStorage
+from automccd_lite.storage import FileStorage
 
 log = logging.getLogger("automccd_lite.api")
 
@@ -38,6 +37,17 @@ log = logging.getLogger("automccd_lite.api")
 class Readiness(BaseModel):
     ready: bool
     components: dict[str, Any]
+
+
+def icd_client(cfg: Settings | None = None) -> IcdClient:
+    cfg = cfg or settings()
+    return IcdClient(
+        cfg.env.icd_api_url,
+        cfg.code.icd_release,
+        cfg.code.linearization,
+        cfg.code.timeout_s,
+        cfg.code.max_retries,
+    )
 
 
 @dataclass
@@ -48,29 +58,23 @@ class Runtime:
     ask: Ask
     icd: IcdClient
     cache: FileCodeCache
-    storage: BlobStorage
+    storage: FileStorage
 
     @classmethod
     def from_env(cls) -> Runtime:
         cfg = settings()
-        icd = IcdClient(
-            cfg.env.icd_api_url,
-            cfg.code.icd_release,
-            cfg.code.linearization,
-            cfg.code.timeout_s,
-            cfg.code.max_retries,
-        )
+        icd = icd_client(cfg)
         return cls(
             settings=cfg,
             ask=asker(make_client(cfg)),
             icd=icd,
             cache=FileCodeCache(icd),
-            storage=BlobStorage(cfg),
+            storage=FileStorage(cfg.env.store_dir),
         )
 
     def certify_one(self, record: Record) -> Certificate:
         with session_scope() as s:
-            deps = Deps(self.ask, self.icd, self.cache, self.storage, PostgresCertificateStore(s))
+            deps = Deps(self.ask, self.icd, self.cache, self.storage, SqliteCertificateStore(s))
             cert = certify_record(record, deps)
         log_event(
             log,
@@ -89,19 +93,15 @@ class Runtime:
     def readiness(self) -> dict:
         components: dict[str, bool | str] = {}
         try:
-            with session_scope() as s:
-                s.execute(text("select 1"))
-            components["postgres"] = True
-        except Exception as e:  # noqa: BLE001 - reported, not raised
-            components["postgres"] = type(e).__name__
-        try:
             components["icd_api"] = self.icd.available()
-        except Exception as e:  # noqa: BLE001
+        except Exception as e:  # noqa: BLE001 - reported, not raised
             components["icd_api"] = type(e).__name__
         try:
-            components["storage"] = self.storage.container.exists()
+            with session_scope() as s:
+                s.execute(text("select 1"))
+            components["store"] = self.storage.store_dir.is_dir()
         except Exception as e:  # noqa: BLE001
-            components["storage"] = type(e).__name__
+            components["store"] = type(e).__name__
         components["model_configured"] = bool(self.settings.env.openai_api_key)
         return components
 
@@ -138,17 +138,3 @@ def readyz(request: Request, response: Response) -> Readiness:
     ready = all(v is True for v in components.values())
     response.status_code = 200 if ready else 503
     return Readiness(ready=ready, components=components)
-
-
-def main() -> None:
-    configure_logging()
-    uvicorn.run(
-        "automccd_lite.api:app",
-        host=os.environ.get("API_HOST", "0.0.0.0"),  # noqa: S104 - a container port
-        port=int(os.environ.get("API_PORT", "8000")),
-        log_config=None,
-    )
-
-
-if __name__ == "__main__":
-    main()
