@@ -335,6 +335,14 @@
     "query": "Cerebral vascular disease",
     "uri": "http://id.who.int/icd/entity/843843448"
   },
+  "cerebrovascular accident with residual left hemiparesis": {
+    "adjudicated": false,
+    "code": "6B60.6",
+    "match_score": 0.5876176910505844,
+    "matched_text": "Hemiparesis",
+    "query": "Cerebrovascular accident with residual left hemiparesis",
+    "uri": "http://id.who.int/icd/entity/292596552"
+  },
   "cerebrovascular disease with residual left hemiparesis": {
     "adjudicated": false,
     "code": "6B60.6",
@@ -526,6 +534,14 @@
     "matched_text": "Cystic fibrosis",
     "query": "Cystic fibrosis with disseminated infection",
     "uri": "http://id.who.int/icd/entity/514403112"
+  },
+  "death": {
+    "adjudicated": false,
+    "code": "MH14",
+    "match_score": 1,
+    "matched_text": "death NOS",
+    "query": "Death",
+    "uri": "http://id.who.int/icd/entity/178135136"
   },
   "deep vein thrombosis": {
     "adjudicated": false,
@@ -887,6 +903,14 @@
     "query": "Left ventricular rupture",
     "uri": "http://id.who.int/icd/entity/1321780180 & http://id.who.int/icd/entity/271422288 & http://id.who.int/icd/entity/732645847"
   },
+  "left ventricular rupture causing exsanguination": {
+    "adjudicated": false,
+    "code": "BD11.Z",
+    "match_score": 0.2377346493479387,
+    "matched_text": "Left ventricular failure",
+    "query": "Left ventricular rupture causing exsanguination",
+    "uri": "http://id.who.int/icd/entity/437702716"
+  },
   "liver failure": {
     "adjudicated": false,
     "code": "DB99.7",
@@ -1063,6 +1087,14 @@
     "query": "Pediatric congenital heart disease",
     "uri": "http://id.who.int/icd/entity/2004408087"
   },
+  "pediatric congestive heart failure due to unrepaired fallot's tetralogy": {
+    "adjudicated": false,
+    "code": "BD10",
+    "match_score": 0.427325992090707,
+    "matched_text": "Congestive heart failure",
+    "query": "Pediatric congestive heart failure due to unrepaired Fallot's tetralogy",
+    "uri": "http://id.who.int/icd/entity/2136808878"
+  },
   "perforated duodenal ulcer": {
     "adjudicated": false,
     "code": "DA63.Y",
@@ -1151,12 +1183,28 @@
     "query": "Prematurity",
     "uri": "http://id.who.int/icd/entity/1726201225"
   },
+  "prior myocardial infarction": {
+    "adjudicated": false,
+    "code": "BA41.Z",
+    "match_score": 0.681807676756762,
+    "matched_text": "myocardial infarct NOS",
+    "query": "Prior myocardial infarction",
+    "uri": "http://id.who.int/icd/entity/1334938734"
+  },
   "protein losing enteropathy": {
     "adjudicated": false,
     "code": "DA96.1",
     "match_score": 1,
     "matched_text": "Protein-losing enteropathy",
     "query": "Protein losing enteropathy",
+    "uri": "http://id.who.int/icd/entity/1821383469"
+  },
+  "protein-losing enteropathy": {
+    "adjudicated": false,
+    "code": "DA96.1",
+    "match_score": 1,
+    "matched_text": "Protein-losing enteropathy",
+    "query": "Protein-losing enteropathy",
     "uri": "http://id.who.int/icd/entity/1821383469"
   },
   "pseudomonas aeruginosa infection": {
@@ -1351,6 +1399,14 @@
     "query": "Septicaemic shock state",
     "uri": "http://id.who.int/icd/entity/2093238381"
   },
+  "septicemia": {
+    "adjudicated": false,
+    "code": "MA15.0",
+    "match_score": 1,
+    "matched_text": "Septicaemia",
+    "query": "Septicemia",
+    "uri": "http://id.who.int/icd/entity/2093238381"
+  },
   "severe acute renal failure": {
     "adjudicated": false,
     "code": "GB60.Z&XS25",
@@ -1422,6 +1478,14 @@
     "matched_text": "Staphylococcus aureus bacteraemia",
     "query": "Staphylococcus aureus bacteremia",
     "uri": "http://id.who.int/icd/entity/1876028448"
+  },
+  "staphylococcus aureus infection": {
+    "adjudicated": false,
+    "code": "EH11&XN6BM",
+    "match_score": 0.05217040078790687,
+    "matched_text": "Neonatal pyogenic skin infections[Staphylococcus aureus]",
+    "query": "Staphylococcus aureus infection",
+    "uri": "http://id.who.int/icd/entity/756297560 & http://id.who.int/icd/entity/1367266331"
   },
   "staphylococcus aureus infection of central nervous system": {
     "adjudicated": false,
