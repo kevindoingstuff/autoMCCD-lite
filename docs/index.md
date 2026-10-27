@@ -30,6 +30,13 @@ only a certificate that passes everything may skip the human.
 The package turns one clinical record into a WHO Medical Certificate of Cause of Death coded in ICD-11, and tells you whether a human must look at it before it counts.
 :::
 
+:::{grid-item-card} Pipeline
+:link: pipeline
+:link-type: doc
+
+The four nodes one record goes through: Draft the MCCD, Verify, Code, Generate the MCCD.
+:::
+
 :::{grid-item-card} API reference
 :link: reference/api
 :link-type: doc
@@ -42,7 +49,7 @@ The code reference, generated from the docstrings.
 
 ![system](_static/diagrams/system.drawio.png)
 
-The package is the whole system: it takes your record from the api request, asks the model endpoint for a draft and for at most two revisions, codes the result through the WHO icd-api container, and hands the certificate to Blob storage and to the `certificates` table in Postgres. The autocode cache on disk saves a container call for every term it has seen; the evaluation harness writes its runs beside it. The [module guide](automccd_lite.md) walks through every stage.
+The package is the whole system: it takes your record from the api request, asks the model endpoint for a draft and for at most two revisions, codes the result through the WHO icd-api container, and hands the certificate to Blob storage and to the `certificates` table in Postgres. The autocode cache on disk saves a container call for every term it has seen; the evaluation harness writes its runs beside it. The [pipeline page](pipeline.md) walks through the four nodes; the [module guide](automccd_lite.md) covers everything around them.
 
 ## Data
 
@@ -72,6 +79,13 @@ autoMCCD-lite/
 | Module | Purpose | Doc | Generated from |
 |---|---|---|---|
 | automccd_lite | The package turns one clinical record into a WHO Medical Certificate of Cause of Death coded in ICD-11, and tells you whether a human must look at it before it counts. | [automccd_lite.md](automccd_lite.md) | `df3b472` |
+
+```{toctree}
+:caption: Pipeline
+:hidden:
+
+pipeline
+```
 
 ```{toctree}
 :caption: Modules
