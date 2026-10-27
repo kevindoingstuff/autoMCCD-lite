@@ -47,6 +47,8 @@ autoMCCD-lite/
 
 ## Milestones
 
+Status 2026-10-27: LM0 to LM5 built, checked and committed. The LM5 check passed: a fresh clone with only `.env` copied in ran `make up` and `make smoke` to `SMOKE OK`; the Sphinx site builds clean; `make notebooks` executes both notebooks against the stack.
+
 ### LM0 — Scaffold
 - Repo, pyproject (`automccd_lite`, deps: fastapi, uvicorn, pydantic, pyyaml, sqlalchemy, psycopg, httpx, openai, azure-storage-blob, jsonschema, python-dotenv; dev: pytest, ruff; groups: notebooks (jupyter, matplotlib, graphviz), docs (sphinx, myst-parser, sphinx-design, sphinx-copybutton, furo)), Makefile, `.env.example`, `.gitignore` (`.env`, `runs/`, `docs/_build/`, `.ipynb_checkpoints/`), `.dockerignore`, README skeleton.
 - Copy prompts, schema, config, data (gold, scenarios, sets, attributions, demographics, 3 records); build `data/robust_sample.json` from the full corpus (2 per variant, tagged `stress`).
