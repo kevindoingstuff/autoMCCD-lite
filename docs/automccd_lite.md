@@ -1,6 +1,6 @@
 ---
 module: automccd_lite
-generated_from: df3b4722789f32f68be49485dea6282a496e39ae
+generated_from: 2b94648f6ab8d05d6000f2bbec49ba82db0d4c2a
 generated_at: 2026-10-27
 ---
 
@@ -10,14 +10,14 @@ generated_at: 2026-10-27
 
 ![automccd_lite in the system](_static/diagrams/automccd_lite/system.drawio.png)
 
-The package turns one clinical record into a WHO Medical Certificate of Cause of Death coded in ICD-11, and tells you whether a human must look at it before it counts. A language model writes the draft; the code checks it against ten rules and the WHO's own coding tools, gives the model one chance to fix what failed, and then decides the route from what it could verify. The api calls it once per request, the evaluation harness calls it once per case, and the notebooks call its functions one at a time.
+The package turns one clinical record into a WHO Medical Certificate of Cause of Death coded in ICD-11, and tells you whether a human must look at it before it counts. A language model writes the draft; the code checks it against ten rules and the WHO's own coding tools, gives the model one chance to fix what failed, and then decides the route from what it could verify. The api calls it once per request, the evaluation harness calls it once per case, and the notebooks call its functions one at a time. The `automccd-lite` command starts everything: the WHO icd-api container, the store folder and the api.
 
 The pipeline has four nodes, each a section of this guide:
 
 1. **Draft the MCCD**: renders your record as text, pairs it with the fixed system prompt, and makes one model call with strict JSON-schema decoding.
 2. **Verify**: checks the schema and the rules V1 to V10 against your record, then sends the failures back to the model once and adopts the answer only if it still answers the same question.
 3. **Code**: codes every term with autocode, selects the underlying cause with DORIS, runs CoDEdit twice, and asks the model once for the standard name of a term autocode could not match.
-4. **Generate the MCCD**: turns every finding into a reason code, decides `auto` or `review`, builds the certificate, and in the api writes the blob and the provenance row.
+4. **Generate the MCCD**: turns every finding into a reason code, decides `auto` or `review`, builds the certificate, and in the api writes the JSON file and the provenance row.
 
 You provide a record with its notes and the demographics; the package produces a certificate with a route, its reasons, the codes and the versions that produced it.
 
@@ -55,19 +55,19 @@ You provide a record with its notes and the demographics; the package produces a
 | `usage` | `Usage` | Prompt, completion and reasoning tokens, and the number of model calls. | `src/automccd_lite/models.py:79` |
 | `timings_ms` | `dict[str, int]` | Milliseconds per stage: `draft`, `validate`, `revise`, `code`, `route`. | `src/automccd_lite/pipeline.py:39` |
 
-2. One row in the Postgres table `certificates` (the response plus the provenance the response leaves out)
+2. One row in the `certificates` table of `store/certificates.sqlite` (the response plus the provenance the response leaves out)
 
 | Field | Type | Description | Source |
 |---|---|---|---|
-| `record_id`, `route`, `reasons`, `draft_status` | `str`, `str`, `jsonb`, `str` | The decision and the model status. | `src/automccd_lite/db.py:34` |
-| `versions`, `usage`, `timings_ms` | `jsonb` | As in the response. | `src/automccd_lite/db.py:41` |
-| `certificate` | `jsonb` | The MCCD; it carries patient text. | `src/automccd_lite/db.py:42` |
-| `validation` | `jsonb` | The gate's verdict, both revisions, the model's chain; it carries patient text. | `src/automccd_lite/db.py:43` |
-| `coding` | `jsonb` | The raw autocode, DORIS and CoDEdit replies. | `src/automccd_lite/db.py:44` |
-| `icd_error` | `str \| null` | `icd_unavailable` or `icd_error` when the WHO container failed. | `src/automccd_lite/db.py:45` |
-| `blob_path` | `str \| null` | Where the JSON copy went. | `src/automccd_lite/db.py:48` |
+| `record_id`, `route`, `reasons`, `draft_status` | `str`, `str`, `json`, `str` | The decision and the model status. | `src/automccd_lite/db.py:39` |
+| `versions`, `usage`, `timings_ms` | `json` | As in the response. | `src/automccd_lite/db.py:46` |
+| `certificate` | `json` | The MCCD; it carries patient text. | `src/automccd_lite/db.py:47` |
+| `validation` | `json` | The gate's verdict, both revisions, the model's chain; it carries patient text. | `src/automccd_lite/db.py:48` |
+| `coding` | `json` | The raw autocode, DORIS and CoDEdit replies. | `src/automccd_lite/db.py:49` |
+| `icd_error` | `str \| null` | `icd_unavailable` or `icd_error` when the WHO container failed. | `src/automccd_lite/db.py:50` |
+| `file_path` | `str \| null` | Where the JSON copy went, relative to the store folder. | `src/automccd_lite/db.py:53` |
 
-3. One blob per certificate, `certificates/{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json` (the response body, pretty-printed) (`src/automccd_lite/storage.py:22`)
+3. One file per certificate, `store/certificates/{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json` (the response body, pretty-printed) (`src/automccd_lite/storage.py:21`)
 4. `runs/<set>_<hhmmss>Z/results.json` and `summary.md` from the evaluation harness (`src/automccd_lite/eval.py:462`)
 5. JSON log lines on stdout, one per certified record, restricted to an allowlist of fields that never carry patient text (`src/automccd_lite/log.py:16`)
 
@@ -88,27 +88,28 @@ src/automccd_lite/
 ├── code.py           # code_draft: the WHO icd-api client, the autocode cache
 │   # Generate the MCCD
 ├── route.py          # route_draft: the reason codes and the two routes
-├── certificate.py    # generate_certificate: the Certificate, the blob, the row, the response body
+├── certificate.py    # generate_certificate: the Certificate, the file, the row, the response body
 │
 │   # Supporting modules
 ├── models.py         # Record, Draft, DraftValidation, CodedDraft, Route, Decision, Certificate
 ├── config.py         # settings(): config/default.yaml by stage plus the environment
 ├── log.py            # JSON logs with the PHI allowlist
-├── storage.py        # BlobStorage: Azurite or Azure Blob through a connection string
-├── db.py             # the certificates table, create_all, the session, the store
+├── storage.py        # FileStorage: the certificate JSON files under store/
+├── db.py             # the certificates table in store/certificates.sqlite, create_all, the store
 ├── api.py            # FastAPI: POST /certify, /healthz, /readyz; Runtime built at startup
+├── cli.py            # automccd-lite serve | icd | smoke | eval: the container, the store, uvicorn
 └── eval.py           # the mini harness: headline and robust sets, scoring, runs/ output
 ```
 
 ## Quickstart
 
 :::{note}
-The api needs the WHO icd-api container, Postgres and Azurite beside it; `make up` starts all four. The icd-api downloads its release on the first start and takes about a minute to turn healthy, and `/readyz` reports it as not ready until then.
+The WHO ships its ICD-API only as a Docker image, so Docker must be installed and running. `serve` starts that one container for you; the release it downloads on the first start takes about a minute to load, and `/readyz` reports the api as not ready until then.
 :::
 
 ### 1. Give it a model endpoint
 
-- Copy `.env.example` to `.env` and set `OPENAI_BASE_URL` (e.g. `https://api.openai.com/v1`) and `OPENAI_API_KEY`. Any OpenAI-compatible endpoint works; the model name comes from the config file, and `LLM_MODEL` in `.env` overrides it (e.g. `gpt-5-nano-2025-08-07`).
+- Run `uv run automccd-lite serve` once: it copies `.env.example` to `.env` and stops. Set `OPENAI_BASE_URL` (e.g. `https://api.openai.com/v1`) and `OPENAI_API_KEY` in `.env`. Any OpenAI-compatible endpoint works; the model name comes from the config file, and `LLM_MODEL` in `.env` overrides it (e.g. `gpt-5-nano-2025-08-07`).
 
 ### 2. Tune the stages, if you want to
 
@@ -117,11 +118,11 @@ The api needs the WHO icd-api container, Postgres and Azurite beside it; `make u
 ### 3. Run it
 
 ```
-make up          # Makefile:19
-make smoke       # Makefile:31
+uv run automccd-lite serve     # src/automccd_lite/cli.py:134, or: make run (Makefile:17)
+uv run automccd-lite smoke     # src/automccd_lite/cli.py:151, in a second terminal, or: make smoke
 ```
 
-`make smoke` ends with `SMOKE OK` after it has certified `data/records/S01.json` and found the row and the blob. Then send your own record:
+`serve` starts the container `automccd-lite-icd`, waits for its release, creates `store/` and runs the api on `127.0.0.1:8000`. `smoke` ends with `SMOKE OK` after it has certified `data/records/S01.json` and found the row and the file. Then send your own record:
 
 ```
 curl -s -X POST localhost:8000/certify -H 'content-type: application/json' --data-binary @data/records/S02.json
@@ -130,11 +131,11 @@ curl -s -X POST localhost:8000/certify -H 'content-type: application/json' --dat
 ### 4. Measure it
 
 ```
-make eval                     # Makefile:37, the 17 headline cases
+make eval                     # Makefile:27, the 17 headline cases
 EVAL_SET=robust make eval     # the 34 stress cases, scored on behaviour
 ```
 
-The run folder is printed last; read its `summary.md`. The harness runs in-process and reaches the icd-api on the host port, so the stack must be up.
+The run folder is printed last; read its `summary.md`. The harness runs in-process and needs only the container: `uv run automccd-lite icd start` when the api is not running.
 
 ### Configuration
 
@@ -155,10 +156,10 @@ The run folder is printed last; read its `summary.md`. The harness runs in-proce
 | `code.timeout_s`, `code.max_retries` | `float`, `int` | `30`, `2` | Per icd-api call. | `config/default.yaml:25` |
 | `OPENAI_BASE_URL`, `OPENAI_API_KEY` | env | none | The model endpoint; never logged. | `src/automccd_lite/config.py:85` |
 | `LLM_MODEL` | env | unset | Overrides `draft.model`. | `src/automccd_lite/config.py:82` |
-| `ICD_API_URL` | env | `http://localhost:8082` | The icd-api as seen from the process; compose sets `http://icd-api:80` inside the container. | `src/automccd_lite/config.py:87` |
-| `AZURE_STORAGE_CONNECTION_STRING`, `AZURE_STORAGE_CONTAINER` | env | none, `certificates` | The blob account and container. | `src/automccd_lite/config.py:88` |
-| `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER`, `PGPASSWORD` | env | from `.env.example` | Read by psycopg; the URL names no host. | `src/automccd_lite/db.py:23` |
-| `API_HOST`, `API_PORT` | env | `0.0.0.0`, `8000` | Where uvicorn listens. | `src/automccd_lite/api.py:147` |
+| `ICD_API_URL` | env | `http://localhost:8082` | Where the api, the eval and the notebooks reach the icd-api. | `src/automccd_lite/config.py:87` |
+| `ICD_PORT` | env | `8082` | The host port `serve` publishes the container on. | `src/automccd_lite/cli.py:69` |
+| `STORE_DIR` | env | `<repo>/store` | Where the SQLite file and the certificate JSON files go. | `src/automccd_lite/config.py:88` |
+| `API_HOST`, `API_PORT` | env | `127.0.0.1`, `8000` | Where uvicorn listens. | `src/automccd_lite/cli.py:145` |
 
 ## Pipeline
 
@@ -169,7 +170,7 @@ The four nodes have [a page of their own](pipeline.md): what each one does to yo
 | Draft the MCCD | `src/automccd_lite/prompt.py:89`, `src/automccd_lite/draft.py:125` | The record becomes a prompt; the model returns a draft under the strict schema. |
 | Verify | `src/automccd_lite/validate.py:569`, `src/automccd_lite/revise.py:74` | The ten rules, and one bounded revision when they fail. |
 | Code | `src/automccd_lite/code.py:257`, `src/automccd_lite/revise.py:171` | The WHO tools, with one bounded terminology revision inside. |
-| Generate the MCCD | `src/automccd_lite/route.py:14`, `src/automccd_lite/certificate.py:66` | The reason codes, the route, the certificate and where it goes. |
+| Generate the MCCD | `src/automccd_lite/route.py:14`, `src/automccd_lite/certificate.py:62` | The reason codes, the route, the certificate and where it goes. |
 
 ## Supporting Modules
 
@@ -178,9 +179,10 @@ The four nodes have [a page of their own](pipeline.md): what each one does to yo
 | models | `src/automccd_lite/models.py:41` | The types that flow between the nodes. |
 | config | `src/automccd_lite/config.py:79` | The settings, from the YAML file and the environment. |
 | log | `src/automccd_lite/log.py:64` | JSON log lines filtered through an allowlist. |
-| storage | `src/automccd_lite/storage.py:27` | The blob adapter. |
-| db | `src/automccd_lite/db.py:30` | The certificates table and its store. |
+| storage | `src/automccd_lite/storage.py:26` | The certificate JSON files. |
+| db | `src/automccd_lite/db.py:35` | The certificates table and its store. |
 | api | `src/automccd_lite/api.py:125` | The three routes and the runtime built at startup. |
+| cli | `src/automccd_lite/cli.py:204` | The `automccd-lite` command. |
 | eval | `src/automccd_lite/eval.py:462` | The mini harness. |
 
 ### models
@@ -197,15 +199,19 @@ Writes one JSON line per event and drops every field that is not on the allowlis
 
 ### storage
 
-Writes the response body as JSON to a blob container through a connection string, creating the container on first use (`src/automccd_lite/storage.py:33`). The blob name `certificates/{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json` carries the time, so a re-run of the same record never collides with the first (`src/automccd_lite/storage.py:22`).
+Writes the response body as a JSON file under the store folder, creating `store/certificates/` on first use (`src/automccd_lite/storage.py:27`). The file name `certificates/{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json` carries the time, so a re-run of the same record never collides with the first (`src/automccd_lite/storage.py:21`). The same two calls, `put_certificate` and `exists`, are what an Azure Blob adapter would offer; the full project has one.
 
 ### db
 
-The one table, `certificates`, its engine and session, `create_all`, and the store that inserts a row from a `Certificate` (`src/automccd_lite/db.py:83`). There are no migrations: the api creates the table at startup. The connection URL is `postgresql+psycopg://` with no host, so psycopg reads `PGHOST`, `PGPORT`, `PGDATABASE`, `PGUSER` and `PGPASSWORD` from the environment and no secret is ever in a string this package logs (`src/automccd_lite/db.py:23`).
+The one table, `certificates`, in `store/certificates.sqlite`; its engine and session, `create_all`, and the store that inserts a row from a `Certificate` (`src/automccd_lite/db.py:90`). There are no migrations: the api creates the table at startup (`src/automccd_lite/db.py:82`). The JSON columns keep the row shape a Postgres table would have, so the model works unchanged against Postgres later (`src/automccd_lite/db.py:44`).
 
 ### api
 
-The FastAPI app: `POST /certify` runs one record in the request, in one transaction (`src/automccd_lite/api.py:125`); `/healthz` answers at once; `/readyz` probes Postgres, the icd-api, the blob container and the model configuration and returns `503` until every component is true (`src/automccd_lite/api.py:136`). A `ModelUnavailable` becomes `503 {"detail": "model unavailable; retry later"}` with nothing stored (`src/automccd_lite/api.py:119`). The `Runtime` built at startup holds the model client, the icd client, the cache and the storage (`src/automccd_lite/api.py:54`). `API_HOST` and `API_PORT` say where uvicorn listens (`src/automccd_lite/api.py:147`).
+The FastAPI app: `POST /certify` runs one record in the request, in one transaction (`src/automccd_lite/api.py:125`); `/healthz` answers at once; `/readyz` probes the icd-api, the store and the model configuration and returns `503` until every component is true (`src/automccd_lite/api.py:136`). A `ModelUnavailable` becomes `503 {"detail": "model unavailable; retry later"}` with nothing stored (`src/automccd_lite/api.py:119`). The `Runtime` built at startup holds the model client, the icd client, the cache and the storage (`src/automccd_lite/api.py:54`).
+
+### cli
+
+The `automccd-lite` command (`src/automccd_lite/cli.py:204`). `serve` creates `.env` from the example when it is missing and stops until the model key is filled (`src/automccd_lite/cli.py:48`), starts the WHO icd-api as the named container `automccd-lite-icd` from a pinned image, reusing it when it exists (`src/automccd_lite/cli.py:80`), waits until the release answers (`src/automccd_lite/cli.py:98`), creates the store folder and runs uvicorn on `127.0.0.1:8000` (`src/automccd_lite/cli.py:134`). `icd start|stop|status` manages that container alone (`src/automccd_lite/cli.py:113`); the container is left running between serves because it takes about a minute to load its release. `smoke` is the end-to-end check: `/readyz`, `POST /certify` with S01, the row, the file (`src/automccd_lite/cli.py:151`). `eval` hands its arguments to the harness.
 
 ### eval
 
@@ -217,8 +223,8 @@ The mini harness. It builds the 17 headline cases from the scenarios, the demogr
 
 ![POST /certify](_static/diagrams/automccd_lite/sequence.drawio.png)
 
-1. The api validates the body into a `Record` and opens one database transaction (`src/automccd_lite/api.py:72`).
+1. The api validates the body into a `Record` and opens one database transaction (`src/automccd_lite/api.py:76`).
 2. **Draft the MCCD**: `build_prompt` renders the record and `draft_certificate` makes one model call under the strict schema (`src/automccd_lite/pipeline.py:49`).
 3. **Verify**: `validate_draft` checks the schema and the rules V1 to V10 against the notes (`src/automccd_lite/pipeline.py:57`); when a rule failed, `revise_draft` sends the failures back once and adopts the answer only if it keeps the assessment (`src/automccd_lite/pipeline.py:61`).
 4. **Code**: for a certifiable draft, `revise_terms` restates weak terms once, then `code_draft` runs autocode, DORIS and CoDEdit twice; a container failure becomes `icd_unavailable` or `icd_error` instead of an exception (`src/automccd_lite/pipeline.py:65`).
-5. **Generate the MCCD**: `route_draft` turns every finding into a reason code and picks `auto` or `review` (`src/automccd_lite/pipeline.py:81`); `generate_certificate` writes the blob, inserts the row, and returns the `Certificate`; the api commits the transaction and answers with `as_response` (`src/automccd_lite/certificate.py:94`).
+5. **Generate the MCCD**: `route_draft` turns every finding into a reason code and picks `auto` or `review` (`src/automccd_lite/pipeline.py:81`); `generate_certificate` writes the JSON file, inserts the row, and returns the `Certificate`; the api commits the transaction and answers with `as_response` (`src/automccd_lite/certificate.py:90`).

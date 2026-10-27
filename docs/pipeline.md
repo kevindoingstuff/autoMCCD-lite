@@ -1,6 +1,6 @@
 ---
 module: automccd_lite
-generated_from: 13dcc31b4a4b22da9a597ee5a6f80f107cfea841
+generated_from: 2b94648f6ab8d05d6000f2bbec49ba82db0d4c2a
 generated_at: 2026-10-27
 ---
 
@@ -18,7 +18,7 @@ One record goes through four nodes, in this order, and comes out as a certificat
 | Draft the MCCD | `src/automccd_lite/prompt.py:89`, `src/automccd_lite/draft.py:125` | The record becomes a prompt; the model returns a draft under the strict schema. |
 | Verify | `src/automccd_lite/validate.py:569`, `src/automccd_lite/revise.py:74` | The ten rules, and one bounded revision when they fail. |
 | Code | `src/automccd_lite/code.py:257`, `src/automccd_lite/revise.py:171` | The WHO tools, with one bounded terminology revision inside. |
-| Generate the MCCD | `src/automccd_lite/route.py:14`, `src/automccd_lite/certificate.py:66` | The reason codes, the route, the certificate and where it goes. |
+| Generate the MCCD | `src/automccd_lite/route.py:14`, `src/automccd_lite/certificate.py:62` | The reason codes, the route, the certificate and where it goes. |
 
 ## Draft the MCCD
 
@@ -94,14 +94,14 @@ The terminology revision runs before coding when a Part I term scores under `cod
 
 | Name | Type | Default | Where read |
 |---|---|---|---|
-| `ICD_API_URL` | env | `http://localhost:8082` | `src/automccd_lite/api.py:57` |
+| `ICD_API_URL` | env | `http://localhost:8082` | `src/automccd_lite/api.py:45` |
 | `code.icd_release`, `code.linearization` | str | `"2026-01"`, `"mms"` | `src/automccd_lite/code.py:89` |
 | `code.min_match_score` | float | `0.5` | `src/automccd_lite/pipeline.py:68` |
 | `revise.term_max_attempts` | int | `1` | `src/automccd_lite/pipeline.py:67` |
 
 ### Things to Note
 
-- The cache file is shared by the api container (through the compose bind mount), the harness and the notebooks; a save re-reads the file and merges before it rewrites, so no writer drops another's entries (`src/automccd_lite/code.py:221`).
+- The cache file is shared by the api, the harness and the notebooks; a save re-reads the file and merges before it rewrites, so no writer drops another's entries (`src/automccd_lite/code.py:221`).
 - All three request headers are required: without `Accept` the container answers 412, without `API-Version` 400 (`src/automccd_lite/code.py:42`).
 - Coding runs only when the assessment is `certifiable`; a declined record skips the WHO calls and routes to review on its assessment alone (`src/automccd_lite/pipeline.py:65`).
 
@@ -109,14 +109,14 @@ The terminology revision runs before coding when a Part I term scores under `cod
 
 The decision and the certificate that carries it. The router is a table, not a judgement: every finding becomes a stable reason code, no reasons means `auto`, any reason means `review`. There is no score and no threshold, which is why a reviewer can trust that `auto` means every check passed. The reasons come in a fixed order: model status, assessment, schema, rules, revisions, confidence, coding, demographics.
 
-The generator builds the `Certificate` from everything the nodes produced and, when the api passes a storage and a store, writes the blob first and then the row. The response body is the certificate without the provenance: the validation, the raw coding replies, the icd error and the draft status stay in the row.
+The generator builds the `Certificate` from everything the nodes produced and, when the api passes a storage and a store, writes the JSON file first and then the SQLite row. The response body is the certificate without the provenance: the validation, the raw coding replies, the icd error and the draft status stay in the row.
 
 ### Inputs and Outputs
 
 - In: the record, the draft, the validation, the coded draft, the icd error and `code.min_match_score` (`src/automccd_lite/route.py:14`)
 - Out: a `Decision` with the route and the reasons (`src/automccd_lite/route.py:64`)
-- Generator in: the decision, the usage, the timings, and optionally a `Storage` and a `CertificateStore` (`src/automccd_lite/certificate.py:66`)
-- Generator out: a `Certificate`; the response body excludes `validation`, `coded`, `icd_error` and `draft_status` (`src/automccd_lite/certificate.py:101`)
+- Generator in: the decision, the usage, the timings, and optionally a `FileStorage` and a `SqliteCertificateStore` (`src/automccd_lite/certificate.py:62`)
+- Generator out: a `Certificate`; the response body excludes `validation`, `coded`, `icd_error` and `draft_status` (`src/automccd_lite/certificate.py:97`)
 
 ### Things to Note
 
