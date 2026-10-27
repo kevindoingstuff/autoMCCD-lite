@@ -209,9 +209,10 @@ def main(argv: list[str] | None = None) -> None:
     icd = sub.add_parser("icd", help="the WHO icd-api container alone")
     icd.add_argument("action", choices=["start", "stop", "status"])
     sub.add_parser("smoke", help="the end-to-end check against a running serve")
-    ev = sub.add_parser("eval", help="the mini harness; arguments go to automccd_lite.eval")
-    ev.add_argument("args", nargs=argparse.REMAINDER)
-    a = p.parse_args(argv)
+    sub.add_parser("eval", help="the mini harness; every other argument goes to automccd_lite.eval")
+    a, rest = p.parse_known_args(argv)
+    if a.cmd != "eval" and rest:
+        p.error(f"unrecognized arguments: {' '.join(rest)}")
 
     if a.cmd == "serve":
         serve()
@@ -222,7 +223,7 @@ def main(argv: list[str] | None = None) -> None:
     elif a.cmd == "eval":
         from automccd_lite.eval import main as eval_main
 
-        eval_main(a.args)
+        eval_main(rest)
 
 
 if __name__ == "__main__":
