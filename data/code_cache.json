@@ -79,6 +79,14 @@
     "query": "Acute hepatic failure",
     "uri": "http://id.who.int/icd/entity/1973223737"
   },
+  "acute kidney injury": {
+    "adjudicated": false,
+    "code": "GB60.Z",
+    "match_score": 0.6391113170178825,
+    "matched_text": "nontraumatic acute kidney injury",
+    "query": "Acute kidney injury",
+    "uri": "http://id.who.int/icd/entity/476391827"
+  },
   "acute myocardial infarction": {
     "adjudicated": false,
     "code": "BA41.Z",
@@ -207,6 +215,14 @@
     "query": "Angina pectoris",
     "uri": "http://id.who.int/icd/entity/718946808"
   },
+  "arterial occlusion": {
+    "adjudicated": false,
+    "code": "BD30.Z",
+    "match_score": 0.699052481543272,
+    "matched_text": "Acute arterial occlusion",
+    "query": "Arterial occlusion",
+    "uri": "http://id.who.int/icd/entity/1999156089"
+  },
   "arteriosclerosis": {
     "adjudicated": false,
     "code": "BD40.Z",
@@ -247,6 +263,14 @@
     "query": "Bedridden status",
     "uri": "http://id.who.int/icd/entity/1839464738"
   },
+  "carcinoma of cecum": {
+    "adjudicated": false,
+    "code": "2E61.0",
+    "match_score": 0.764456629195672,
+    "matched_text": "carcinoma in situ of caecum",
+    "query": "Carcinoma of cecum",
+    "uri": "http://id.who.int/icd/entity/1958429829"
+  },
   "carcinoma of colon": {
     "adjudicated": false,
     "code": "2B90.Y",
@@ -279,6 +303,14 @@
     "query": "Cardiac arrest",
     "uri": "http://id.who.int/icd/entity/395422191"
   },
+  "cardiovascular collapse due to circulatory failure": {
+    "adjudicated": false,
+    "code": "MG40.Z",
+    "match_score": 0.7728967222591625,
+    "matched_text": "collapse cardiovascular",
+    "query": "Cardiovascular collapse due to circulatory failure",
+    "uri": "http://id.who.int/icd/entity/1164022950"
+  },
   "cecal carcinoma": {
     "adjudicated": false,
     "code": "2E61.0",
@@ -294,6 +326,30 @@
     "matched_text": "cerebral infarct",
     "query": "Cerebral infarction",
     "uri": "http://id.who.int/icd/entity/1614716959"
+  },
+  "cerebral vascular disease": {
+    "adjudicated": false,
+    "code": "8B2Z",
+    "match_score": 1,
+    "matched_text": "cerebral vascular disease",
+    "query": "Cerebral vascular disease",
+    "uri": "http://id.who.int/icd/entity/843843448"
+  },
+  "cerebrovascular disease with residual left hemiparesis": {
+    "adjudicated": false,
+    "code": "6B60.6",
+    "match_score": 0.608308808559849,
+    "matched_text": "Hemiparesis",
+    "query": "Cerebrovascular disease with residual left hemiparesis",
+    "uri": "http://id.who.int/icd/entity/292596552"
+  },
+  "chronic alcohol dependence": {
+    "adjudicated": false,
+    "code": "6D84.0/6C40.2Z",
+    "match_score": 0.5909100022074785,
+    "matched_text": "chronic alcoholic brain syndrome[Alcohol dependence, unspecified]",
+    "query": "Chronic alcohol dependence",
+    "uri": "http://id.who.int/icd/entity/1619582852 / http://id.who.int/icd/entity/1580466198"
   },
   "chronic alcohol use": {
     "adjudicated": false,
@@ -367,6 +423,14 @@
     "query": "Chronic pancreatitis",
     "uri": "http://id.who.int/icd/entity/1758007371"
   },
+  "cigarette smoking": {
+    "adjudicated": false,
+    "code": "QE13",
+    "match_score": 1,
+    "matched_text": "cigarette smoking",
+    "query": "Cigarette smoking",
+    "uri": "http://id.who.int/icd/entity/457960184"
+  },
   "coagulopathy": {
     "adjudicated": false,
     "code": "3B4Z",
@@ -439,6 +503,14 @@
     "query": "Coronary heart disease",
     "uri": "http://id.who.int/icd/entity/1221742343"
   },
+  "corticosteroid therapy": {
+    "adjudicated": false,
+    "code": "5A74.1",
+    "match_score": 0.7624331130777066,
+    "matched_text": "Interruption of corticosteroid therapy",
+    "query": "Corticosteroid therapy",
+    "uri": "http://id.who.int/icd/entity/480633636"
+  },
   "cystic fibrosis": {
     "adjudicated": false,
     "code": "CA25.Z",
@@ -502,6 +574,14 @@
     "matched_text": "Type 2 diabetes mellitus",
     "query": "Diabetes mellitus type 2",
     "uri": "http://id.who.int/icd/entity/119724091"
+  },
+  "diarrhoea": {
+    "adjudicated": false,
+    "code": "ME05.1",
+    "match_score": 1,
+    "matched_text": "Diarrhoea",
+    "query": "Diarrhoea",
+    "uri": "http://id.who.int/icd/entity/116759077"
   },
   "diminished liver function": {
     "adjudicated": false,
@@ -583,6 +663,14 @@
     "query": "Fallot ’s tetralogy",
     "uri": "http://id.who.int/icd/entity/90973426"
   },
+  "fallot’s tetralogy": {
+    "adjudicated": false,
+    "code": "LA88.2Z",
+    "match_score": 1,
+    "matched_text": "Tetralogy of Fallot",
+    "query": "Fallot’s Tetralogy",
+    "uri": "http://id.who.int/icd/entity/90973426"
+  },
   "germ in the blood stream": {
     "adjudicated": false,
     "code": "3C0Z",
@@ -598,6 +686,14 @@
     "matched_text": "Gestational hypertension",
     "query": "Gestational hypertension",
     "uri": "http://id.who.int/icd/entity/2118553363"
+  },
+  "heart failure": {
+    "adjudicated": false,
+    "code": "BD1Z",
+    "match_score": 1,
+    "matched_text": "cardiac failure",
+    "query": "Heart failure",
+    "uri": "http://id.who.int/icd/entity/1458683894"
   },
   "hemorrhagic shock": {
     "adjudicated": false,
@@ -630,6 +726,14 @@
     "matched_text": "Hypercholesterolaemia",
     "query": "Hypercholesterolemia",
     "uri": "http://id.who.int/icd/entity/875976032"
+  },
+  "hyperlipidemia": {
+    "adjudicated": false,
+    "code": "5C80.Z",
+    "match_score": 1,
+    "matched_text": "Hyperlipidaemia",
+    "query": "Hyperlipidemia",
+    "uri": "http://id.who.int/icd/entity/2023062398"
   },
   "hyperosmolar hyperglycaemic state": {
     "adjudicated": false,
@@ -695,6 +799,14 @@
     "query": "Hypovolemic shock",
     "uri": "http://id.who.int/icd/entity/284999005"
   },
+  "immunodeficiency": {
+    "adjudicated": false,
+    "code": "4B4Z",
+    "match_score": 1,
+    "matched_text": "Immunodeficiencies",
+    "query": "Immunodeficiency",
+    "uri": "http://id.who.int/icd/entity/978368870"
+  },
   "in-dwelling bladder catheter": {
     "adjudicated": false,
     "code": "GC01.Z",
@@ -725,6 +837,14 @@
     "match_score": 1,
     "matched_text": "Ischaemic heart disease NOS",
     "query": "Ischaemic heart disease",
+    "uri": "http://id.who.int/icd/entity/1964269418"
+  },
+  "ischemic heart disease": {
+    "adjudicated": false,
+    "code": "BA6Z",
+    "match_score": 1,
+    "matched_text": "Ischaemic heart disease NOS",
+    "query": "Ischemic heart disease",
     "uri": "http://id.who.int/icd/entity/1964269418"
   },
   "klebsiella pneumonia": {
@@ -759,6 +879,14 @@
     "query": "Left ventricular free wall rupture",
     "uri": "http://id.who.int/icd/entity/437702716"
   },
+  "left ventricular rupture": {
+    "adjudicated": false,
+    "code": "NB30.41&XK8G&XA7NQ7",
+    "match_score": -1.0985114212717773,
+    "matched_text": "traumatic rupture of pulmonary blood vessels[Left][left anterior interventricular artery]",
+    "query": "Left ventricular rupture",
+    "uri": "http://id.who.int/icd/entity/1321780180 & http://id.who.int/icd/entity/271422288 & http://id.who.int/icd/entity/732645847"
+  },
   "liver failure": {
     "adjudicated": false,
     "code": "DB99.7",
@@ -774,6 +902,22 @@
     "matched_text": "malabsorption",
     "query": "Malabsorption",
     "uri": "http://id.who.int/icd/entity/1526938195"
+  },
+  "malignant hepatic neoplasm": {
+    "adjudicated": false,
+    "code": "2C12.0Z",
+    "match_score": 1,
+    "matched_text": "Malignant neoplasm of liver",
+    "query": "Malignant hepatic neoplasm",
+    "uri": "http://id.who.int/icd/entity/1605020868"
+  },
+  "malnutrition": {
+    "adjudicated": false,
+    "code": "5B7Z",
+    "match_score": 1,
+    "matched_text": "Malnutrition NOS",
+    "query": "Malnutrition",
+    "uri": "http://id.who.int/icd/entity/1517885800"
   },
   "massive obstetric hemorrhage": {
     "adjudicated": false,
@@ -839,6 +983,14 @@
     "query": "Non-insulin-dependent diabetes mellitus",
     "uri": "http://id.who.int/icd/entity/119724091"
   },
+  "noninsulin dependent diabetes mellitus": {
+    "adjudicated": false,
+    "code": "5A11",
+    "match_score": 1,
+    "matched_text": "non-insulin dependent diabetes mellitus",
+    "query": "Noninsulin dependent diabetes mellitus",
+    "uri": "http://id.who.int/icd/entity/119724091"
+  },
   "obesity": {
     "adjudicated": false,
     "code": "5B81.Z",
@@ -887,6 +1039,14 @@
     "query": "Pancreatic calcification",
     "uri": "http://id.who.int/icd/entity/517550448"
   },
+  "pancreatic fibrosis": {
+    "adjudicated": false,
+    "code": "DC3Y",
+    "match_score": 1,
+    "matched_text": "Fibrosis of pancreas",
+    "query": "Pancreatic fibrosis",
+    "uri": "http://id.who.int/icd/entity/349856900"
+  },
   "pancreatic fibrosis with acute inflammation and necrosis": {
     "adjudicated": false,
     "code": "DC31.Y",
@@ -894,6 +1054,14 @@
     "matched_text": "acute necrosis of pancreas",
     "query": "Pancreatic fibrosis with acute inflammation and necrosis",
     "uri": "http://id.who.int/icd/entity/2063881303"
+  },
+  "pediatric congenital heart disease": {
+    "adjudicated": false,
+    "code": "LA8Z",
+    "match_score": 0.7235072977357442,
+    "matched_text": "congenital heart disease",
+    "query": "Pediatric congenital heart disease",
+    "uri": "http://id.who.int/icd/entity/2004408087"
   },
   "perforated duodenal ulcer": {
     "adjudicated": false,
@@ -958,6 +1126,14 @@
     "matched_text": "Pneumonia due to Klebsiella pneumoniae",
     "query": "Pneumonia due to Klebsiella pneumoniae",
     "uri": "http://id.who.int/icd/entity/1250089989"
+  },
+  "postoperative deep vein thrombosis": {
+    "adjudicated": false,
+    "code": "JB41.1",
+    "match_score": 0.7420709605625224,
+    "matched_text": "postnatal deep vein thrombosis",
+    "query": "Postoperative deep vein thrombosis",
+    "uri": "http://id.who.int/icd/entity/1914718106"
   },
   "preeclampsia": {
     "adjudicated": false,
@@ -1030,6 +1206,14 @@
     "matched_text": "history of radiation therapy",
     "query": "Radiation therapy",
     "uri": "http://id.who.int/icd/entity/1888786135"
+  },
+  "radiation therapy for cancer": {
+    "adjudicated": false,
+    "code": "QB9Y",
+    "match_score": 0.7230233475218191,
+    "matched_text": "hormone cancer therapy",
+    "query": "Radiation therapy for cancer",
+    "uri": "http://id.who.int/icd/entity/610106043"
   },
   "renal transplant": {
     "adjudicated": false,
@@ -1125,6 +1309,14 @@
     "match_score": 1,
     "matched_text": "sepsis due to Escherichia coli NOS",
     "query": "Sepsis due to Escherichia coli",
+    "uri": "http://id.who.int/icd/entity/736553724"
+  },
+  "sepsis due to escherichia coli meningitis": {
+    "adjudicated": false,
+    "code": "1C41/1G40&XN6P4",
+    "match_score": 0.7474439345558348,
+    "matched_text": "sepsis due to Escherichia coli NOS",
+    "query": "Sepsis due to Escherichia coli meningitis",
     "uri": "http://id.who.int/icd/entity/736553724"
   },
   "sepsis due to pseudomonas aeruginosa": {
@@ -1295,6 +1487,22 @@
     "query": "Tetanus",
     "uri": "http://id.who.int/icd/entity/1793762788"
   },
+  "transfusion dependence": {
+    "adjudicated": false,
+    "code": "3A9Z",
+    "match_score": -0.2190531408971046,
+    "matched_text": "Transfusion dependent anaemia",
+    "query": "Transfusion dependence",
+    "uri": "http://id.who.int/icd/entity/2047819255"
+  },
+  "transfusion dependent anemia": {
+    "adjudicated": false,
+    "code": "3A9Z",
+    "match_score": 1,
+    "matched_text": "Transfusion dependent anaemia",
+    "query": "Transfusion dependent anemia",
+    "uri": "http://id.who.int/icd/entity/2047819255"
+  },
   "type 2 diabetes mellitus": {
     "adjudicated": false,
     "code": "5A11",
@@ -1302,6 +1510,14 @@
     "matched_text": "Type 2 diabetes mellitus",
     "query": "Type 2 diabetes mellitus",
     "uri": "http://id.who.int/icd/entity/119724091"
+  },
+  "urosepsis due to pseudomonas aeruginosa": {
+    "adjudicated": false,
+    "code": "GC08.Z",
+    "match_score": 0.5045595316541478,
+    "matched_text": "urosepsis NOS",
+    "query": "Urosepsis due to Pseudomonas aeruginosa",
+    "uri": "http://id.who.int/icd/entity/1848472780"
   },
   "weight loss": {
     "adjudicated": false,
