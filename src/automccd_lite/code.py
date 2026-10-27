@@ -106,7 +106,7 @@ class IcdClient:
         for attempt in range(retries + 1):
             try:
                 r = self._http.get(path, params=clean)
-            except (httpx.ConnectError, httpx.TimeoutException, httpx.RemoteProtocolError) as e:
+            except httpx.TransportError as e:  # refused, timed out, reset while it loads
                 if attempt == retries:
                     raise ICDUnavailable(f"{path}: {type(e).__name__}") from e
             else:
