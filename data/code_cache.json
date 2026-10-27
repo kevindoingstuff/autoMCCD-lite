@@ -7,12 +7,28 @@
     "query": "36 weeks into pregnancy",
     "uri": "http://id.who.int/icd/entity/1520349216"
   },
+  "abortus placentae (abruptio placentae)": {
+    "adjudicated": false,
+    "code": "JA8C.Z",
+    "match_score": 0.6407834447681974,
+    "matched_text": "Abruptio placentae NOS",
+    "query": "Abortus placentae (abruptio placentae)",
+    "uri": "http://id.who.int/icd/entity/1153253585"
+  },
   "abruptio placenta": {
     "adjudicated": false,
     "code": "JA8C.Z",
     "match_score": 1,
     "matched_text": "Abruptio placentae NOS",
     "query": "Abruptio placenta",
+    "uri": "http://id.who.int/icd/entity/1153253585"
+  },
+  "abruptio placentae": {
+    "adjudicated": false,
+    "code": "JA8C.Z",
+    "match_score": 1,
+    "matched_text": "Abruptio placentae NOS",
+    "query": "Abruptio placentae",
     "uri": "http://id.who.int/icd/entity/1153253585"
   },
   "acquired immunodeficiency syndrome": {
@@ -38,6 +54,14 @@
     "matched_text": "chronic obstructive airway disease, unspecified",
     "query": "Acute exacerbation of chronic obstructive airway disease",
     "uri": "http://id.who.int/icd/entity/133207228"
+  },
+  "acute exacerbation of chronic obstructive pulmonary disease": {
+    "adjudicated": false,
+    "code": "CA22.0",
+    "match_score": 1,
+    "matched_text": "Chronic obstructive pulmonary disease with acute exacerbation, unspecified",
+    "query": "Acute exacerbation of chronic obstructive pulmonary disease",
+    "uri": "http://id.who.int/icd/entity/1665365733"
   },
   "acute exacerbation of chronic pancreatitis": {
     "adjudicated": false,
@@ -95,6 +119,22 @@
     "query": "Acute renal failure",
     "uri": "http://id.who.int/icd/entity/476391827"
   },
+  "acute respiratory failure": {
+    "adjudicated": false,
+    "code": "CB41.0Z",
+    "match_score": 1,
+    "matched_text": "Acute respiratory failure",
+    "query": "Acute respiratory failure",
+    "uri": "http://id.who.int/icd/entity/875272781"
+  },
+  "acute respiratory failure due to acute exacerbation of chronic obstructive pulmonary disease": {
+    "adjudicated": false,
+    "code": "CA22.0",
+    "match_score": 0.7436740644253026,
+    "matched_text": "Chronic obstructive pulmonary disease with acute exacerbation, unspecified",
+    "query": "Acute respiratory failure due to acute exacerbation of chronic obstructive pulmonary disease",
+    "uri": "http://id.who.int/icd/entity/1665365733"
+  },
   "advanced age": {
     "adjudicated": false,
     "code": "MG2A",
@@ -102,6 +142,14 @@
     "matched_text": "advanced age",
     "query": "Advanced age",
     "uri": "http://id.who.int/icd/entity/835503193"
+  },
+  "advanced cerebrovascular disease with residual left hemiparesis": {
+    "adjudicated": false,
+    "code": "6B60.6",
+    "match_score": 0.5480274498651779,
+    "matched_text": "Hemiparesis",
+    "query": "Advanced cerebrovascular disease with residual left hemiparesis",
+    "uri": "http://id.who.int/icd/entity/292596552"
   },
   "aids": {
     "adjudicated": false,
@@ -183,6 +231,14 @@
     "query": "Arteriosclerotic Heart Disease",
     "uri": "http://id.who.int/icd/entity/1280712786 & http://id.who.int/icd/entity/2106647780"
   },
+  "atrial fibrillation": {
+    "adjudicated": false,
+    "code": "BC81.3Z",
+    "match_score": 1,
+    "matched_text": "Atrial fibrillation",
+    "query": "Atrial fibrillation",
+    "uri": "http://id.who.int/icd/entity/171698302"
+  },
   "bedridden status": {
     "adjudicated": false,
     "code": "MB44.3",
@@ -190,6 +246,22 @@
     "matched_text": "bed ridden",
     "query": "Bedridden status",
     "uri": "http://id.who.int/icd/entity/1839464738"
+  },
+  "carcinoma of colon": {
+    "adjudicated": false,
+    "code": "2B90.Y",
+    "match_score": 1,
+    "matched_text": "Colon carcinoma",
+    "query": "Carcinoma of colon",
+    "uri": "http://id.who.int/icd/entity/865099988"
+  },
+  "carcinoma of the colon": {
+    "adjudicated": false,
+    "code": "2B90.Y",
+    "match_score": 1,
+    "matched_text": "Colon carcinoma",
+    "query": "Carcinoma of the colon",
+    "uri": "http://id.who.int/icd/entity/865099988"
   },
   "carcinoma of the sigmoid colon": {
     "adjudicated": false,
@@ -247,6 +319,14 @@
     "query": "Chronic Bronchitis",
     "uri": "http://id.who.int/icd/entity/290835130"
   },
+  "chronic cerebrovascular disease with residual hemiparesis": {
+    "adjudicated": false,
+    "code": "6B60.6",
+    "match_score": 0.6242348551706928,
+    "matched_text": "Hemiparesis",
+    "query": "Chronic cerebrovascular disease with residual hemiparesis",
+    "uri": "http://id.who.int/icd/entity/292596552"
+  },
   "chronic ischemic heart disease": {
     "adjudicated": false,
     "code": "BA5Z",
@@ -254,6 +334,22 @@
     "matched_text": "Ischaemic heart disease (chronic) NOS",
     "query": "Chronic ischemic heart disease",
     "uri": "http://id.who.int/icd/entity/1221742343"
+  },
+  "chronic kidney disease stage ?,": {
+    "adjudicated": false,
+    "code": "GB61.Z",
+    "match_score": 1,
+    "matched_text": "Chronic kidney disease, stage unspecified",
+    "query": "Chronic kidney disease stage ?,",
+    "uri": "http://id.who.int/icd/entity/412389819"
+  },
+  "chronic liver disease due to hepatocellular carcinoma": {
+    "adjudicated": false,
+    "code": "2C12.02",
+    "match_score": 0.8784525916011472,
+    "matched_text": "Hepatocellular carcinoma of liver",
+    "query": "Chronic liver disease due to hepatocellular carcinoma",
+    "uri": "http://id.who.int/icd/entity/1294035808"
   },
   "chronic obstructive pulmonary disease": {
     "adjudicated": false,
@@ -270,6 +366,22 @@
     "matched_text": "Chronic pancreatitis",
     "query": "Chronic pancreatitis",
     "uri": "http://id.who.int/icd/entity/1758007371"
+  },
+  "coagulopathy": {
+    "adjudicated": false,
+    "code": "3B4Z",
+    "match_score": 1,
+    "matched_text": "coagulopathy NOS",
+    "query": "Coagulopathy",
+    "uri": "http://id.who.int/icd/entity/1016799900"
+  },
+  "congenital blindness": {
+    "adjudicated": false,
+    "code": "9D90.6",
+    "match_score": 1,
+    "matched_text": "congenital blindness",
+    "query": "Congenital blindness",
+    "uri": "http://id.who.int/icd/entity/49873717"
   },
   "congenital cystic fibrosis": {
     "adjudicated": false,
@@ -295,6 +407,14 @@
     "query": "Congestive heart failure",
     "uri": "http://id.who.int/icd/entity/2136808878"
   },
+  "coronary and cerebrovascular disease": {
+    "adjudicated": false,
+    "code": "8B2Z",
+    "match_score": 0.6981337919872412,
+    "matched_text": "Cerebrovascular diseases, unspecified",
+    "query": "Coronary and cerebrovascular disease",
+    "uri": "http://id.who.int/icd/entity/843843448"
+  },
   "coronary arteriosclerosis": {
     "adjudicated": false,
     "code": "BA52.Z",
@@ -303,12 +423,36 @@
     "query": "Coronary arteriosclerosis",
     "uri": "http://id.who.int/icd/entity/1280712786"
   },
+  "coronary artery disease": {
+    "adjudicated": false,
+    "code": "BA8Z",
+    "match_score": 1,
+    "matched_text": "coronary arterial disease",
+    "query": "Coronary artery disease",
+    "uri": "http://id.who.int/icd/entity/1059873720"
+  },
+  "coronary heart disease": {
+    "adjudicated": false,
+    "code": "BA5Z",
+    "match_score": 1,
+    "matched_text": "coronary heart disease",
+    "query": "Coronary heart disease",
+    "uri": "http://id.who.int/icd/entity/1221742343"
+  },
   "cystic fibrosis": {
     "adjudicated": false,
     "code": "CA25.Z",
     "match_score": 1,
     "matched_text": "Cystic fibrosis",
     "query": "Cystic fibrosis",
+    "uri": "http://id.who.int/icd/entity/514403112"
+  },
+  "cystic fibrosis with disseminated infection": {
+    "adjudicated": false,
+    "code": "CA25.Z",
+    "match_score": 0.40101642063423343,
+    "matched_text": "Cystic fibrosis",
+    "query": "Cystic fibrosis with disseminated infection",
     "uri": "http://id.who.int/icd/entity/514403112"
   },
   "deep vein thrombosis": {
@@ -335,6 +479,14 @@
     "query": "Deep venous thrombosis of left thigh",
     "uri": "http://id.who.int/icd/entity/1014964218 & http://id.who.int/icd/entity/271422288"
   },
+  "deep venous thrombosis of the left thigh": {
+    "adjudicated": false,
+    "code": "BB00.Z&XK8G",
+    "match_score": 0.4861380431337093,
+    "matched_text": "deep lung venous thrombosis[Left]",
+    "query": "Deep venous thrombosis of the left thigh",
+    "uri": "http://id.who.int/icd/entity/1014964218 & http://id.who.int/icd/entity/271422288"
+  },
   "diabetes mellitus": {
     "adjudicated": false,
     "code": "5A14",
@@ -350,6 +502,22 @@
     "matched_text": "Type 2 diabetes mellitus",
     "query": "Diabetes mellitus type 2",
     "uri": "http://id.who.int/icd/entity/119724091"
+  },
+  "diminished liver function": {
+    "adjudicated": false,
+    "code": "DB99.7",
+    "match_score": 0.3421735177427421,
+    "matched_text": "liver function failure",
+    "query": "Diminished liver function",
+    "uri": "http://id.who.int/icd/entity/508643963"
+  },
+  "diminution of liver function": {
+    "adjudicated": false,
+    "code": "DB99.7",
+    "match_score": 0.3421735177427421,
+    "matched_text": "liver function failure",
+    "query": "Diminution of liver function",
+    "uri": "http://id.who.int/icd/entity/508643963"
   },
   "disseminated intravascular coagulation": {
     "adjudicated": false,
@@ -375,6 +543,14 @@
     "query": "Duodenal ulcer",
     "uri": "http://id.who.int/icd/entity/553678663"
   },
+  "dysrhythmia": {
+    "adjudicated": false,
+    "code": "BC9Z",
+    "match_score": 1,
+    "matched_text": "dysrhythmia NOS",
+    "query": "Dysrhythmia",
+    "uri": "http://id.who.int/icd/entity/1457291912"
+  },
   "escherichia coli meningitis": {
     "adjudicated": false,
     "code": "1D01.0Y&XN6P4",
@@ -391,6 +567,14 @@
     "query": "Failure to thrive",
     "uri": "http://id.who.int/icd/entity/1232517390"
   },
+  "fallot tetralogy": {
+    "adjudicated": false,
+    "code": "LA88.2Z",
+    "match_score": 1,
+    "matched_text": "Tetralogy of Fallot",
+    "query": "Fallot tetralogy",
+    "uri": "http://id.who.int/icd/entity/90973426"
+  },
   "fallot ’s tetralogy": {
     "adjudicated": false,
     "code": "LA88.2Z",
@@ -398,6 +582,14 @@
     "matched_text": "Tetralogy of Fallot",
     "query": "Fallot ’s tetralogy",
     "uri": "http://id.who.int/icd/entity/90973426"
+  },
+  "germ in the blood stream": {
+    "adjudicated": false,
+    "code": "3C0Z",
+    "match_score": 0.18246659861496242,
+    "matched_text": "blood disorder NOS",
+    "query": "Germ in the blood stream",
+    "uri": "http://id.who.int/icd/entity/1766440644"
   },
   "gestational hypertension": {
     "adjudicated": false,
@@ -431,12 +623,28 @@
     "query": "HIV infection",
     "uri": "http://id.who.int/icd/entity/1508081745"
   },
+  "hypercholesterolemia": {
+    "adjudicated": false,
+    "code": "5C80.0Z",
+    "match_score": 1,
+    "matched_text": "Hypercholesterolaemia",
+    "query": "Hypercholesterolemia",
+    "uri": "http://id.who.int/icd/entity/875976032"
+  },
   "hyperosmolar hyperglycaemic state": {
     "adjudicated": false,
     "code": "5A20.0",
     "match_score": 1,
     "matched_text": "hyperglycaemic hyperosmolar state NOS",
     "query": "Hyperosmolar hyperglycaemic state",
+    "uri": "http://id.who.int/icd/entity/1322661241"
+  },
+  "hyperosmolar hyperglycemic state": {
+    "adjudicated": false,
+    "code": "5A20.0",
+    "match_score": 1,
+    "matched_text": "hyperglycaemic hyperosmolar state NOS",
+    "query": "Hyperosmolar hyperglycemic state",
     "uri": "http://id.who.int/icd/entity/1322661241"
   },
   "hyperosmolar non - ketotic coma": {
@@ -479,6 +687,14 @@
     "query": "Hypotension",
     "uri": "http://id.who.int/icd/entity/1663360295"
   },
+  "hypovolemic shock": {
+    "adjudicated": false,
+    "code": "MG40.1",
+    "match_score": 1,
+    "matched_text": "Hypovolaemic shock",
+    "query": "Hypovolemic shock",
+    "uri": "http://id.who.int/icd/entity/284999005"
+  },
   "in-dwelling bladder catheter": {
     "adjudicated": false,
     "code": "GC01.Z",
@@ -486,6 +702,22 @@
     "matched_text": "Disorder of bladder, unspecified",
     "query": "In-dwelling bladder catheter",
     "uri": "http://id.who.int/icd/entity/1468065226"
+  },
+  "internal bleeding": {
+    "adjudicated": false,
+    "code": "MG27",
+    "match_score": 1,
+    "matched_text": "internal bleeding NOS",
+    "query": "Internal bleeding",
+    "uri": "http://id.who.int/icd/entity/940081636"
+  },
+  "intrauterine fetal demise": {
+    "adjudicated": false,
+    "code": "KD3B.Z",
+    "match_score": 1,
+    "matched_text": "intrauterine fetal demise",
+    "query": "Intrauterine fetal demise",
+    "uri": "http://id.who.int/icd/entity/505744734"
   },
   "ischaemic heart disease": {
     "adjudicated": false,
@@ -503,6 +735,14 @@
     "query": "Klebsiella pneumonia",
     "uri": "http://id.who.int/icd/entity/1250089989"
   },
+  "lack of consent from the parents": {
+    "adjudicated": false,
+    "code": "QE50.4",
+    "match_score": 0.10751556419852669,
+    "matched_text": "problem with parent",
+    "query": "Lack of consent from the parents",
+    "uri": "http://id.who.int/icd/entity/2112818375"
+  },
   "left hemiparesis": {
     "adjudicated": false,
     "code": "6B60.6",
@@ -511,6 +751,22 @@
     "query": "Left hemiparesis",
     "uri": "http://id.who.int/icd/entity/292596552"
   },
+  "left ventricular free wall rupture": {
+    "adjudicated": false,
+    "code": "BD11.Z",
+    "match_score": 0.2520310025512824,
+    "matched_text": "Left ventricular failure",
+    "query": "Left ventricular free wall rupture",
+    "uri": "http://id.who.int/icd/entity/437702716"
+  },
+  "liver failure": {
+    "adjudicated": false,
+    "code": "DB99.7",
+    "match_score": 1,
+    "matched_text": "hepatic failure NOS",
+    "query": "Liver failure",
+    "uri": "http://id.who.int/icd/entity/508643963"
+  },
   "malabsorption": {
     "adjudicated": false,
     "code": "DA96.0Z",
@@ -518,6 +774,30 @@
     "matched_text": "malabsorption",
     "query": "Malabsorption",
     "uri": "http://id.who.int/icd/entity/1526938195"
+  },
+  "massive obstetric hemorrhage": {
+    "adjudicated": false,
+    "code": "JA4Z",
+    "match_score": 0.7171117298602661,
+    "matched_text": "obstetric haemorrhage NOS",
+    "query": "Massive obstetric hemorrhage",
+    "uri": "http://id.who.int/icd/entity/903303141"
+  },
+  "meningitis": {
+    "adjudicated": false,
+    "code": "1D01.Z",
+    "match_score": 1,
+    "matched_text": "meningitis NOS",
+    "query": "Meningitis",
+    "uri": "http://id.who.int/icd/entity/703043937"
+  },
+  "meningitis from a staph germ": {
+    "adjudicated": false,
+    "code": "1B54",
+    "match_score": 0.6263943303264387,
+    "matched_text": "Meningitis due to Staphylococcus",
+    "query": "Meningitis from a staph germ",
+    "uri": "http://id.who.int/icd/entity/1331660907"
   },
   "moderately differentiated hepatocellular carcinoma": {
     "adjudicated": false,
@@ -534,6 +814,14 @@
     "matched_text": "myocardial infarct NOS",
     "query": "Myocardial infarction",
     "uri": "http://id.who.int/icd/entity/1334938734"
+  },
+  "myocardial infarction due to coronary artery disease": {
+    "adjudicated": false,
+    "code": "BA41.Z&XA2QX7",
+    "match_score": 0.6537177964945101,
+    "matched_text": "myocardial infarct NOS[Right coronary artery]",
+    "query": "Myocardial infarction due to coronary artery disease",
+    "uri": "http://id.who.int/icd/entity/1334938734 & http://id.who.int/icd/entity/787267597"
   },
   "niddm": {
     "adjudicated": false,
@@ -559,6 +847,14 @@
     "query": "Obesity",
     "uri": "http://id.who.int/icd/entity/149403041"
   },
+  "occult blood in stool": {
+    "adjudicated": false,
+    "code": "ME24.A6",
+    "match_score": 0.7803758725547326,
+    "matched_text": "Positive occult blood in stool",
+    "query": "Occult blood in stool",
+    "uri": "http://id.who.int/icd/entity/1048974920"
+  },
   "occult gastrointestinal bleeding": {
     "adjudicated": false,
     "code": "ME24.9Z",
@@ -575,6 +871,30 @@
     "query": "Old cerebrovascular accident",
     "uri": "http://id.who.int/icd/entity/557175275"
   },
+  "overwhelming staph infection of the blood": {
+    "adjudicated": false,
+    "code": "1B5Z",
+    "match_score": 0.3451948401913488,
+    "matched_text": "staphylococcal infection NOS",
+    "query": "Overwhelming staph infection of the blood",
+    "uri": "http://id.who.int/icd/entity/1854705998"
+  },
+  "pancreatic calcification": {
+    "adjudicated": false,
+    "code": "DC3Y",
+    "match_score": 1,
+    "matched_text": "Pancreas calcification",
+    "query": "Pancreatic calcification",
+    "uri": "http://id.who.int/icd/entity/517550448"
+  },
+  "pancreatic fibrosis with acute inflammation and necrosis": {
+    "adjudicated": false,
+    "code": "DC31.Y",
+    "match_score": 0.7358135848995826,
+    "matched_text": "acute necrosis of pancreas",
+    "query": "Pancreatic fibrosis with acute inflammation and necrosis",
+    "uri": "http://id.who.int/icd/entity/2063881303"
+  },
   "perforated duodenal ulcer": {
     "adjudicated": false,
     "code": "DA63.Y",
@@ -582,6 +902,14 @@
     "matched_text": "Perforated duodenal ulcer",
     "query": "Perforated duodenal ulcer",
     "uri": "http://id.who.int/icd/entity/1982276025"
+  },
+  "peritonitis due to duodenal ulcer perforation": {
+    "adjudicated": false,
+    "code": "DC50.Z",
+    "match_score": 0.5747594387914344,
+    "matched_text": "Acute perforative peritonitis",
+    "query": "Peritonitis due to duodenal ulcer perforation",
+    "uri": "http://id.who.int/icd/entity/1307641658"
   },
   "peritonitis due to perforated duodenal ulcer": {
     "adjudicated": false,
@@ -597,6 +925,14 @@
     "match_score": 1,
     "matched_text": "pneumonia due to Pneumocystis carinii",
     "query": "Pneumocystis carinii pneumonia",
+    "uri": "http://id.who.int/icd/entity/1526046317"
+  },
+  "pneumocystis jirovecii pneumonia": {
+    "adjudicated": false,
+    "code": "CA40.20",
+    "match_score": 1,
+    "matched_text": "Pneumonia due to Pneumocystis jirovecii",
+    "query": "Pneumocystis jirovecii pneumonia",
     "uri": "http://id.who.int/icd/entity/1526046317"
   },
   "pneumocystis pneumonia": {
@@ -623,6 +959,14 @@
     "query": "Pneumonia due to Klebsiella pneumoniae",
     "uri": "http://id.who.int/icd/entity/1250089989"
   },
+  "preeclampsia": {
+    "adjudicated": false,
+    "code": "JA24.Z",
+    "match_score": 1,
+    "matched_text": "Pre-eclampsia",
+    "query": "Preeclampsia",
+    "uri": "http://id.who.int/icd/entity/229121159"
+  },
   "prematurity": {
     "adjudicated": false,
     "code": "KA21.4Z",
@@ -638,6 +982,14 @@
     "matched_text": "Protein-losing enteropathy",
     "query": "Protein losing enteropathy",
     "uri": "http://id.who.int/icd/entity/1821383469"
+  },
+  "pseudomonas aeruginosa infection": {
+    "adjudicated": false,
+    "code": "GC08.Y&XN5L6",
+    "match_score": 0.5832936655301793,
+    "matched_text": "Urinary tract infection, site not specified, due to Pseudomonas aeruginosa",
+    "query": "Pseudomonas aeruginosa infection",
+    "uri": "http://id.who.int/icd/entity/1873982884"
   },
   "pseudomonas aeruginosa sepsis": {
     "adjudicated": false,
@@ -671,6 +1023,14 @@
     "query": "Pulmonary embolism",
     "uri": "http://id.who.int/icd/entity/1014964218"
   },
+  "radiation therapy": {
+    "adjudicated": false,
+    "code": "QC48.Y",
+    "match_score": 0.772572920734209,
+    "matched_text": "history of radiation therapy",
+    "query": "Radiation therapy",
+    "uri": "http://id.who.int/icd/entity/1888786135"
+  },
   "renal transplant": {
     "adjudicated": false,
     "code": "NE84",
@@ -679,6 +1039,14 @@
     "query": "Renal transplant",
     "uri": "http://id.who.int/icd/entity/1598788412"
   },
+  "renal transplant status": {
+    "adjudicated": false,
+    "code": "QB63.0",
+    "match_score": 1,
+    "matched_text": "kidney transplant status",
+    "query": "Renal transplant status",
+    "uri": "http://id.who.int/icd/entity/599293929"
+  },
   "respiratory distress syndrome": {
     "adjudicated": false,
     "code": "CB00",
@@ -686,6 +1054,14 @@
     "matched_text": "Acute respiratory distress syndrome",
     "query": "Respiratory distress syndrome",
     "uri": "http://id.who.int/icd/entity/1189702844"
+  },
+  "respiratory failure": {
+    "adjudicated": false,
+    "code": "CB41",
+    "match_score": 1,
+    "matched_text": "Respiratory failure",
+    "query": "Respiratory failure",
+    "uri": "http://id.who.int/icd/entity/370028006"
   },
   "right sub-phrenic abscess": {
     "adjudicated": false,
@@ -703,6 +1079,14 @@
     "query": "Rupture of L/ventricle",
     "uri": "http://id.who.int/icd/entity/5417233"
   },
+  "rupture of left ventricle": {
+    "adjudicated": false,
+    "code": "NB30.41&XK8G&XA7NQ7",
+    "match_score": -1.0985114212717773,
+    "matched_text": "traumatic rupture of pulmonary blood vessels[Left][left anterior interventricular artery]",
+    "query": "Rupture of left ventricle",
+    "uri": "http://id.who.int/icd/entity/1321780180 & http://id.who.int/icd/entity/271422288 & http://id.who.int/icd/entity/732645847"
+  },
   "rupture of left ventricle following coronary artery bypass grafting": {
     "adjudicated": false,
     "code": "QB50.1",
@@ -710,6 +1094,14 @@
     "matched_text": "Presence of coronary artery bypass graft",
     "query": "Rupture of left ventricle following coronary artery bypass grafting",
     "uri": "http://id.who.int/icd/entity/1510701822"
+  },
+  "rupture of left ventricle leading to exsanguination": {
+    "adjudicated": false,
+    "code": "BD11.Z",
+    "match_score": 0.2331427797543489,
+    "matched_text": "Left ventricular failure",
+    "query": "Rupture of left ventricle leading to exsanguination",
+    "uri": "http://id.who.int/icd/entity/437702716"
   },
   "sepsis": {
     "adjudicated": false,
@@ -727,6 +1119,22 @@
     "query": "Sepsis due to abdominal infection",
     "uri": "http://id.who.int/icd/entity/1070977756"
   },
+  "sepsis due to escherichia coli": {
+    "adjudicated": false,
+    "code": "1C41/1G40&XN6P4",
+    "match_score": 1,
+    "matched_text": "sepsis due to Escherichia coli NOS",
+    "query": "Sepsis due to Escherichia coli",
+    "uri": "http://id.who.int/icd/entity/736553724"
+  },
+  "sepsis due to pseudomonas aeruginosa": {
+    "adjudicated": false,
+    "code": "1C41/1G40&XN5L6",
+    "match_score": 1,
+    "matched_text": "sepsis due to Pseudomonas aeruginosa NOS",
+    "query": "Sepsis due to Pseudomonas aeruginosa",
+    "uri": "http://id.who.int/icd/entity/1983664632"
+  },
   "sepsis due to pseudomonas aeruginosa infection": {
     "adjudicated": false,
     "code": "1C41/1G41&XN5L6",
@@ -743,6 +1151,14 @@
     "query": "Septic shock",
     "uri": "http://id.who.int/icd/entity/1683090852"
   },
+  "septicaemic shock state": {
+    "adjudicated": false,
+    "code": "MA15.0",
+    "match_score": 0.4905617157016639,
+    "matched_text": "Septicaemia",
+    "query": "Septicaemic shock state",
+    "uri": "http://id.who.int/icd/entity/2093238381"
+  },
   "severe acute renal failure": {
     "adjudicated": false,
     "code": "GB60.Z&XS25",
@@ -750,6 +1166,86 @@
     "matched_text": "Acute kidney failure[Severe]",
     "query": "Severe acute renal failure",
     "uri": "http://id.who.int/icd/entity/476391827 & http://id.who.int/icd/entity/1201187093"
+  },
+  "severe multi-vessel coronary artery stenosis": {
+    "adjudicated": false,
+    "code": "BA8Z",
+    "match_score": 0.6307649109697574,
+    "matched_text": "multivessel coronary artery disease",
+    "query": "Severe multi-vessel coronary artery stenosis",
+    "uri": "http://id.who.int/icd/entity/1059873720"
+  },
+  "shock": {
+    "adjudicated": false,
+    "code": "MG40.Z",
+    "match_score": 1,
+    "matched_text": "Shock",
+    "query": "Shock",
+    "uri": "http://id.who.int/icd/entity/1164022950"
+  },
+  "shock due to overwhelming infection": {
+    "adjudicated": false,
+    "code": "1G41",
+    "match_score": 0.5396288254073383,
+    "matched_text": "infectious shock",
+    "query": "Shock due to overwhelming infection",
+    "uri": "http://id.who.int/icd/entity/1683090852"
+  },
+  "smoking": {
+    "adjudicated": false,
+    "code": "QE13",
+    "match_score": 1,
+    "matched_text": "smoking NOS",
+    "query": "Smoking",
+    "uri": "http://id.who.int/icd/entity/457960184"
+  },
+  "staph meningitis": {
+    "adjudicated": false,
+    "code": "1B54",
+    "match_score": 1,
+    "matched_text": "Meningitis due to Staphylococcus",
+    "query": "Staph meningitis",
+    "uri": "http://id.who.int/icd/entity/1331660907"
+  },
+  "staphylococcal meningitis": {
+    "adjudicated": false,
+    "code": "1B54",
+    "match_score": 1,
+    "matched_text": "Meningitis due to Staphylococcus",
+    "query": "Staphylococcal meningitis",
+    "uri": "http://id.who.int/icd/entity/1331660907"
+  },
+  "staphylococcal septicemia": {
+    "adjudicated": false,
+    "code": "MA15.0",
+    "match_score": 0.7877459279489376,
+    "matched_text": "staphylococcal septicaemia NOS (deprecated)",
+    "query": "Staphylococcal septicemia",
+    "uri": "http://id.who.int/icd/entity/2093238381"
+  },
+  "staphylococcus aureus bacteremia": {
+    "adjudicated": false,
+    "code": "MA15.0",
+    "match_score": 1,
+    "matched_text": "Staphylococcus aureus bacteraemia",
+    "query": "Staphylococcus aureus bacteremia",
+    "uri": "http://id.who.int/icd/entity/1876028448"
+  },
+  "staphylococcus aureus infection of central nervous system": {
+    "adjudicated": false,
+    "code": "1D0Z",
+    "match_score": 0.6395568219220527,
+    "matched_text": "acute central nervous system infection NOS",
+    "query": "Staphylococcus aureus infection of central nervous system",
+    "uri": "http://id.who.int/icd/entity/1585949804"
+  },
+  "staphylococcus aureus infection of the meninges": {
+    "adjudicated": false,
+    "code": "1B54",
+    "match_score": 0.7511412672605584,
+    "matched_text": "Meningitis due to Staphylococcus aureus",
+    "query": "Staphylococcus aureus infection of the meninges",
+    "uri": "http://id.who.int/icd/entity/240293267"
   },
   "staphylococcus aureus meningitis": {
     "adjudicated": false,
@@ -775,6 +1271,14 @@
     "query": "Subphrenic abscess",
     "uri": "http://id.who.int/icd/entity/196539238"
   },
+  "sudden cardiac death": {
+    "adjudicated": false,
+    "code": "MC82.Z",
+    "match_score": 1,
+    "matched_text": "sudden cardiac death",
+    "query": "Sudden cardiac death",
+    "uri": "http://id.who.int/icd/entity/264292672"
+  },
   "tachycardia": {
     "adjudicated": false,
     "code": "MC81.0",
@@ -783,6 +1287,14 @@
     "query": "Tachycardia",
     "uri": "http://id.who.int/icd/entity/515681918"
   },
+  "tetanus": {
+    "adjudicated": false,
+    "code": "1C13",
+    "match_score": 1,
+    "matched_text": "Tetanus",
+    "query": "Tetanus",
+    "uri": "http://id.who.int/icd/entity/1793762788"
+  },
   "type 2 diabetes mellitus": {
     "adjudicated": false,
     "code": "5A11",
@@ -790,5 +1302,13 @@
     "matched_text": "Type 2 diabetes mellitus",
     "query": "Type 2 diabetes mellitus",
     "uri": "http://id.who.int/icd/entity/119724091"
+  },
+  "weight loss": {
+    "adjudicated": false,
+    "code": "MG43.5",
+    "match_score": 1,
+    "matched_text": "weight loss NOS",
+    "query": "Weight loss",
+    "uri": "http://id.who.int/icd/entity/2015627151"
   }
 }
