@@ -4,19 +4,19 @@ check_rules runs the deterministic gate: the schema again, then the rules
 V1 to V10 against the text of the notes. The model is asked to self-check
 too, but a check by the thing being checked fails in exactly the cases that
 matter, so every rule lives here, in code that cannot be talked out of its
-answer.
+answer. The rules::
 
-V1   exact quote: evidence_span is verbatim in the note named by evidence_field
-V2   mode of dying: no Part I line is one
-V3   one cause per line
-V4   no abbreviations
-V5   chain shape: Part I has 1-4 lines, none empty or repeated
-V6   interval order: intervals do not decrease from 1a down
-V7   Part II overlap: Part II shares nothing with Part I, at most 4 entries
-V8   decline consistency: a declined record has no chain and states a reason
-V9   no codes in terms: no ICD-10 or ICD-11 code in a certified term
-V10  no identifiers: no phone, NIC, email or street address in a term, span,
-     review.note or decline_reason (names have no pattern and are not checked)
+    V1   exact quote: evidence_span is verbatim in the note named by evidence_field
+    V2   mode of dying: no Part I line is one
+    V3   one cause per line
+    V4   no abbreviations
+    V5   chain shape: Part I has 1-4 lines, none empty or repeated
+    V6   interval order: intervals do not decrease from 1a down
+    V7   Part II overlap: Part II shares nothing with Part I, at most 4 entries
+    V8   decline consistency: a declined record has no chain and states a reason
+    V9   no codes in terms: no ICD-10 or ICD-11 code in a certified term
+    V10  no identifiers: no phone, NIC, email or street address in a term, span,
+         review.note or decline_reason (names have no pattern and are not checked)
 
 Severity: an error blocks auto and triggers the fix; a warning is recorded
 for the reviewer and does not block.

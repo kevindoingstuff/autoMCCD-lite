@@ -1,4 +1,4 @@
-"""certify_record: one record through the three steps.
+"""certify_record: one record through the three steps::
 
     Draft   draft_certificate
     Check   check_rules -> fix_rules (once, when a rule fails)
