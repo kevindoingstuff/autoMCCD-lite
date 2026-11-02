@@ -32,7 +32,6 @@ import os
 import time
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Protocol
 
 import httpx
 
@@ -51,16 +50,16 @@ SEX = {"male": 1, "female": 2, "m": 1, "f": 2, "1": 1, "2": 2}
 CACHE_PATH = DATA_DIR / "code_cache.json"
 
 
-class IcdError(RuntimeError):
+class WhoError(RuntimeError):
     """The API answered with an error (4xx, or 5xx after retries)."""
 
 
-class ICDUnavailable(IcdError):
+class WhoUnavailable(WhoError):
     """Container not reachable. The pipeline degrades to review."""
 
 
 @dataclass
-class IcdCertificate:
+class WhoCertificate:
     """The subset of the death-certificate form these endpoints need."""
 
     sex: int | None = None
@@ -85,7 +84,7 @@ class IcdCertificate:
         return p
 
 
-class IcdClient:
+class WhoClient:
     def __init__(
         self,
         base_url: str,
@@ -108,14 +107,14 @@ class IcdClient:
                 r = self._http.get(path, params=clean)
             except httpx.TransportError as e:  # refused, timed out, reset while it loads
                 if attempt == retries:
-                    raise ICDUnavailable(f"{path}: {type(e).__name__}") from e
+                    raise WhoUnavailable(f"{path}: {type(e).__name__}") from e
             else:
                 if r.status_code < 400:
                     return r.json()
                 # A 4xx is the API talking, not the container being absent. A
                 # 5xx is the container struggling, and is retried like a timeout.
                 if r.status_code < 500 or attempt == retries:
-                    raise IcdError(f"{path}: HTTP {r.status_code}")
+                    raise WhoError(f"{path}: HTTP {r.status_code}")
             time.sleep(1 + attempt)
         raise AssertionError("unreachable")
 
@@ -123,7 +122,7 @@ class IcdClient:
         try:
             self._get(f"/icd/release/11/{self.release}/{self.linearization}", retries=0)
             return True
-        except IcdError:
+        except WhoError:
             return False
 
     def autocode(self, text: str) -> dict:
@@ -140,7 +139,7 @@ class IcdClient:
             "adjudicated": False,
         }
 
-    def doris(self, cert: IcdCertificate) -> dict:
+    def doris(self, cert: WhoCertificate) -> dict:
         """Underlying-cause selection, with WHO's own rule trace."""
         r = self._get(f"/icd/release/11/{self.release}/doris", cert.params())
         return {
@@ -153,7 +152,7 @@ class IcdClient:
             "warning": r.get("warning"),
         }
 
-    def codedit(self, cert: IcdCertificate) -> dict:
+    def codedit(self, cert: WhoCertificate) -> dict:
         """Quality checks. issueIds is an empty string when clean."""
         r = self._get(f"/icd/release/11/{self.release}/codedit", cert.params())
         raw = (r.get("issueIds") or "").replace(";", ",")
@@ -180,55 +179,41 @@ def cache_key(text: str) -> str:
     return " ".join(text.lower().split())
 
 
-class CodeCache(Protocol):
-    def code(self, text: str) -> dict: ...
-
-
-class MemoryCodeCache:
-    def __init__(self, client: IcdClient):
-        self.client = client
-        self.data: dict[str, dict] = {}
-
-    def code(self, text: str) -> dict:
-        key = cache_key(text)
-        if key not in self.data:
-            self.data[key] = self.client.autocode(text)
-        return self.data[key]
-
-
-class FileCodeCache:
-    """A JSON file, `{term_key: {code, matched_text, match_score, ...,
-    adjudicated}}`, shared by the api, the eval and the notebooks. Persisted
-    between runs, so a fresh clone codes the gold chains without the
+class CodeCache:
+    """Each term coded once. With a path (the default, `data/code_cache.json`)
+    the entries persist as a JSON file, `{term_key: {code, matched_text,
+    match_score, ..., adjudicated}}`, shared by the api, the eval and the
+    notebooks: a fresh clone codes the reference chains without the
     container, and a human can set `adjudicated: true` after review. The
     file is rewritten whole on every new term; a few hundred entries make
-    that cheap."""
+    that cheap. With `path=None` the entries live in memory only (tests)."""
 
-    def __init__(self, client: IcdClient, path: Path = CACHE_PATH):
+    def __init__(self, client: WhoClient, path: Path | None = CACHE_PATH):
         self.client = client
         self.path = path
         self.data: dict[str, dict] = {}
-        if path.exists():
+        if path is not None and path.exists():
             self.data = json.loads(path.read_text(encoding="utf-8") or "{}")
 
     def code(self, text: str) -> dict:
         key = cache_key(text)
         if key not in self.data:
             self.data[key] = self.client.autocode(text)
-            self._save()
+            if self.path is not None:
+                self._save(self.path)
         return self.data[key]
 
-    def _save(self) -> None:
-        # The api container, the eval and the notebooks all write this file;
-        # merge what another writer added since we loaded it, then rewrite.
-        if self.path.exists():
-            on_disk = json.loads(self.path.read_text(encoding="utf-8") or "{}")
+    def _save(self, path: Path) -> None:
+        # The api, the eval and the notebooks all write this file; merge what
+        # another writer added since we loaded it, then rewrite.
+        if path.exists():
+            on_disk = json.loads(path.read_text(encoding="utf-8") or "{}")
             self.data = {**on_disk, **self.data}
-        tmp = self.path.with_suffix(".json.tmp")
+        tmp = path.with_suffix(".json.tmp")
         with tmp.open("w", encoding="utf-8", newline="\n") as f:  # LF on Windows too
             json.dump(self.data, f, ensure_ascii=False, indent=2, sort_keys=True)
             f.write("\n")
-        os.replace(tmp, self.path)  # a crash mid-write leaves the old file intact
+        os.replace(tmp, path)  # a crash mid-write leaves the old file intact
 
 
 # --------------------------------------------------------------------------
@@ -236,7 +221,7 @@ class FileCodeCache:
 # --------------------------------------------------------------------------
 
 
-def icd_certificate(cert: dict, cache: CodeCache, demographics: dict | None) -> IcdCertificate:
+def who_certificate(cert: dict, cache: CodeCache, demographics: dict | None) -> WhoCertificate:
     """Map a model-produced MCCD onto the API's certificate shape."""
     p1 = [c.get("certified_term", "") for c in (cert.get("part1") or [])]
     p2 = [c.get("certified_term", "") for c in (cert.get("part2") or [])]
@@ -245,7 +230,7 @@ def icd_certificate(cert: dict, cache: CodeCache, demographics: dict | None) -> 
         iv = c.get("interval") or {}
         intervals.append(iso_duration(iv.get("value"), iv.get("unit")))
     demo = demographics or {}
-    return IcdCertificate(
+    return WhoCertificate(
         sex=SEX.get(str(demo.get("sex") or "").lower()),
         estimated_age=demo.get("age_iso"),
         part1_codes=[cache.code(t)["code"] if t else None for t in p1],
@@ -255,9 +240,9 @@ def icd_certificate(cert: dict, cache: CodeCache, demographics: dict | None) -> 
 
 
 def code_draft(
-    cert: dict, cache: CodeCache, client: IcdClient, demographics: dict | None
+    cert: dict, cache: CodeCache, client: WhoClient, demographics: dict | None
 ) -> Coding:
-    c = icd_certificate(cert, cache, demographics)
+    c = who_certificate(cert, cache, demographics)
     p1_terms = [x.get("certified_term", "") for x in (cert.get("part1") or [])]
     p2_terms = [x.get("certified_term", "") for x in (cert.get("part2") or [])]
     entries = [cache.code(t) for t in p1_terms + p2_terms if t]
@@ -265,7 +250,7 @@ def code_draft(
     codedit = client.codedit(c)
     ucod = doris.get("ucod_stem_code")
     codedit_cause = (
-        client.codedit(IcdCertificate(sex=c.sex, estimated_age=c.estimated_age, part1_codes=[ucod]))
+        client.codedit(WhoCertificate(sex=c.sex, estimated_age=c.estimated_age, part1_codes=[ucod]))
         if ucod
         else None
     )

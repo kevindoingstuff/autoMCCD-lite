@@ -7,7 +7,7 @@ from collections.abc import Iterable
 
 import pytest
 
-from automccd_lite.code import IcdCertificate
+from automccd_lite.code import WhoCertificate
 from automccd_lite.models import Draft, Note, Record, Usage
 
 NARRATIVE = (
@@ -95,14 +95,14 @@ class FakeIcd:
         return {"query": text, "code": code, "matched_text": text, "match_score": score,
                 "uri": None, "adjudicated": False}  # fmt: skip
 
-    def doris(self, cert: IcdCertificate) -> dict:
+    def doris(self, cert: WhoCertificate) -> dict:
         self.calls.append("doris")
         coded = [c for c in (cert.part1_codes or []) if c]
         ucod = coded[-1] if coded else None
         return {"ucod_code": ucod, "ucod_stem_code": ucod, "ucod_uri": None,
                 "report": "fake", "rejected": False, "error": None, "warning": None}  # fmt: skip
 
-    def codedit(self, cert: IcdCertificate) -> dict:
+    def codedit(self, cert: WhoCertificate) -> dict:
         self.calls.append("codedit")
         solo = len([c for c in (cert.part1_codes or []) if c]) == 1 and not cert.part2_codes
         ids = self.ucod_issues if solo and self.ucod_issues else self.issues

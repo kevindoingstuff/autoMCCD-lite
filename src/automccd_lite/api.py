@@ -22,7 +22,7 @@ from sqlalchemy import text
 
 from automccd_lite import __version__
 from automccd_lite.certificate import as_response
-from automccd_lite.code import FileCodeCache, IcdClient
+from automccd_lite.code import CodeCache, WhoClient
 from automccd_lite.config import Settings, settings
 from automccd_lite.db import SqliteCertificateStore, create_all, session_scope
 from automccd_lite.draft import Ask, ModelUnavailable, asker, make_client
@@ -39,9 +39,9 @@ class Readiness(BaseModel):
     components: dict[str, Any]
 
 
-def icd_client(cfg: Settings | None = None) -> IcdClient:
+def icd_client(cfg: Settings | None = None) -> WhoClient:
     cfg = cfg or settings()
-    return IcdClient(
+    return WhoClient(
         cfg.env.icd_api_url,
         cfg.code.icd_release,
         cfg.code.linearization,
@@ -56,8 +56,8 @@ class Runtime:
 
     settings: Settings
     ask: Ask
-    icd: IcdClient
-    cache: FileCodeCache
+    icd: WhoClient
+    cache: CodeCache
     storage: FileStorage
 
     @classmethod
@@ -68,7 +68,7 @@ class Runtime:
             settings=cfg,
             ask=asker(make_client(cfg)),
             icd=icd,
-            cache=FileCodeCache(icd),
+            cache=CodeCache(icd),
             storage=FileStorage(cfg.env.store_dir),
         )
 

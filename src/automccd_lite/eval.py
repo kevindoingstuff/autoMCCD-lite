@@ -31,7 +31,7 @@ from pathlib import Path
 from typing import Any
 
 from automccd_lite import __version__
-from automccd_lite.code import FileCodeCache, IcdClient, IcdError, ICDUnavailable, code_draft
+from automccd_lite.code import CodeCache, WhoClient, WhoError, WhoUnavailable, code_draft
 from automccd_lite.config import DATA_DIR, ROOT, settings
 from automccd_lite.draft import ModelUnavailable, asker, make_client
 from automccd_lite.models import Record, Result
@@ -260,7 +260,7 @@ class Reference:
     DORIS pipeline as the model's certificate, so the comparison is code
     against code and not word against word."""
 
-    def __init__(self, icd: IcdClient, cache: FileCodeCache):
+    def __init__(self, icd: WhoClient, cache: CodeCache):
         self.icd, self.cache = icd, cache
         self.codes: dict[str, str | None] = {}
 
@@ -274,7 +274,7 @@ class Reference:
             try:
                 coded = code_draft(mccd, self.cache, self.icd, case.record.demographics)
                 self.codes[case.parent] = coded.doris.get("ucod_stem_code")
-            except (IcdError, ICDUnavailable):
+            except (WhoError, WhoUnavailable):
                 self.codes[case.parent] = None
         return self.codes[case.parent]
 
@@ -448,14 +448,14 @@ def summarize(rows: list[dict]) -> dict[str, Any]:
 
 def default_deps() -> Deps:
     cfg = settings()
-    icd = IcdClient(
+    icd = WhoClient(
         cfg.env.icd_api_url,
         cfg.code.icd_release,
         cfg.code.linearization,
         cfg.code.timeout_s,
         cfg.code.max_retries,
     )
-    return Deps(ask=asker(make_client(cfg)), icd=icd, cache=FileCodeCache(icd))
+    return Deps(ask=asker(make_client(cfg)), icd=icd, cache=CodeCache(icd))
 
 
 def run(
@@ -501,7 +501,7 @@ def run(
         "set": set_name,
         "only": list(only),
         "corpus_version": robust_sample()["corpus_version"],
-        "method": "in-process certify_record, strict json_schema, FileCodeCache",
+        "method": "in-process certify_record, strict json_schema, the autocode cache file",
         "versions": {
             "prompt_version": sp.version,
             "prompt_sha1": sp.sha1,

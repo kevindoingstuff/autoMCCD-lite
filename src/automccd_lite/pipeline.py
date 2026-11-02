@@ -13,7 +13,7 @@ import time
 from dataclasses import dataclass
 
 from automccd_lite.certificate import generate_certificate
-from automccd_lite.code import CodeCache, IcdClient, IcdError, ICDUnavailable, code_draft
+from automccd_lite.code import CodeCache, WhoClient, WhoError, WhoUnavailable, code_draft
 from automccd_lite.config import settings
 from automccd_lite.db import SqliteCertificateStore
 from automccd_lite.draft import Ask, draft_certificate
@@ -27,7 +27,7 @@ from automccd_lite.validate import validate_draft
 @dataclass
 class Deps:
     ask: Ask
-    icd: IcdClient
+    icd: WhoClient
     cache: CodeCache
     storage: FileStorage | None = None
     store: SqliteCertificateStore | None = None
@@ -74,9 +74,9 @@ def certify_record(record: Record, deps: Deps) -> Result:
                 coded = code_draft(
                     draft.certificate or {}, deps.cache, deps.icd, record.demographics
                 )
-            except ICDUnavailable:
+            except WhoUnavailable:
                 icd_error = "who:unavailable"
-            except IcdError:
+            except WhoError:
                 icd_error = "who:error"
             t.mark("code")
 
