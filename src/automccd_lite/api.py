@@ -27,7 +27,7 @@ from automccd_lite.config import Settings, settings
 from automccd_lite.db import SqliteCertificateStore, create_all, session_scope
 from automccd_lite.draft import Ask, ModelUnavailable, asker, make_client
 from automccd_lite.log import log_event
-from automccd_lite.models import Certificate, Record
+from automccd_lite.models import Record, Result
 from automccd_lite.pipeline import Deps, certify_record
 from automccd_lite.storage import FileStorage
 
@@ -72,7 +72,7 @@ class Runtime:
             storage=FileStorage(cfg.env.store_dir),
         )
 
-    def certify_one(self, record: Record) -> Certificate:
+    def certify_one(self, record: Record) -> Result:
         with session_scope() as s:
             deps = Deps(self.ask, self.icd, self.cache, self.storage, SqliteCertificateStore(s))
             cert = certify_record(record, deps)

@@ -1,4 +1,4 @@
-"""generate_certificate: the Certificate, and where it goes.
+"""generate_certificate: the Result, and where it goes.
 
 Builds the response object from everything the stages produced. When a
 storage and a store are passed it also writes the JSON file and inserts the
@@ -12,14 +12,14 @@ from typing import TYPE_CHECKING, Any
 from automccd_lite import __version__
 from automccd_lite.config import settings
 from automccd_lite.models import (
-    Certificate,
-    CodedDraft,
+    Coding,
     CodingSummary,
     Decision,
     Draft,
     DraftStatus,
-    DraftValidation,
     Record,
+    Result,
+    RuleCheck,
     Usage,
     Versions,
 )
@@ -30,19 +30,19 @@ if TYPE_CHECKING:
     from automccd_lite.storage import FileStorage
 
 
-def coding_summary(coded: CodedDraft | None) -> CodingSummary | None:
+def coding_summary(coded: Coding | None) -> CodingSummary | None:
     if coded is None:
         return None
     issues = list(coded.codedit.get("issue_ids") or [])
-    if coded.codedit_ucod:
-        issues += [i for i in coded.codedit_ucod.get("issue_ids") or [] if i not in issues]
+    if coded.codedit_cause:
+        issues += [i for i in coded.codedit_cause.get("issue_ids") or [] if i not in issues]
     return CodingSummary(
-        ucod_stem=coded.doris.get("ucod_stem_code"),
-        ucod_full=coded.doris.get("ucod_code"),
+        underlying_cause=coded.doris.get("ucod_stem_code"),
+        underlying_cause_full=coded.doris.get("ucod_code"),
         codes=coded.codes,
-        code_scores=coded.code_scores,
-        codedit_issues=issues,
-        doris_warning=coded.doris.get("warning"),
+        match_scores=coded.match_scores,
+        quality_issues=issues,
+        cause_warning=coded.doris.get("warning"),
     )
 
 
@@ -55,24 +55,24 @@ def versions(model: str | None) -> Versions:
         schema_version=sp.schema_version,
         model=model or cfg.draft.model,
         icd_release=cfg.code.icd_release,
-        automccd_version=__version__,
+        package_version=__version__,
     )
 
 
 def generate_certificate(
     record: Record,
     draft: Draft,
-    validation: DraftValidation | None,
-    coded: CodedDraft | None,
+    validation: RuleCheck | None,
+    coded: Coding | None,
     icd_error: str | None,
     decision: Decision,
     usage: Usage,
     timings_ms: dict[str, int],
     storage: FileStorage | None = None,
     store: SqliteCertificateStore | None = None,
-) -> Certificate:
+) -> Result:
     status: DraftStatus = draft.status
-    cert = Certificate(
+    cert = Result(
         record_id=record.record_id,
         route=decision.route,
         reasons=decision.reasons,
@@ -94,7 +94,7 @@ def generate_certificate(
     return cert
 
 
-def as_response(cert: Certificate) -> dict[str, Any]:
+def as_response(cert: Result) -> dict[str, Any]:
     """The API body: the certificate without the bulky provenance, which
     stays in the database."""
     return cert.model_dump(

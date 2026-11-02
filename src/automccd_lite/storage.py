@@ -13,7 +13,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 from automccd_lite.config import settings
-from automccd_lite.models import Certificate
+from automccd_lite.models import Result
 
 CERTIFICATES_DIR = "certificates"
 
@@ -28,7 +28,7 @@ class FileStorage:
         self.store_dir = store_dir or settings().env.store_dir
         (self.store_dir / CERTIFICATES_DIR).mkdir(parents=True, exist_ok=True)
 
-    def put_certificate(self, cert: Certificate) -> str:
+    def put_certificate(self, cert: Result) -> str:
         from automccd_lite.certificate import as_response  # the file holds the response body
 
         rel = certificate_path(cert.record_id)

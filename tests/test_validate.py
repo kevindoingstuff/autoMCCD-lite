@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from automccd_lite.validate import validate, validate_schema
+from automccd_lite.validate import apply_rules, validate_schema
 
 NARRATIVE = (
     "The patient was admitted with fever and drowsiness. A diagnosis of "
@@ -136,7 +136,7 @@ CASES = [
 
 @pytest.mark.parametrize("case", CASES, ids=str)
 def test_rule(case: Case):
-    errs = validate(case.cert, case.fields).errors
+    errs = apply_rules(case.cert, case.fields).errors
     hits = [e for e in errs if case.rule in (None, e.rule)]
     if case.expect == "fires":
         assert hits, f"{case.rule} did not fire; fired: {sorted({e.rule for e in errs})}"

@@ -104,13 +104,13 @@ def complete(
         return Draft(status="truncated", reason="finish_reason=length", **base)
     content = msg.content or ""
     if not content.strip():
-        return Draft(status="invalid", reason="empty reply", **base)
+        return Draft(status="unparsable", reason="empty reply", **base)
     try:
         parsed = json.loads(content)
     except json.JSONDecodeError as e:
-        return Draft(status="invalid", reason=f"not valid JSON: {e}"[:300], **base)
+        return Draft(status="unparsable", reason=f"not valid JSON: {e}"[:300], **base)
     if not isinstance(parsed, dict):
-        return Draft(status="invalid", reason="reply is not a JSON object", **base)
+        return Draft(status="unparsable", reason="reply is not a JSON object", **base)
     return Draft(status="ok", certificate=parsed, **base)
 
 

@@ -67,10 +67,10 @@ def render(record: Record) -> str:
     sex = record.sex or "not recorded"
     age = record.age_iso or "not recorded"
     lines = [f"record_id: {record.record_id}", f"decedent: sex={sex}; age={age}"]
-    if record.context:
-        lines.append(
-            f"context (registry metadata, not a record field -- do not cite): {record.context}"
-        )
+    if record.registry_info:
+        # The label stays "context": the model was evaluated on this exact text.
+        label = "context (registry metadata, not a record field -- do not cite)"
+        lines.append(f"{label}: {record.registry_info}")
     lines.append("")
     for name, text in record.fields.items():
         lines.append(f"=== field: {name} ===")

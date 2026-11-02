@@ -4,7 +4,7 @@
     python -m automccd_lite.eval --set robust --only S01-ocr H01
 
 Runs `certify_record` in-process, so every row comes from the full
-Certificate: the gate's verdict, both revisions, the codes. Four numbers
+Result: the gate's verdict, both revisions, the codes. Four numbers
 matter: validator-clean on the first pass and after revision, the auto share,
 and the UCOD against the gold certificate coded through the same
 autocode + DORIS pipeline. The robust sample is scored on behaviour only:
@@ -34,7 +34,7 @@ from automccd_lite import __version__
 from automccd_lite.code import FileCodeCache, IcdClient, IcdError, ICDUnavailable, code_draft
 from automccd_lite.config import DATA_DIR, ROOT, settings
 from automccd_lite.draft import ModelUnavailable, asker, make_client
-from automccd_lite.models import Certificate, Record
+from automccd_lite.models import Record, Result
 from automccd_lite.pipeline import Deps, certify_record
 from automccd_lite.prompt import system_prompt
 from automccd_lite.validate import verbatim_in
@@ -156,7 +156,7 @@ def robust_cases() -> list[Case]:
             sex=raw.get("sex"),
             age=age,
             age_unit=unit,
-            context=raw.get("context"),
+            registry_info=raw.get("context"),
             notes=[{"name": n, "text": t} for n, t in raw["fields"].items()],
         )
         out.append(
@@ -316,7 +316,7 @@ def must_not_violations(case: Case, row: dict) -> list[str]:
             v.append("auto")
         elif m == "certify" and row.get("assessment") == "certifiable":
             v.append("certify")
-        elif m == "mode_of_dying_1a" and "V2" in (row.get("rules_fired") or []):
+        elif m == "mode_of_dying_1a" and "V2" in (row.get("broken_rules") or []):
             v.append("mode_of_dying_1a")
         elif m == "explicit_without_record" and "explicit_diagnosis" in (
             row.get("model_bases") or []
@@ -337,7 +337,7 @@ def must_not_violations(case: Case, row: dict) -> list[str]:
     return v
 
 
-def score(case: Case, cert: Certificate | None, err: str | None = None) -> dict[str, Any]:
+def score(case: Case, cert: Result | None, err: str | None = None) -> dict[str, Any]:
     """The row for one case. `cert` is None when the pipeline raised."""
     row: dict[str, Any] = {
         "id": case.id,
@@ -368,20 +368,19 @@ def score(case: Case, cert: Certificate | None, err: str | None = None) -> dict[
     row.update(
         parsed=True,
         schema_ok=v.schema_ok,
-        validator_passed=v.validator_passed,
-        errors=list(v.errors),
-        warnings=list(v.warnings),
-        rules_fired=list(v.rules_fired),
-        first_pass=dict(v.revise_before)
-        if v.revise_before
+        rules_passed=v.rules_passed,
+        messages=list(v.messages),
+        broken_rules=list(v.broken_rules),
+        first_pass=dict(v.before_fix)
+        if v.before_fix
         else {
             "schema_ok": v.schema_ok,
-            "validator_passed": v.validator_passed,
-            "rules_fired": list(v.rules_fired),
+            "rules_passed": v.rules_passed,
+            "broken_rules": list(v.broken_rules),
         },
-        repaired=v.revised,
-        repair_rejected=v.revise_rejected,
-        term_repair=v.term_revision,
+        repaired=v.rules_fixed,
+        repair_rejected=v.fix_rejected,
+        term_repair=v.terms_fixed,
         term_changes=list(v.term_changes),
         assessment=v.assessment,
         confidence=v.confidence,
@@ -395,13 +394,13 @@ def score(case: Case, cert: Certificate | None, err: str | None = None) -> dict[
         ref_ucod=case.ref_ucod,
     )
     if cert.coded is not None:
-        cu = cert.coded.codedit_ucod or {}
+        cu = cert.coded.codedit_cause or {}
         row.update(
             codes=list(cert.coded.codes.get("part1") or []),
-            code_scores=list(cert.coded.code_scores),
+            match_scores=list(cert.coded.match_scores),
             ucod_code=cert.coded.doris.get("ucod_stem_code"),
-            ucod_full=cert.coded.doris.get("ucod_code"),
-            codedit_issues=list(cert.coded.codedit.get("issue_ids") or []),
+            underlying_cause_full=cert.coded.doris.get("ucod_code"),
+            quality_issues=list(cert.coded.codedit.get("issue_ids") or []),
             ill_defined=bool(cu.get("ill_defined")),
         )
     row["behaviour_ok"] = behaviour_ok(case.expected, v.assessment, row["route"])
@@ -422,9 +421,9 @@ def summarize(rows: list[dict]) -> dict[str, Any]:
         "n": n,
         "parsed": len(parsed),
         "validator_clean_first_pass": share(
-            sum(r["first_pass"].get("validator_passed", False) for r in parsed), n
+            sum(r["first_pass"].get("rules_passed", False) for r in parsed), n
         ),
-        "validator_clean": share(sum(r["validator_passed"] for r in parsed), n),
+        "validator_clean": share(sum(r["rules_passed"] for r in parsed), n),
         "revised": sum(bool(r.get("repaired")) for r in parsed),
         "terms_revised": sum(r.get("term_repair") == "applied" for r in parsed),
         "auto_share": share(sum(r.get("route") == "auto" for r in rows), n),
@@ -435,7 +434,7 @@ def summarize(rows: list[dict]) -> dict[str, Any]:
         "gold_compared": len(gold),
         "behaviour_ok": share(sum(bool(r.get("behaviour_ok")) for r in rows), n),
         "must_not_violations": sum(len(r.get("must_not_violations") or []) for r in rows),
-        "rules_fired": dict(Counter(x for r in parsed for x in r["rules_fired"])),
+        "broken_rules": dict(Counter(x for r in parsed for x in r["broken_rules"])),
         "routes": dict(Counter(r.get("route", "error") for r in rows)),
         "reasons": dict(Counter(x for r in rows for x in r.get("reasons") or [])),
         "ill_defined": sum(bool(r.get("ill_defined")) for r in parsed),
@@ -490,7 +489,7 @@ def run(
         if not quiet:
             print(
                 f"[{i:>2}/{len(cases)}] {case.id:<16} {row.get('route', 'error'):<7} "
-                f"{','.join(row.get('rules_fired') or []) or '-':<8} "
+                f"{','.join(row.get('broken_rules') or []) or '-':<8} "
                 f"ucod={row.get('ucod_code') or '-':<8} {row.get('ucod_code_match') or ''}",
                 flush=True,
             )
@@ -509,7 +508,7 @@ def run(
             "schema_version": sp.schema_version,
             "model": cfg.draft.model,
             "icd_release": cfg.code.icd_release,
-            "automccd_lite_version": __version__,
+            "package_version": __version__,
         },
         "wall_s": round(time.perf_counter() - t0, 1),
     }
@@ -548,7 +547,7 @@ def report(manifest: dict, s: dict, rows: list[dict]) -> str:
         f"| must_not violations | {s['must_not_violations']} |",
         f"| ill-defined UCOD | {s['ill_defined']} |",
         "",
-        f"Rules fired (final): {s['rules_fired'] or 'none'}. Routes: {s['routes']}.",
+        f"Rules fired (final): {s['broken_rules'] or 'none'}. Routes: {s['routes']}.",
         "",
         "## Per case",
         "",
@@ -557,8 +556,8 @@ def report(manifest: dict, s: dict, rows: list[dict]) -> str:
         "|---|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
-        fp = ",".join((r.get("first_pass") or {}).get("rules_fired") or []) or "-"
-        fin = ",".join(r.get("rules_fired") or []) or "-"
+        fp = ",".join((r.get("first_pass") or {}).get("broken_rules") or []) or "-"
+        fin = ",".join(r.get("broken_rules") or []) or "-"
         lines.append(
             f"| {r['id']} | {r['expected']} | {r.get('assessment') or r.get('parse_error', '')} "
             f"| {r.get('route', '')} | {', '.join(r.get('reasons') or [])} | {fp} → {fin} "

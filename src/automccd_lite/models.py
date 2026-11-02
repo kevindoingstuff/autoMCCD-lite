@@ -1,6 +1,6 @@
 """Domain types that flow between the stages.
 
-Record -> Draft -> DraftValidation -> CodedDraft -> Route -> Certificate.
+Record -> Draft -> RuleCheck -> Coding -> Route -> Result.
 
 The MCCD itself stays a dict: it is the JSON the model returned under the
 strict schema, and the validators and the ICD client read it as such.
@@ -46,7 +46,7 @@ class Record(BaseModel):
     sex: Literal["male", "female"] | None = None
     age: float | None = Field(default=None, ge=0)
     age_unit: Literal["minutes", "hours", "days", "weeks", "months", "years"] | None = None
-    context: str | None = None
+    registry_info: str | None = None  # registry metadata; never evidence
     notes: list[Note] = Field(min_length=1)
 
     @model_validator(mode="after")
@@ -91,11 +91,11 @@ class Usage(BaseModel):
         )
 
 
-DraftStatus = Literal["ok", "refused", "truncated", "invalid"]
+DraftStatus = Literal["ok", "refused", "truncated", "unparsable"]
 
 
 class Draft(BaseModel):
-    """One model reply. `ok` carries a parsed JSON object; `invalid` is a
+    """One model reply. `ok` carries a parsed JSON object; `unparsable` is a
     reply that is not one (strict mode should prevent it); `refused` and
     `truncated` carry no certificate and go straight to review."""
 
@@ -115,15 +115,13 @@ class Route(StrEnum):
     REVIEW = "review"
 
 
-class DraftValidation(BaseModel):
+class RuleCheck(BaseModel):
     """The gate's verdict on one draft."""
 
     schema_ok: bool
-    schema_errors: list[str] = Field(default_factory=list)
-    validator_passed: bool
-    errors: list[str] = Field(default_factory=list)
-    warnings: list[str] = Field(default_factory=list)
-    rules_fired: list[str] = Field(default_factory=list)
+    rules_passed: bool
+    broken_rules: list[str] = Field(default_factory=list)  # rule ids with an error
+    messages: list[str] = Field(default_factory=list)  # every error and warning, readable
     assessment: str | None = None
     decline_reason: str | None = None
     confidence: str | None = None
@@ -131,28 +129,28 @@ class DraftValidation(BaseModel):
     model_chain: list[str] = Field(default_factory=list)
     triage: Route
     # Revision outcome, read by routing and provenance.
-    revised: bool = False
-    revise_before: dict[str, Any] | None = None
-    revise_rejected: str | None = None
-    term_revision: Literal["applied", "unchanged", "rejected"] | None = None
+    rules_fixed: bool = False
+    before_fix: dict[str, Any] | None = None
+    fix_rejected: str | None = None
+    terms_fixed: Literal["applied", "unchanged", "rejected"] | None = None
     term_changes: list[list[str]] = Field(default_factory=list)
     term_reverted: list[list[Any]] = Field(default_factory=list)
 
     @property
-    def needs_revision(self) -> bool:
-        return not self.schema_ok or not self.validator_passed
+    def needs_fix(self) -> bool:
+        return not self.schema_ok or not self.rules_passed
 
 
-class CodedDraft(BaseModel):
+class Coding(BaseModel):
     """What WHO's tools said about one certificate."""
 
     codes: dict[str, list[str | None]]
     uncoded_part1: list[int] = Field(default_factory=list)
-    code_scores: list[float | None] = Field(default_factory=list)
+    match_scores: list[float | None] = Field(default_factory=list)
     autocode: list[dict[str, Any]] = Field(default_factory=list)
     doris: dict[str, Any]
     codedit: dict[str, Any]
-    codedit_ucod: dict[str, Any] | None = None
+    codedit_cause: dict[str, Any] | None = None
 
 
 class Decision(BaseModel):
@@ -161,12 +159,12 @@ class Decision(BaseModel):
 
 
 class CodingSummary(BaseModel):
-    ucod_stem: str | None = None
-    ucod_full: str | None = None
+    underlying_cause: str | None = None
+    underlying_cause_full: str | None = None
     codes: dict[str, list[str | None]] = Field(default_factory=dict)
-    code_scores: list[float | None] = Field(default_factory=list)
-    codedit_issues: list[str] = Field(default_factory=list)
-    doris_warning: str | None = None
+    match_scores: list[float | None] = Field(default_factory=list)
+    quality_issues: list[str] = Field(default_factory=list)
+    cause_warning: str | None = None
 
 
 class Versions(BaseModel):
@@ -175,10 +173,10 @@ class Versions(BaseModel):
     schema_version: str
     model: str
     icd_release: str
-    automccd_version: str
+    package_version: str
 
 
-class Certificate(BaseModel):
+class Result(BaseModel):
     """What the API returns and what Blob stores."""
 
     record_id: str
@@ -191,6 +189,6 @@ class Certificate(BaseModel):
     timings_ms: dict[str, int]
     # Provenance: everything a reviewer or an audit needs, kept whole.
     draft_status: DraftStatus
-    validation: DraftValidation | None
-    coded: CodedDraft | None
+    validation: RuleCheck | None
+    coded: Coding | None
     icd_error: str | None = None

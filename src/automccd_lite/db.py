@@ -19,7 +19,7 @@ from sqlalchemy import JSON, DateTime, Engine, Integer, String, create_engine, f
 from sqlalchemy.orm import DeclarativeBase, Mapped, Session, mapped_column, sessionmaker
 
 from automccd_lite.config import settings
-from automccd_lite.models import Certificate
+from automccd_lite.models import Result
 
 DB_NAME = "certificates.sqlite"
 
@@ -87,7 +87,7 @@ class SqliteCertificateStore:
     def __init__(self, session: Session):
         self.session = session
 
-    def insert_certificate(self, cert: Certificate, file_path: str | None) -> None:
+    def insert_certificate(self, cert: Result, file_path: str | None) -> None:
         self.session.add(
             CertificateRow(
                 record_id=cert.record_id,

@@ -37,7 +37,7 @@ from typing import Protocol
 import httpx
 
 from automccd_lite.config import DATA_DIR
-from automccd_lite.models import CodedDraft, iso_duration
+from automccd_lite.models import Coding, iso_duration
 
 HEADERS = {"API-Version": "v2", "Accept-Language": "en", "Accept": "application/json"}
 
@@ -256,7 +256,7 @@ def icd_certificate(cert: dict, cache: CodeCache, demographics: dict | None) -> 
 
 def code_draft(
     cert: dict, cache: CodeCache, client: IcdClient, demographics: dict | None
-) -> CodedDraft:
+) -> Coding:
     c = icd_certificate(cert, cache, demographics)
     p1_terms = [x.get("certified_term", "") for x in (cert.get("part1") or [])]
     p2_terms = [x.get("certified_term", "") for x in (cert.get("part2") or [])]
@@ -264,17 +264,17 @@ def code_draft(
     doris = client.doris(c)
     codedit = client.codedit(c)
     ucod = doris.get("ucod_stem_code")
-    codedit_ucod = (
+    codedit_cause = (
         client.codedit(IcdCertificate(sex=c.sex, estimated_age=c.estimated_age, part1_codes=[ucod]))
         if ucod
         else None
     )
-    return CodedDraft(
+    return Coding(
         codes={"part1": c.part1_codes or [], "part2": list(c.part2_codes or [])},
         uncoded_part1=[i for i, code in enumerate(c.part1_codes or []) if not code],
-        code_scores=[cache.code(t)["match_score"] if t else None for t in p1_terms],
+        match_scores=[cache.code(t)["match_score"] if t else None for t in p1_terms],
         autocode=entries,
         doris=doris,
         codedit=codedit,
-        codedit_ucod=codedit_ucod,
+        codedit_cause=codedit_cause,
     )

@@ -30,7 +30,7 @@ from functools import lru_cache
 
 import jsonschema
 
-from automccd_lite.models import DraftValidation, Route
+from automccd_lite.models import Route, RuleCheck
 from automccd_lite.prompt import system_prompt
 
 # --------------------------------------------------------------------------
@@ -146,6 +146,20 @@ UNIT_HOURS = {
 
 NOTE_MAX_CHARS = 300
 
+# The short name that goes with each rule id in messages and docs.
+RULE_NAMES = {
+    "V1": "exact quote",
+    "V2": "mode of dying",
+    "V3": "one cause per line",
+    "V4": "no abbreviations",
+    "V5": "chain shape",
+    "V6": "interval order",
+    "V7": "Part II overlap",
+    "V8": "decline consistency",
+    "V9": "no codes in terms",
+    "V10": "no identifiers",
+}
+
 
 # --------------------------------------------------------------------------
 
@@ -158,12 +172,17 @@ class Finding:
     location: str = ""
 
     def __str__(self) -> str:
-        where = f" [{self.location}]" if self.location else ""
-        return f"{self.rule} {self.severity}{where}: {self.message}"
+        """For people: 'V2 mode of dying (error, 1a): ...'."""
+        where = f", {self.location}" if self.location else ""
+        return f"{self.rule} {RULE_NAMES[self.rule]} ({self.severity}{where}): {self.message}"
+
+    def brief(self) -> str:
+        """For the model, in the fix request: 'V2 [1a]: ...'."""
+        return f"{self.rule} [{self.location}]: {self.message}"
 
 
 @dataclass
-class Result:
+class Findings:
     record_id: str
     findings: list[Finding] = field(default_factory=list)
 
@@ -262,12 +281,12 @@ def _is_bare(term: str, head: str, qualifier_re: str) -> bool:
     return not any(re.match(qualifier_re, " ".join(words[i:])) for i in range(len(words)))
 
 
-def validate(cert: dict, source_fields: dict[str, str]) -> Result:  # noqa: C901
+def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa: C901
     """Validate one certificate against its source record.
 
     source_fields maps evidence_field name -> the text of that field.
     """
-    res = Result(record_id=cert.get("record_id", "?"))
+    res = Findings(record_id=cert.get("record_id", "?"))
     part1 = cert.get("part1") or []
     part2 = cert.get("part2") or []
     assessment = cert.get("assessment")
@@ -550,7 +569,7 @@ def validate_schema(cert: dict) -> list[str]:
 
 
 def pre_icd_route(
-    assessment: str | None, schema_ok: bool, validator_passed: bool, confidence: str | None
+    assessment: str | None, schema_ok: bool, rules_passed: bool, confidence: str | None
 ) -> Route:
     """Triage from the deterministic half alone.
 
@@ -561,26 +580,25 @@ def pre_icd_route(
     """
     if assessment != "certifiable":
         return Route.REVIEW
-    if schema_ok and validator_passed and confidence == "high":
+    if schema_ok and rules_passed and confidence == "high":
         return Route.AUTO
     return Route.REVIEW
 
 
-def validate_draft(cert: dict, fields: dict[str, str]) -> DraftValidation:
+def validate_draft(cert: dict, fields: dict[str, str]) -> RuleCheck:
     """Schema conformance, rules V1-V10 against the source fields, and the
     triage route they give."""
     schema_errors = validate_schema(cert)
-    res = validate(cert, fields)
+    res = apply_rules(cert, fields)
     review = cert.get("review") or {}
     assessment = cert.get("assessment")
     confidence = review.get("confidence")
-    return DraftValidation(
+    return RuleCheck(
         schema_ok=not schema_errors,
-        schema_errors=schema_errors[:5],
-        validator_passed=res.passed,
-        errors=[f"{f.rule} [{f.location}]: {f.message}" for f in res.errors],
-        warnings=[f"{f.rule} [{f.location}]: {f.message}" for f in res.warnings],
-        rules_fired=sorted({f.rule for f in res.errors}),
+        rules_passed=res.passed,
+        messages=[f"schema (error): {e}" for e in schema_errors[:5]]
+        + [str(f) for f in res.findings],
+        broken_rules=sorted({f.rule for f in res.errors}),
         assessment=assessment,
         decline_reason=cert.get("decline_reason"),
         confidence=confidence,
@@ -590,7 +608,7 @@ def validate_draft(cert: dict, fields: dict[str, str]) -> DraftValidation:
     )
 
 
-def never_auto(v: DraftValidation) -> None:
+def never_auto(v: RuleCheck) -> None:
     """A revised or revision-rejected draft goes to a human whatever else holds."""
     if v.triage == Route.AUTO:
         v.triage = Route.REVIEW

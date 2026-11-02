@@ -17,8 +17,8 @@ from automccd_lite.code import CodeCache, IcdClient, IcdError, ICDUnavailable, c
 from automccd_lite.config import settings
 from automccd_lite.db import SqliteCertificateStore
 from automccd_lite.draft import Ask, draft_certificate
-from automccd_lite.models import Certificate, CodedDraft, DraftValidation, Record
-from automccd_lite.revise import needs_revision, revise_draft, revise_terms
+from automccd_lite.models import Coding, Record, Result, RuleCheck
+from automccd_lite.revise import needs_fix, revise_draft, revise_terms
 from automccd_lite.route import route_draft
 from automccd_lite.storage import FileStorage
 from automccd_lite.validate import validate_draft
@@ -44,23 +44,23 @@ class Timer:
         self.t = now
 
 
-def certify_record(record: Record, deps: Deps) -> Certificate:
+def certify_record(record: Record, deps: Deps) -> Result:
     cfg = settings()
     t = Timer()
 
     draft = draft_certificate(record, deps.ask)
     t.mark("draft")
 
-    validation: DraftValidation | None = None
-    coded: CodedDraft | None = None
+    validation: RuleCheck | None = None
+    coded: Coding | None = None
     icd_error: str | None = None
 
-    if draft.status in ("ok", "invalid"):
+    if draft.status in ("ok", "unparsable"):
         if draft.certificate is not None:
             validation = validate_draft(draft.certificate, record.fields)
         t.mark("validate")
 
-        if needs_revision(draft, validation) and cfg.revise.max_attempts > 0:
+        if needs_fix(draft, validation) and cfg.revise.max_attempts > 0:
             draft, validation = revise_draft(record, draft, validation, deps.ask)
             t.mark("revise")
 

@@ -24,9 +24,9 @@ import json
 
 from automccd_lite.code import CodeCache
 from automccd_lite.draft import Ask
-from automccd_lite.models import Draft, DraftValidation, Record
+from automccd_lite.models import Draft, Record, RuleCheck
 from automccd_lite.prompt import render
-from automccd_lite.validate import never_auto, validate_draft
+from automccd_lite.validate import apply_rules, never_auto, validate_draft, validate_schema
 
 PREVIOUS_MAX_CHARS = 6000  # the budget the PoC's repair rates were measured with
 
@@ -47,10 +47,10 @@ everything else as it was. If a span cannot be copied verbatim from the field yo
 shorten it to a few words that appear exactly in that field, or change the field."""
 
 
-def needs_revision(draft: Draft, validation: DraftValidation | None) -> bool:
-    if draft.status == "invalid":
+def needs_fix(draft: Draft, validation: RuleCheck | None) -> bool:
+    if draft.status == "unparsable":
         return True
-    return validation is not None and validation.needs_revision
+    return validation is not None and validation.needs_fix
 
 
 def previous_text(draft: Draft) -> str:
@@ -59,11 +59,14 @@ def previous_text(draft: Draft) -> str:
     return ""
 
 
-def revise_message(record: Record, draft: Draft, validation: DraftValidation | None) -> str:
-    if validation is None:
+def revise_message(record: Record, draft: Draft, validation: RuleCheck | None) -> str:
+    if validation is None or draft.certificate is None:
         fails = [f"The reply is not valid JSON ({draft.reason})."]
     else:
-        fails = [f"schema: {e}" for e in validation.schema_errors] + validation.errors
+        # The failures in the wording the fix rates were measured with.
+        cert = draft.certificate
+        fails = [f"schema: {e}" for e in validate_schema(cert)[:5]]
+        fails += [f.brief() for f in apply_rules(cert, record.fields).errors]
     return REVISE_TEMPLATE.format(
         record=render(record),
         previous=previous_text(draft),
@@ -72,8 +75,8 @@ def revise_message(record: Record, draft: Draft, validation: DraftValidation | N
 
 
 def revise_draft(
-    record: Record, draft: Draft, validation: DraftValidation | None, ask: Ask
-) -> tuple[Draft, DraftValidation | None]:
+    record: Record, draft: Draft, validation: RuleCheck | None, ask: Ask
+) -> tuple[Draft, RuleCheck | None]:
     """One revision call. Returns the (draft, validation) the pipeline goes
     on with: the revision when adopted, the first draft when rejected. Either
     way the returned draft's usage includes the revision call."""
@@ -84,15 +87,15 @@ def revise_draft(
     keeps_question = (
         validation is None
         or (new_validation is not None and new_validation.assessment == validation.assessment)
-        or "V8" in validation.rules_fired
+        or "V8" in validation.broken_rules
     )
     if new_validation is not None and keeps_question:
-        new_validation.revised = True
-        new_validation.revise_before = (
+        new_validation.rules_fixed = True
+        new_validation.before_fix = (
             {
                 "schema_ok": validation.schema_ok,
-                "validator_passed": validation.validator_passed,
-                "rules_fired": validation.rules_fired,
+                "rules_passed": validation.rules_passed,
+                "broken_rules": validation.broken_rules,
             }
             if validation is not None
             else {"status": draft.status, "reason": draft.reason}
@@ -102,7 +105,7 @@ def revise_draft(
         return again, new_validation
     why = again.reason if again.certificate is None else "changed the assessment"
     if validation is not None:
-        validation.revise_rejected = f"rejected: {why}"
+        validation.fix_rejected = f"rejected: {why}"
         never_auto(validation)
     draft.usage = draft.usage + again.usage
     return draft, validation
@@ -171,11 +174,11 @@ def scoped_to_terms(old: dict, new: dict) -> dict | None:
 def revise_terms(
     record: Record,
     draft: Draft,
-    validation: DraftValidation,
+    validation: RuleCheck,
     cache: CodeCache,
     ask: Ask,
     min_score: float,
-) -> tuple[Draft, DraftValidation]:
+) -> tuple[Draft, RuleCheck]:
     """The (draft, validation) the pipeline goes on with. Unchanged when no
     Part I term scores low."""
     cert = draft.certificate or {}
@@ -190,17 +193,17 @@ def revise_terms(
     if (
         new is None
         or new_v is None
-        or not new_v.validator_passed
+        or not new_v.rules_passed
         or new_v.assessment != validation.assessment
         or len(new_v.model_chain) != len(validation.model_chain)
     ):
-        validation.term_revision = "rejected"
+        validation.terms_fixed = "rejected"
         draft.usage = total
         return draft, validation
 
     new = scoped_to_terms(cert, new)
     if new is None:
-        validation.term_revision = "rejected"
+        validation.terms_fixed = "rejected"
         draft.usage = total
         return draft, validation
     again.certificate = new
@@ -224,13 +227,13 @@ def revise_terms(
     ]
     if not changes:
         validation.term_reverted = reverted
-        validation.term_revision = "unchanged"
+        validation.terms_fixed = "unchanged"
         draft.usage = total
         return draft, validation
 
-    new_v.revised, new_v.revise_before = validation.revised, validation.revise_before
-    new_v.revise_rejected = validation.revise_rejected
-    new_v.term_revision = "applied"
+    new_v.rules_fixed, new_v.before_fix = validation.rules_fixed, validation.before_fix
+    new_v.fix_rejected = validation.fix_rejected
+    new_v.terms_fixed = "applied"
     new_v.term_changes = changes
     never_auto(new_v)
     again.usage = total

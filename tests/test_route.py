@@ -2,7 +2,7 @@
 
 import pytest
 
-from automccd_lite.models import CodedDraft, Draft, Route
+from automccd_lite.models import Coding, Draft, Route
 from automccd_lite.route import route_draft
 from automccd_lite.validate import validate_draft
 from tests.conftest import cond, good_cert, make_record, ok
@@ -11,17 +11,17 @@ MIN = 0.5
 
 
 def coded(scores=(0.9, 0.9), ucod="1D01.0", issues=(), ucod_issues=(), uncoded=()):
-    return CodedDraft(
+    return Coding(
         codes={"part1": ["1G41", "1D01.0"], "part2": ["5A11"]},
         uncoded_part1=list(uncoded),
-        code_scores=list(scores),
+        match_scores=list(scores),
         doris={"ucod_stem_code": ucod, "ucod_code": ucod, "warning": None},
         codedit={"issue_ids": list(issues)},
-        codedit_ucod={"issue_ids": list(ucod_issues)} if ucod else None,
+        codedit_cause={"issue_ids": list(ucod_issues)} if ucod else None,
     )
 
 
-CLEAN = object()  # "use a clean CodedDraft"; None means "not coded"
+CLEAN = object()  # "use a clean Coding"; None means "not coded"
 
 
 def route(cert=None, draft=None, c=CLEAN, icd_error=None, rec=None):
@@ -41,7 +41,7 @@ def test_clean_coded_certificate_is_auto():
     [
         (Draft(status="refused", reason="filter"), "model_refused"),
         (Draft(status="truncated", reason="length"), "model_truncated"),
-        (Draft(status="invalid", reason="junk"), "model_invalid"),
+        (Draft(status="unparsable", reason="junk"), "model_invalid"),
     ],
 )
 def test_model_failures_go_to_review(draft, reason):
@@ -109,6 +109,6 @@ def test_revised_never_auto():
     rec = make_record()
     draft = ok(good_cert())
     v = validate_draft(draft.certificate, rec.fields)
-    v.revised = True
+    v.rules_fixed = True
     d = route_draft(rec, draft, v, coded(), None, MIN)
     assert d.route == Route.REVIEW and d.reasons == ["revised"]

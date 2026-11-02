@@ -8,14 +8,14 @@ provenance row say why a human is looking at it. A declined record is
 
 from __future__ import annotations
 
-from automccd_lite.models import CodedDraft, Decision, Draft, DraftValidation, Record, Route
+from automccd_lite.models import Coding, Decision, Draft, Record, Route, RuleCheck
 
 
 def route_draft(
     record: Record,
     draft: Draft,
-    validation: DraftValidation | None,
-    coded: CodedDraft | None,
+    validation: RuleCheck | None,
+    coded: Coding | None,
     icd_error: str | None,
     min_score: float,
 ) -> Decision:
@@ -34,10 +34,10 @@ def route_draft(
     reasons: list[str] = []
     if not validation.schema_ok:
         reasons.append("schema_invalid")
-    reasons += [f"validator:{rule}" for rule in validation.rules_fired]
-    if validation.revised or validation.revise_rejected:
+    reasons += [f"validator:{rule}" for rule in validation.broken_rules]
+    if validation.rules_fixed or validation.fix_rejected:
         reasons.append("revised")
-    if validation.term_revision == "applied":
+    if validation.terms_fixed == "applied":
         reasons.append("terms_revised")
     if validation.confidence != "high":
         reasons.append("low_confidence")
@@ -49,13 +49,13 @@ def route_draft(
     else:
         if coded.uncoded_part1:
             reasons.append("part1_line_uncoded")
-        if any(s is None or float(s) < min_score for s in coded.code_scores):
+        if any(s is None or float(s) < min_score for s in coded.match_scores):
             reasons.append("autocode_low_score")
         if not coded.doris.get("ucod_stem_code"):
             reasons.append("no_ucod")
         issues = list(coded.codedit.get("issue_ids") or [])
-        if coded.codedit_ucod:
-            issues += [i for i in coded.codedit_ucod.get("issue_ids") or [] if i not in issues]
+        if coded.codedit_cause:
+            issues += [i for i in coded.codedit_cause.get("issue_ids") or [] if i not in issues]
         reasons += [f"codedit:{i}" for i in issues]
 
     if record.demographics_missing:

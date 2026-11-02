@@ -3,7 +3,7 @@
   "sex": "female",
   "age": 74,
   "age_unit": "years",
-  "context": null,
+  "registry_info": null,
   "notes": [
     {
       "name": "case_narrative",

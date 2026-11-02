@@ -17,7 +17,7 @@ import matplotlib.pyplot as plt
 from IPython.display import HTML, Image, display
 
 from automccd_lite.config import DATA_DIR, settings
-from automccd_lite.models import Certificate, Record
+from automccd_lite.models import Result, Record
 from automccd_lite.validate import _source_key, _span_key
 
 settings()  # loads .env, so db.engine() and the clients see PGPORT and the keys
@@ -85,11 +85,11 @@ def _interval(iv: dict | None) -> str:
     return f"{approx}{val} {unit}"
 
 
-def render_mccd(mccd: dict | Certificate, codes: dict | None = None, title: str = "") -> HTML:
+def render_mccd(mccd: dict | Result, codes: dict | None = None, title: str = "") -> HTML:
     """The certificate drawn as the WHO international form: Part I lines
     1a to 1d (each line is caused by the one below it), Part II beside it,
     and the ICD-11 code per line when coding has happened."""
-    if isinstance(mccd, Certificate):
+    if isinstance(mccd, Result):
         codes = codes or (mccd.coding.codes if mccd.coding else None)
         title = title or f"{mccd.record_id}: route {mccd.route.value}"
         mccd = mccd.certificate or {}
@@ -182,11 +182,11 @@ def _find_span(span: str, text: str) -> tuple[int, int] | None:
     return start, end
 
 
-def highlight_spans(record: Record, mccd: dict | Certificate) -> HTML:
+def highlight_spans(record: Record, mccd: dict | Result) -> HTML:
     """The record text with every evidence span the model cited highlighted
     and labelled with the line it supports. This is V1 made visible: a span
     the highlighter cannot find is a span the validator rejects."""
-    if isinstance(mccd, Certificate):
+    if isinstance(mccd, Result):
         mccd = mccd.certificate or {}
     cites = []
     for i, c in enumerate(mccd.get("part1") or []):
@@ -250,7 +250,7 @@ STAGES = [
 ]
 
 
-def flow_diagram(cert: Certificate) -> Image | HTML:
+def flow_diagram(cert: Result) -> Image | HTML:
     """The seven stages left to right, each carrying what this certificate
     did there: the model status, the rules fired, whether a revision ran, the
     codes and the UCOD, the route and its reasons. Needs the Graphviz `dot`
@@ -260,18 +260,18 @@ def flow_diagram(cert: Certificate) -> Image | HTML:
         "prompt": f"sha1 {cert.versions.prompt_sha1[:8]}",
         "draft": f"{cert.draft_status} · {cert.usage.calls} call(s)\\n{ms.get('draft', 0)} ms",
         "validate": (
-            f"schema {'ok' if v.schema_ok else 'FAIL'}\\nrules {', '.join(v.rules_fired) or 'none'}"
+            f"schema {'ok' if v.schema_ok else 'FAIL'}\\nrules {', '.join(v.broken_rules) or 'none'}"
             if v
             else "skipped"
         ),
         "revise": (
             "rules: adopted"
-            if v and v.revised
+            if v and v.rules_fixed
             else "rules: rejected"
-            if v and v.revise_rejected
+            if v and v.fix_rejected
             else "rules: not needed"
         )
-        + (f"\\nterms: {v.term_revision}" if v and v.term_revision else "")
+        + (f"\\nterms: {v.terms_fixed}" if v and v.terms_fixed else "")
         + (f"\\n{ms['revise']} ms" if ms.get("revise") else ""),
         "code": (
             f"UCOD {coded.doris.get('ucod_stem_code') or '—'}\\n"
@@ -286,8 +286,8 @@ def flow_diagram(cert: Certificate) -> Image | HTML:
         "generate": "stored" if cert.coding is not None or cert.certificate else "built",
     }
     fill = {
-        "validate": "#e8f1fb" if (v and v.validator_passed and v.schema_ok) else "#fde8d7",
-        "revise": "#fff6d6" if (v and (v.revised or v.term_revision == "applied")) else "#f3f3f1",
+        "validate": "#e8f1fb" if (v and v.rules_passed and v.schema_ok) else "#fde8d7",
+        "revise": "#fff6d6" if (v and (v.rules_fixed or v.terms_fixed == "applied")) else "#f3f3f1",
         "code": "#e8f1fb" if coded else "#f3f3f1",
         "route": "#e2f3ea" if cert.route.value == "auto" else "#fde8d7",
     }
@@ -327,8 +327,8 @@ def charts(rows: list[dict], save_to: str | None = None):
     (first pass against final), and how the model's UCOD compared with the
     gold's. Counts, not percentages: 17 cases are too few to pretend otherwise."""
     routes = Counter(r.get("route", "error") for r in rows)
-    first = Counter(x for r in rows if r.get("parsed") for x in r["first_pass"].get("rules_fired", []))
-    final = Counter(x for r in rows if r.get("parsed") for x in r.get("rules_fired", []))
+    first = Counter(x for r in rows if r.get("parsed") for x in r["first_pass"].get("broken_rules", []))
+    final = Counter(x for r in rows if r.get("parsed") for x in r.get("broken_rules", []))
     rules = sorted(set(first) | set(final), key=lambda k: int(k[1:]))
     match = Counter(r.get("ucod_code_match") or "not compared" for r in rows)
     order = ["exact", "same_stem", "different", "not compared"]
@@ -396,8 +396,8 @@ def reason_table(rows: list[dict]) -> HTML:
     head = "<tr><th>case</th><th>route</th><th>reasons</th><th>rules first → final</th><th>UCOD model / gold</th><th>match</th></tr>"
     body = ""
     for r in rows:
-        fp = ",".join((r.get("first_pass") or {}).get("rules_fired") or []) or "–"
-        fn = ",".join(r.get("rules_fired") or []) or "–"
+        fp = ",".join((r.get("first_pass") or {}).get("broken_rules") or []) or "–"
+        fn = ",".join(r.get("broken_rules") or []) or "–"
         color = ROUTE_COLOR.get(r.get("route", ""), MUTED)
         body += (
             f"<tr><td>{r['id']}</td><td><b style='color:{color}'>{r.get('route', '')}</b></td>"
