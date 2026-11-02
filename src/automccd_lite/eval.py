@@ -33,9 +33,9 @@ from typing import Any
 from automccd_lite import __version__
 from automccd_lite.coding import CodeCache, WhoClient, WhoError, WhoUnavailable, code_terms
 from automccd_lite.config import DATA_DIR, ROOT, settings
-from automccd_lite.draft import ModelUnavailable, connect_model, system_prompt
+from automccd_lite.draft import ModelUnavailable, system_prompt
 from automccd_lite.models import Record, Result
-from automccd_lite.pipeline import Deps, certify_record
+from automccd_lite.pipeline import Deps, build_deps, certify_record
 from automccd_lite.rules import verbatim_in
 
 GOLD = DATA_DIR / "gold"
@@ -446,18 +446,6 @@ def summarize(rows: list[dict]) -> dict[str, Any]:
 # the run
 
 
-def default_deps() -> Deps:
-    cfg = settings()
-    icd = WhoClient(
-        cfg.env.icd_api_url,
-        cfg.code.icd_release,
-        cfg.code.linearization,
-        cfg.code.timeout_s,
-        cfg.code.max_retries,
-    )
-    return Deps(ask=connect_model(cfg), who=icd, cache=CodeCache(icd))
-
-
 def run(
     set_name: str,
     only: tuple[str, ...] = (),
@@ -467,7 +455,7 @@ def run(
 ) -> dict[str, Any]:
     """Certify every case of the set, score it, write the run folder.
     Returns {"run_dir", "manifest", "summary", "rows"}."""
-    deps = deps or default_deps()
+    deps = deps or build_deps()
     cases = load_cases(set_name, only)
     started = datetime.now(UTC)
     run_dir = out_dir or RUNS / f"{set_name}_{started:%H%M%S}Z"
@@ -507,7 +495,7 @@ def run(
             "prompt_sha1": sp.sha1,
             "schema_version": sp.schema_version,
             "model": cfg.draft.model,
-            "icd_release": cfg.code.icd_release,
+            "icd_release": cfg.check.icd_release,
             "package_version": __version__,
         },
         "wall_s": round(time.perf_counter() - t0, 1),

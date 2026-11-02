@@ -27,7 +27,7 @@ from automccd_lite.config import DATA_DIR, ROOT, settings
 from automccd_lite.log import configure_logging
 
 ICD_CONTAINER = "automccd-lite-icd"
-# config/default.yaml code.icd_release must match the release this image serves (2026-01).
+# config/default.yaml check.icd_release must match the release this image serves (2026-01).
 ICD_IMAGE = "whoicd/icd-api@sha256:1b77eb6dc43e0c65a12e9e9340ad178493c93488e728d0d936507cc57ada1b7c"
 ICD_WAIT_S = 240
 
@@ -98,9 +98,9 @@ def icd_start() -> None:
 def icd_wait() -> None:
     """The container answers only after it has loaded the release (about a
     minute, longer on the first start when it downloads it)."""
-    from automccd_lite.api import icd_client
+    from automccd_lite.pipeline import who_client
 
-    icd = icd_client()
+    icd = who_client()
     t0 = time.monotonic()
     while time.monotonic() - t0 < ICD_WAIT_S:
         if icd.available():
@@ -122,9 +122,9 @@ def icd_status() -> None:
     state = icd_state()
     say(f"icd-api: container {ICD_CONTAINER} {state or 'absent'}")
     if state == "running":
-        from automccd_lite.api import icd_client
+        from automccd_lite.pipeline import who_client
 
-        say(f"icd-api: release reachable: {icd_client().available()}")
+        say(f"icd-api: release reachable: {who_client().available()}")
 
 
 # ---------------------------------------------------------------------------
@@ -150,10 +150,7 @@ def serve() -> None:
 
 def smoke() -> None:
     """readyz -> POST /certify with data/records/S01.json -> the row -> the file."""
-    from sqlalchemy import select
-
-    from automccd_lite.db import CertificateRow, session_scope
-    from automccd_lite.storage import FileStorage
+    from automccd_lite.store import latest_row, stored_file
 
     cfg = settings()
     api = os.environ.get("API_URL", f"http://localhost:{cfg.env.api_port}")
@@ -184,15 +181,10 @@ def smoke() -> None:
     say(f"   route={resp['route']} reasons={resp['reasons']}")
 
     say("3. the stored row and its file")
-    with session_scope() as s:
-        row = s.scalars(
-            select(CertificateRow)
-            .where(CertificateRow.record_id == "S01")
-            .order_by(CertificateRow.id.desc())
-        ).first()
+    row = latest_row("S01")
     if row is None:
         fail("no certificates row for S01")
-    if not row.file_path or not FileStorage(cfg.env.store_dir).exists(row.file_path):
+    if not row.file_path or not stored_file(row.file_path).is_file():
         fail(f"row {row.id} has no file: {row.file_path}")
     say(f"   row {row.id}: {row.route} {row.file_path}")
     say("SMOKE OK")

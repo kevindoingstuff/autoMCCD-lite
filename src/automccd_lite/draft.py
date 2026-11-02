@@ -66,8 +66,8 @@ class SystemPrompt:
 
 @lru_cache(maxsize=1)
 def system_prompt() -> SystemPrompt:
-    cfg = settings().prompt
-    prompt_text = (PROMPTS_DIR / "mccd" / f"v{cfg.version}.md").read_text(encoding="utf-8")
+    cfg = settings().draft
+    prompt_text = (PROMPTS_DIR / "mccd" / f"v{cfg.prompt_version}.md").read_text(encoding="utf-8")
     schema_text = (PROMPTS_DIR / "schemas" / f"{cfg.schema_name}.schema.json").read_text(
         encoding="utf-8"
     )
@@ -76,7 +76,7 @@ def system_prompt() -> SystemPrompt:
     return SystemPrompt(
         text=text,
         sha1=hashlib.sha1(text.encode("utf-8")).hexdigest(),  # noqa: S324 - identity, not security
-        version=cfg.version,
+        version=cfg.prompt_version,
         schema=schema,
         schema_version=str(schema.get("$id", "")).rsplit("/", 1)[-1] or "unknown",
     )

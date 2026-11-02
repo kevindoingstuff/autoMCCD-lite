@@ -1,6 +1,7 @@
 """Runtime settings: config/default.yaml merged with the environment.
 
-Tuning lives in YAML, nested by stage. Endpoints and secrets come only from
+Tuning lives in YAML, one section per step that has settings (Draft and
+Check; Decide has none). Endpoints and secrets come only from
 environment variables, using the names the vendor SDKs already read, so
 nothing secret is ever written to a file this package owns.
 """
@@ -22,14 +23,9 @@ PROMPTS_DIR = ROOT / "prompts"
 DATA_DIR = ROOT / "data"
 
 
-class PromptCfg(BaseModel):
-    version: str
-    schema_name: str = Field(alias="schema")
-
-    model_config = {"populate_by_name": True}
-
-
 class DraftCfg(BaseModel):
+    prompt_version: str
+    schema_name: str = Field(alias="schema")
     model: str
     temperature: float | None = None  # None: do not send (reasoning models reject it)
     seed: int | None = None
@@ -38,16 +34,15 @@ class DraftCfg(BaseModel):
     timeout_s: float = 120
     max_retries: int = 4
 
-
-class ReviseCfg(BaseModel):
-    max_attempts: int = 1
-    term_max_attempts: int = 1
+    model_config = {"populate_by_name": True}
 
 
-class CodeCfg(BaseModel):
+class CheckCfg(BaseModel):
+    fix_rules_attempts: int = 1
+    fix_terms_attempts: int = 1
+    min_match_score: float = 0.5
     icd_release: str
     linearization: str = "mms"
-    min_match_score: float = 0.5
     timeout_s: float = 30
     max_retries: int = 2
 
@@ -63,10 +58,8 @@ class Env(BaseModel):
 
 
 class Settings(BaseModel):
-    prompt: PromptCfg
     draft: DraftCfg
-    revise: ReviseCfg
-    code: CodeCfg
+    check: CheckCfg
     env: Env
 
 

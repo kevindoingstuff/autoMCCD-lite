@@ -23,9 +23,9 @@ from automccd_lite.coding import (
     code_terms,
     fix_terms,
 )
-from automccd_lite.config import settings
+from automccd_lite.config import Settings, settings
 from automccd_lite.decide import decide
-from automccd_lite.draft import Ask, draft_certificate
+from automccd_lite.draft import Ask, connect_model, draft_certificate
 from automccd_lite.models import Coding, Record, Result, RuleCheck
 from automccd_lite.rules import check_rules, fix_rules, needs_fix
 
@@ -37,6 +37,21 @@ class Deps:
     ask: Ask
     who: WhoClient
     cache: CodeCache
+
+
+def who_client(cfg: Settings | None = None) -> WhoClient:
+    cfg = cfg or settings()
+    c = cfg.check
+    return WhoClient(
+        cfg.env.icd_api_url, c.icd_release, c.linearization, c.timeout_s, c.max_retries
+    )
+
+
+def build_deps(cfg: Settings | None = None) -> Deps:
+    """The real collaborators, from config/default.yaml and .env."""
+    cfg = cfg or settings()
+    who = who_client(cfg)
+    return Deps(ask=connect_model(cfg), who=who, cache=CodeCache(who))
 
 
 class Timer:
@@ -65,13 +80,13 @@ def certify_record(record: Record, deps: Deps) -> Result:
     if draft.status in ("ok", "unparsable"):
         if draft.certificate is not None:
             check = check_rules(draft.certificate, record.fields)
-        if needs_fix(draft, check) and cfg.revise.max_attempts > 0:
+        if needs_fix(draft, check) and cfg.check.fix_rules_attempts > 0:
             draft, check = fix_rules(record, draft, check, deps.ask)
         if check is not None and check.assessment == "certifiable":
             try:
-                if cfg.revise.term_max_attempts > 0:
+                if cfg.check.fix_terms_attempts > 0:
                     draft, check = fix_terms(
-                        record, draft, check, deps.cache, deps.ask, cfg.code.min_match_score
+                        record, draft, check, deps.cache, deps.ask, cfg.check.min_match_score
                     )
                 coding = code_terms(
                     draft.certificate or {}, deps.cache, deps.who, record.demographics

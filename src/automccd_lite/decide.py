@@ -106,7 +106,7 @@ def versions(model: str | None) -> Versions:
         prompt_sha1=sp.sha1,
         schema_version=sp.schema_version,
         model=model or cfg.draft.model,
-        icd_release=cfg.code.icd_release,
+        icd_release=cfg.check.icd_release,
         package_version=__version__,
     )
 
@@ -121,7 +121,7 @@ def decide(
 ) -> Result:
     """The route and its reasons, and the Result that carries everything the
     steps produced."""
-    reasons = reasons_for(record, draft, check, coding, icd_error, settings().code.min_match_score)
+    reasons = reasons_for(record, draft, check, coding, icd_error, settings().check.min_match_score)
     return Result(
         record_id=record.record_id,
         route=Route.REVIEW if reasons else Route.AUTO,

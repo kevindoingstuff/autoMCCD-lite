@@ -1,12 +1,10 @@
-# Pipeline tuning, one section per stage. Secrets and endpoints come from the
-# environment, never from here.
-
-prompt:
-  version: "4.7"            # prompts/mccd/v<version>.md
-  schema: "mccd"            # prompts/schemas/<schema>.schema.json
+# Pipeline settings, one section per step that has any. Decide has none.
+# Secrets and endpoints come from .env, never from here.
 
 draft:
-  model: "gpt-5-nano-2025-08-07"   # LLM_MODEL env overrides
+  prompt_version: "4.7"     # prompts/mccd/v<version>.md
+  schema: "mccd"            # prompts/schemas/<schema>.schema.json
+  model: "gpt-5-nano-2025-08-07"   # LLM_MODEL in .env overrides
   temperature: null         # reasoning models reject anything but the default
   seed: 20251023            # best effort; not deterministic on this model
   reasoning_effort: minimal # minimal = 0 reasoning tokens, ~3 s; low = ~1500, ~12 s
@@ -14,13 +12,11 @@ draft:
   timeout_s: 120
   max_retries: 4            # SDK retries on 429 / 5xx
 
-revise:
-  max_attempts: 1           # validator repair calls per record
-  term_max_attempts: 1      # terminology repair calls per record
-
-code:
-  icd_release: "2026-01"
+check:
+  fix_rules_attempts: 1     # model calls to fix broken rules; 0 turns the fix off
+  fix_terms_attempts: 1     # model calls to restate weakly coded terms; 0 turns it off
+  min_match_score: 0.5      # an autocode match below this is weak: fix_terms, who:low_match
+  icd_release: "2026-01"    # must match the release the icd-api image serves
   linearization: "mms"
-  min_match_score: 0.5
   timeout_s: 30
   max_retries: 2
