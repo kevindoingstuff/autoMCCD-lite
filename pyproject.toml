@@ -61,7 +61,7 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "tests/**" = ["S105", "S106"]
-"tests/test_validate.py" = ["E501"]  # one validator case per line
+"tests/test_check.py" = ["E501"]  # one validator case per line
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

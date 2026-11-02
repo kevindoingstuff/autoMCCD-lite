@@ -1,18 +1,24 @@
-"""The mini evaluation harness: the 17 headline cases and the robust sample.
+"""The mini evaluation harness: the provided set and the dlc set.
 
-    python -m automccd_lite.eval --set headline        (or: make eval)
-    python -m automccd_lite.eval --set robust --only S01-ocr H01
+    uv run automccd-lite eval --set provided
+    uv run automccd-lite eval --set dlc --only S01-ocr H01
 
-Runs `certify_record` in-process, so every row comes from the full
-Result: the gate's verdict, both revisions, the codes. Four numbers
-matter: validator-clean on the first pass and after revision, the auto share,
-and the UCOD against the gold certificate coded through the same
-autocode + DORIS pipeline. The robust sample is scored on behaviour only:
-did the pipeline certify or decline as the case expects, and did it respect
-the case's must_not list.
+provided  the 17 clean teaching scenarios, data/provided/<id>.json, each with
+          its reference certificate (the gold answer from the client's deck)
+dlc       40 harder records, data/dlc/<id>.json: the 34 damaged-record cases
+          (OCR noise, cut pages, a mixed-in patient, ...) and the 6 coroner
+          scenarios the pipeline must decline
 
-Writes runs/<set>_<hhmmss>Z/{results.json,summary.md}. Nothing goes to
-Postgres or Blob: the harness passes neither to the pipeline.
+Each case file holds the record in the POST /certify shape. The harness runs
+certify_record in-process, so every row comes from the whole Result: the
+rule check, both fixes, the codes. The numbers that matter: rules passed on
+the first try and after the fix, the auto share, and the underlying cause
+against the reference certificate coded through the same WHO tools. Every
+case is also scored on behaviour: did the pipeline take the right action,
+and did it avoid the outcomes the case forbids (must_not).
+
+Writes runs/<set>_<hhmmss>Z/{results.json,summary.md}. Nothing is saved to
+the store: the harness never calls save.
 """
 
 from __future__ import annotations
@@ -31,46 +37,28 @@ from pathlib import Path
 from typing import Any
 
 from automccd_lite import __version__
-from automccd_lite.coding import CodeCache, WhoClient, WhoError, WhoUnavailable, code_terms
+from automccd_lite.coding import CodeCache, WhoClient, WhoError, code_terms
 from automccd_lite.config import DATA_DIR, ROOT, settings
 from automccd_lite.draft import ModelUnavailable, system_prompt
 from automccd_lite.models import Record, Result
 from automccd_lite.pipeline import Deps, build_deps, certify_record
 from automccd_lite.rules import verbatim_in
 
-GOLD = DATA_DIR / "gold"
+PROVIDED = DATA_DIR / "provided"
+DLC = DATA_DIR / "dlc"
 RUNS = ROOT / "runs"
-SETS = ("headline", "robust")
+SETS = ("provided", "dlc")
 
 
-def _read(name: str) -> Any:
-    return json.loads((DATA_DIR / name).read_text(encoding="utf-8"))
-
-
-@cache
-def sets() -> dict[str, list[str]]:
-    return {k: v for k, v in _read("eval_sets.json").items() if not k.startswith("_")}
+def _read(path: Path) -> dict[str, Any]:
+    return json.loads(path.read_text(encoding="utf-8"))
 
 
 @cache
-def scenarios() -> dict[str, dict]:
-    return {s["id"]: s for s in _read("scenarios.json")}
-
-
-@cache
-def demographics() -> dict[str, dict]:
-    return _read("demographics.json")
-
-
-@cache
-def load_gold(parent: str) -> dict | None:
-    path = GOLD / f"{parent}.json"
-    return json.loads(path.read_text(encoding="utf-8")) if path.exists() else None
-
-
-@cache
-def robust_sample() -> dict[str, Any]:
-    return _read("robust_sample.json")
+def load_reference(parent: str) -> dict | None:
+    """The reference certificate (gold) of a provided scenario, or None."""
+    path = PROVIDED / f"{parent}.json"
+    return _read(path)["reference"] if path.exists() else None
 
 
 # ---------------------------------------------------------------------------
@@ -91,73 +79,41 @@ class EvalCase:
     must_not: tuple[str, ...] = ()
     forbidden_terms: tuple[str, ...] = ()
     intruder: str | None = None
-    gold_chain: tuple[str, ...] | None = None  # Part I, 1a first
-    ref_ucod: str | None = None
-    gold: dict | None = None  # the gold file (intervals, Part II), when the parent has one
+    reference_chain: tuple[str, ...] | None = None  # Part I, 1a first
+    reference_cause: str | None = None
+    reference: dict | None = None  # the reference certificate, when the parent has one
 
 
-_ISO_AGE = re.compile(
-    r"^P(?:T(?P<tv>\d+(?:\.\d+)?)(?P<tu>[HM])|(?P<v>\d+(?:\.\d+)?)(?P<u>[YMWD]))$"
-)
-_UNITS = {"H": "hours", "TM": "minutes", "Y": "years", "M": "months", "W": "weeks", "D": "days"}
-
-
-def age_from_iso(iso: str | None) -> tuple[float | None, str | None]:
-    """'P49Y' -> (49, 'years'); the inverse of models.iso_duration. Note the
-    T: P2M is two months, PT2M two minutes."""
-    m = _ISO_AGE.match(iso or "")
-    if not m:
-        return None, None
-    if m.group("tv"):
-        unit = "T" + m.group("tu") if m.group("tu") == "M" else m.group("tu")
-        return float(m.group("tv")), _UNITS[unit]
-    return float(m.group("v")), _UNITS[m.group("u")]
-
-
-def headline_cases() -> list[EvalCase]:
-    """The 17 headline scenarios as `<parent>-clean` records, the same ids
-    the full autoMCCD harness uses, so the two runs compare case by case."""
+def provided_cases() -> list[EvalCase]:
+    """The 17 clean scenarios as `<id>-clean` records, the ids the full
+    autoMCCD harness uses, so the two runs compare case by case."""
     out = []
-    for parent in sets()["headline"]:
-        s, d, g = scenarios()[parent], demographics()[parent], load_gold(parent) or {}
-        age, unit = age_from_iso(d.get("age_iso"))
-        record = Record(
-            record_id=f"{parent}-clean",
-            sex=d.get("sex"),
-            age=age,
-            age_unit=unit,
-            notes=[{"name": "case_narrative", "text": s["narrative"]}],
-        )
-        chain = tuple(c["certified_term"] for c in g.get("part1") or [])
+    for path in sorted(PROVIDED.glob("*.json")):
+        raw = _read(path)
+        ref = raw["reference"]
+        chain = tuple(c["certified_term"] for c in ref.get("part1") or [])
         out.append(
             EvalCase(
-                id=record.record_id,
-                parent=parent,
+                id=raw["record"]["record_id"],
+                parent=raw["id"],
                 variant="clean",
                 source="vs_scenarios",
-                expected="certifiable",
-                record=record,
+                expected=raw["expected"],
+                record=Record(**raw["record"]),
                 tags=("clean",),
-                gold_chain=chain or None,
-                ref_ucod=chain[-1] if chain else None,
-                gold=g or None,
+                reference_chain=chain or None,
+                reference_cause=chain[-1] if chain else None,
+                reference=ref,
             )
         )
     return out
 
 
-def robust_cases() -> list[EvalCase]:
+def dlc_cases() -> list[EvalCase]:
     out = []
-    for raw in robust_sample()["cases"]:
-        age, unit = age_from_iso(raw.get("age_iso"))
-        record = Record(
-            record_id=raw["id"],
-            sex=raw.get("sex"),
-            age=age,
-            age_unit=unit,
-            registry_info=raw.get("context"),
-            notes=[{"name": n, "text": t} for n, t in raw["fields"].items()],
-        )
+    for path in sorted(DLC.glob("*.json")):
+        raw = _read(path)
+        chain = raw.get("reference_chain")
         out.append(
             EvalCase(
                 id=raw["id"],
@@ -165,14 +121,16 @@ def robust_cases() -> list[EvalCase]:
                 variant=raw["variant"],
                 source=raw["source"],
                 expected=raw["expected"],
-                record=record,
+                record=Record(**raw["record"]),
                 tags=tuple(raw.get("tags") or ()),
                 must_not=tuple(raw.get("must_not") or ()),
                 forbidden_terms=tuple(raw.get("forbidden_terms") or ()),
                 intruder=raw.get("intruder"),
-                gold_chain=tuple(raw["gold_chain"]) if raw.get("gold_chain") else None,
-                ref_ucod=raw.get("ref_ucod"),
-                gold=load_gold(raw["parent"]) if raw["source"] == "vs_scenarios" else None,
+                reference_chain=tuple(chain) if chain else None,
+                reference_cause=raw.get("reference_cause"),
+                reference=load_reference(raw["parent"])
+                if raw["source"] == "vs_scenarios"
+                else None,
             )
         )
     return out
@@ -182,7 +140,7 @@ def load_cases(set_name: str, only: tuple[str, ...] = ()) -> list[EvalCase]:
     """The cases of a set, in id order. `only` keeps case ids, parents or variants."""
     if set_name not in SETS:
         raise ValueError(f"unknown set {set_name!r}; one of {', '.join(SETS)}")
-    cases = headline_cases() if set_name == "headline" else robust_cases()
+    cases = provided_cases() if set_name == "provided" else dlc_cases()
     if only:
         sel = set(only)
         cases = [c for c in cases if {c.id, c.parent, c.variant} & sel]
@@ -190,11 +148,11 @@ def load_cases(set_name: str, only: tuple[str, ...] = ()) -> list[EvalCase]:
 
 
 # ---------------------------------------------------------------------------
-# the gold, as a certificate
+# the reference, as a certificate
 
 
-def gold_to_cert(gold: dict) -> dict:
-    """Gold certificate -> the MCCD shape code_terms consumes."""
+def reference_to_cert(reference: dict) -> dict:
+    """Reference certificate -> the MCCD shape code_terms consumes."""
 
     def cond(c: dict) -> dict:
         iv = c.get("interval") or {}
@@ -209,17 +167,17 @@ def gold_to_cert(gold: dict) -> dict:
             else None,
         }
 
-    # part2 in gold is a list of strings, sometimes carrying a duration in
-    # parentheses; the term is what autocode needs.
+    # part2 in the reference is a list of strings, sometimes carrying a
+    # duration in parentheses; the term is what autocode needs.
     return {
-        "part1": [cond(c) for c in gold.get("part1", [])],
+        "part1": [cond(c) for c in reference.get("part1", [])],
         "part2": [
             {
                 "certified_term": t.split("(")[0].strip()
                 if isinstance(t, str)
                 else t.get("certified_term", "")
             }
-            for t in gold.get("part2") or []
+            for t in reference.get("part2") or []
         ],
     }
 
@@ -254,38 +212,39 @@ def norm(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip()
 
 
-class Reference:
-    """The gold UCOD of each parent, coded once through the same autocode +
-    DORIS pipeline as the model's certificate, so the comparison is code
-    against code and not word against word."""
+class ReferenceCoder:
+    """The reference underlying cause of each parent, coded once through the
+    same autocode + DORIS calls as the model's certificate, so the comparison
+    is code against code and not word against word."""
 
-    def __init__(self, icd: WhoClient, cache: CodeCache):
-        self.icd, self.cache = icd, cache
+    def __init__(self, who: WhoClient, cache: CodeCache):
+        self.who, self.cache = who, cache
         self.codes: dict[str, str | None] = {}
 
-    def ucod(self, case: EvalCase) -> str | None:
+    def cause(self, case: EvalCase) -> str | None:
         if case.parent not in self.codes:
             mccd = (
-                gold_to_cert(case.gold)
-                if case.gold and case.gold.get("part1")
-                else chain_to_cert(case.gold_chain or ())
+                reference_to_cert(case.reference)
+                if case.reference and case.reference.get("part1")
+                else chain_to_cert(case.reference_chain or ())
             )
             try:
-                coded = code_terms(mccd, self.cache, self.icd, case.record.demographics)
+                coded = code_terms(mccd, self.cache, self.who, case.record.demographics)
                 self.codes[case.parent] = coded.doris.get("ucod_stem_code")
-            except (WhoError, WhoUnavailable):
+            except WhoError:  # WhoUnavailable included
                 self.codes[case.parent] = None
         return self.codes[case.parent]
 
 
-def ucod_match(ref: str | None, model: str | None) -> str | None:
-    """exact | same_stem | different, for two DORIS stem codes."""
-    if not ref or not model:
+def cause_match(reference: str | None, model: str | None) -> str | None:
+    """exact | same_family | different, for two DORIS stem codes. Same
+    family: the same code before the dot (BA41.0 and BA41.Z)."""
+    if not reference or not model:
         return None
-    if ref == model:
+    if reference == model:
         return "exact"
-    if ref.split(".")[0] == model.split(".")[0]:
-        return "same_stem"
+    if reference.split(".")[0] == model.split(".")[0]:
+        return "same_family"
     return "different"
 
 
@@ -293,7 +252,7 @@ def ucod_match(ref: str | None, model: str | None) -> str | None:
 # scoring
 
 
-def behaviour_ok(expected: str, assessment: str | None, route: str | None) -> bool:
+def right_action(expected: str, assessment: str | None, route: str | None) -> bool:
     if expected == "certifiable":
         return assessment == "certifiable"
     if expected == "insufficient_information":
@@ -307,7 +266,8 @@ def behaviour_ok(expected: str, assessment: str | None, route: str | None) -> bo
     raise ValueError(expected)
 
 
-def must_not_violations(case: EvalCase, row: dict) -> list[str]:
+def forbidden_outcomes(case: EvalCase, row: dict) -> list[str]:
+    """Which of the case's must_not outcomes happened."""
     v = []
     terms = [t.casefold() for t in (row.get("model_chain") or []) + (row.get("model_part2") or [])]
     for m in case.must_not:
@@ -324,7 +284,7 @@ def must_not_violations(case: EvalCase, row: dict) -> list[str]:
         elif m == "negated_term" and any(f in t for f in case.forbidden_terms for t in terms):
             v.append("negated_term")
     # wrong_patient: V1 cannot tell the decedent's page from the intruder's,
-    # because both sit in the same field. A span found only in the intruding
+    # because both sit in the same note. A span found only in the intruding
     # page is a certificate built on the wrong patient.
     if case.intruder and row.get("assessment") == "certifiable":
         own, _, other = case.record.fields.get("case_narrative", "").partition("[page 2]")
@@ -336,8 +296,8 @@ def must_not_violations(case: EvalCase, row: dict) -> list[str]:
     return v
 
 
-def score(case: EvalCase, cert: Result | None, err: str | None = None) -> dict[str, Any]:
-    """The row for one case. `cert` is None when the pipeline raised."""
+def score(case: EvalCase, result: Result | None, err: str | None = None) -> dict[str, Any]:
+    """The row for one case. `result` is None when the pipeline raised."""
     row: dict[str, Any] = {
         "id": case.id,
         "parent": case.parent,
@@ -346,40 +306,40 @@ def score(case: EvalCase, cert: Result | None, err: str | None = None) -> dict[s
         "tags": list(case.tags),
         "expected": case.expected,
     }
-    if cert is None:
-        row.update(parsed=False, parse_error=err or "no reply", behaviour_ok=False)
-        row["must_not_violations"] = []
+    if result is None:
+        row.update(parsed=False, parse_error=err or "no reply", right_action=False)
+        row["forbidden_outcomes"] = []
         return row
     row.update(
-        route=cert.route.value,
-        reasons=list(cert.reasons),
-        usage=cert.usage.model_dump(),
-        timings_ms=dict(cert.timings_ms),
-        icd_error=cert.icd_error,
+        route=result.route.value,
+        reasons=list(result.reasons),
+        usage=result.usage.model_dump(),
+        timings_ms=dict(result.timings_ms),
+        icd_error=result.icd_error,
     )
-    v = cert.rule_check
-    if cert.draft_status != "ok" or cert.certificate is None or v is None:
-        row.update(parsed=False, parse_error=cert.draft_status, behaviour_ok=False)
-        row["must_not_violations"] = []
+    v = result.rule_check
+    if result.draft_status != "ok" or result.certificate is None or v is None:
+        row.update(parsed=False, parse_error=result.draft_status, right_action=False)
+        row["forbidden_outcomes"] = []
         return row
-    mccd = cert.certificate
+    mccd = result.certificate
     p1, p2 = mccd.get("part1") or [], mccd.get("part2") or []
     row.update(
         parsed=True,
         schema_ok=v.schema_ok,
         rules_passed=v.rules_passed,
-        messages=list(v.messages),
         broken_rules=list(v.broken_rules),
-        first_pass=dict(v.before_fix)
+        messages=list(v.messages),
+        first_try=dict(v.before_fix)
         if v.before_fix
         else {
             "schema_ok": v.schema_ok,
             "rules_passed": v.rules_passed,
             "broken_rules": list(v.broken_rules),
         },
-        repaired=v.rules_fixed,
-        repair_rejected=v.fix_rejected,
-        term_repair=v.terms_fixed,
+        rules_fixed=v.rules_fixed,
+        fix_rejected=v.fix_rejected,
+        terms_fixed=v.terms_fixed,
         term_changes=list(v.term_changes),
         assessment=v.assessment,
         confidence=v.confidence,
@@ -389,29 +349,29 @@ def score(case: EvalCase, cert: Result | None, err: str | None = None) -> dict[s
         model_bases=[c.get("basis") for c in p1],
         model_part2=[c.get("certified_term", "") for c in p2],
         spans=[c.get("evidence_span") or "" for c in p1 + p2],
-        gold_chain=list(case.gold_chain) if case.gold_chain else None,
-        ref_ucod=case.ref_ucod,
+        reference_chain=list(case.reference_chain) if case.reference_chain else None,
+        reference_cause=case.reference_cause,
     )
-    if cert.who_replies is not None:
-        w = cert.who_replies
+    if result.who_replies is not None:
+        w = result.who_replies
         cu = w.codedit_cause or {}
         row.update(
             codes=list(w.codes.get("part1") or []),
             match_scores=list(w.match_scores),
-            ucod_code=w.doris.get("ucod_stem_code"),
-            underlying_cause_full=w.doris.get("ucod_code"),
+            cause=w.doris.get("ucod_stem_code"),
+            cause_full=w.doris.get("ucod_code"),
             quality_issues=list(w.codedit.get("issue_ids") or []),
             ill_defined=bool(cu.get("ill_defined")),
         )
-    row["behaviour_ok"] = behaviour_ok(case.expected, v.assessment, row["route"])
-    row["must_not_violations"] = must_not_violations(case, row)
+    row["right_action"] = right_action(case.expected, v.assessment, row["route"])
+    row["forbidden_outcomes"] = forbidden_outcomes(case, row)
     return row
 
 
 def summarize(rows: list[dict]) -> dict[str, Any]:
-    """The four numbers, plus the counts behind them."""
+    """The numbers that matter, plus the counts behind them."""
     parsed = [r for r in rows if r.get("parsed")]
-    gold = [r for r in rows if r.get("ucod_code_match")]
+    compared = [r for r in rows if r.get("cause_match")]
     n = len(rows)
 
     def share(k: int, d: int) -> float | None:
@@ -420,20 +380,22 @@ def summarize(rows: list[dict]) -> dict[str, Any]:
     return {
         "n": n,
         "parsed": len(parsed),
-        "validator_clean_first_pass": share(
-            sum(r["first_pass"].get("rules_passed", False) for r in parsed), n
+        "rules_passed_first_try": share(
+            sum(r["first_try"].get("rules_passed", False) for r in parsed), n
         ),
-        "validator_clean": share(sum(r["rules_passed"] for r in parsed), n),
-        "revised": sum(bool(r.get("repaired")) for r in parsed),
-        "terms_revised": sum(r.get("term_repair") == "applied" for r in parsed),
+        "rules_passed_after_fix": share(sum(r["rules_passed"] for r in parsed), n),
+        "rules_fixed": sum(bool(r.get("rules_fixed")) for r in parsed),
+        "terms_fixed": sum(r.get("terms_fixed") == "applied" for r in parsed),
         "auto_share": share(sum(r.get("route") == "auto" for r in rows), n),
-        "gold_ucod_exact": share(sum(r["ucod_code_match"] == "exact" for r in gold), len(gold)),
-        "gold_ucod_same_stem_or_better": share(
-            sum(r["ucod_code_match"] in ("exact", "same_stem") for r in gold), len(gold)
+        "cause_matches_reference": share(
+            sum(r["cause_match"] == "exact" for r in compared), len(compared)
         ),
-        "gold_compared": len(gold),
-        "behaviour_ok": share(sum(bool(r.get("behaviour_ok")) for r in rows), n),
-        "must_not_violations": sum(len(r.get("must_not_violations") or []) for r in rows),
+        "cause_same_family": share(
+            sum(r["cause_match"] in ("exact", "same_family") for r in compared), len(compared)
+        ),
+        "causes_compared": len(compared),
+        "right_action": share(sum(bool(r.get("right_action")) for r in rows), n),
+        "forbidden_outcomes": sum(len(r.get("forbidden_outcomes") or []) for r in rows),
         "broken_rules": dict(Counter(x for r in parsed for x in r["broken_rules"])),
         "routes": dict(Counter(r.get("route", "error") for r in rows)),
         "reasons": dict(Counter(x for r in rows for x in r.get("reasons") or [])),
@@ -460,25 +422,24 @@ def run(
     started = datetime.now(UTC)
     run_dir = out_dir or RUNS / f"{set_name}_{started:%H%M%S}Z"
     run_dir.mkdir(parents=True, exist_ok=True)
-    reference = Reference(deps.who, deps.cache)
+    reference = ReferenceCoder(deps.who, deps.cache)
 
     rows = []
     t0 = time.perf_counter()
     for i, case in enumerate(cases, 1):
         try:
-            cert = certify_record(case.record, deps)
-            row = score(case, cert)
+            row = score(case, certify_record(case.record, deps))
         except ModelUnavailable as e:
             row = score(case, None, f"infra: {e}")
-        if row.get("ucod_code") and case.gold_chain:
-            row["gold_ucod_code"] = reference.ucod(case)
-            row["ucod_code_match"] = ucod_match(row["gold_ucod_code"], row["ucod_code"])
+        if row.get("cause") and case.reference_chain:
+            row["reference_cause_code"] = reference.cause(case)
+            row["cause_match"] = cause_match(row["reference_cause_code"], row["cause"])
         rows.append(row)
         if not quiet:
             print(
                 f"[{i:>2}/{len(cases)}] {case.id:<16} {row.get('route', 'error'):<7} "
                 f"{','.join(row.get('broken_rules') or []) or '-':<8} "
-                f"ucod={row.get('ucod_code') or '-':<8} {row.get('ucod_code_match') or ''}",
+                f"cause={row.get('cause') or '-':<8} {row.get('cause_match') or ''}",
                 flush=True,
             )
 
@@ -488,7 +449,6 @@ def run(
         "created_utc": started.isoformat(timespec="seconds"),
         "set": set_name,
         "only": list(only),
-        "corpus_version": robust_sample()["corpus_version"],
         "method": "in-process certify_record, strict json_schema, the autocode cache file",
         "versions": {
             "prompt_version": sp.version,
@@ -524,33 +484,34 @@ def report(manifest: dict, s: dict, rows: list[dict]) -> str:
         "",
         "| metric | value |",
         "|---|---|",
-        f"| validator clean, first pass | {s['validator_clean_first_pass']}% |",
-        f"| validator clean, final | {s['validator_clean']}% |",
-        f"| revised once | {s['revised']} |",
-        f"| terminology revised | {s['terms_revised']} |",
+        f"| rules passed, first try | {s['rules_passed_first_try']}% |",
+        f"| rules passed, after the fix | {s['rules_passed_after_fix']}% |",
+        f"| rules fixed | {s['rules_fixed']} |",
+        f"| terms fixed | {s['terms_fixed']} |",
         f"| auto share | {s['auto_share']}% |",
-        f"| UCOD exact vs gold | {s['gold_ucod_exact']}% of {s['gold_compared']} |",
-        f"| UCOD same stem or better | {s['gold_ucod_same_stem_or_better']}% |",
-        f"| behaviour as expected | {s['behaviour_ok']}% |",
-        f"| must_not violations | {s['must_not_violations']} |",
-        f"| ill-defined UCOD | {s['ill_defined']} |",
+        f"| underlying cause matches the reference | {s['cause_matches_reference']}% "
+        f"of {s['causes_compared']} |",
+        f"| underlying cause in the same family | {s['cause_same_family']}% |",
+        f"| right action | {s['right_action']}% |",
+        f"| forbidden outcomes | {s['forbidden_outcomes']} |",
+        f"| ill-defined underlying cause | {s['ill_defined']} |",
         "",
-        f"Rules fired (final): {s['broken_rules'] or 'none'}. Routes: {s['routes']}.",
+        f"Rules broken (final): {s['broken_rules'] or 'none'}. Routes: {s['routes']}.",
         "",
         "## Per case",
         "",
         "| case | expected | assessment | route | reasons | rules (first → final) "
-        "| model UCOD | gold UCOD | match |",
+        "| model cause | reference cause | match |",
         "|---|---|---|---|---|---|---|---|---|",
     ]
     for r in rows:
-        fp = ",".join((r.get("first_pass") or {}).get("broken_rules") or []) or "-"
+        fp = ",".join((r.get("first_try") or {}).get("broken_rules") or []) or "-"
         fin = ",".join(r.get("broken_rules") or []) or "-"
         lines.append(
             f"| {r['id']} | {r['expected']} | {r.get('assessment') or r.get('parse_error', '')} "
             f"| {r.get('route', '')} | {', '.join(r.get('reasons') or [])} | {fp} → {fin} "
-            f"| {r.get('ucod_code') or ''} | {r.get('gold_ucod_code') or ''} "
-            f"| {r.get('ucod_code_match') or ''} |"
+            f"| {r.get('cause') or ''} | {r.get('reference_cause_code') or ''} "
+            f"| {r.get('cause_match') or ''} |"
         )
     return "\n".join(lines) + "\n"
 
@@ -558,7 +519,7 @@ def report(manifest: dict, s: dict, rows: list[dict]) -> str:
 def main(argv: list[str] | None = None) -> None:
     sys.stdout.reconfigure(encoding="utf-8")  # type: ignore[union-attr]
     p = argparse.ArgumentParser(description="autoMCCD-lite mini evaluation harness")
-    p.add_argument("--set", default="headline", choices=SETS)
+    p.add_argument("--set", default="provided", choices=SETS)
     p.add_argument("--only", nargs="*", default=(), help="case ids, parents or variants")
     args = p.parse_args(argv)
     run(args.set, tuple(args.only))

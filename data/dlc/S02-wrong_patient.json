@@ -1,0 +1,38 @@
+{
+  "id": "S02-wrong_patient",
+  "parent": "S02",
+  "variant": "wrong_patient",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "wrong_patient"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S02-wrong_patient",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years.\n\n[page 2]\nA 75-year-old female had a 15-year history of non-insulin-dependent diabetes mellitus (NIDDM), a 13-year history of mild hypertension treated with thiazide diuretics, and an uncomplicated myocardial infarction 6 years prior to the present illness. She was found disoriented in her apartment and brought to the hospital. On admission she was noted to be unresponsive, without focal neurologic signs, and severely dehydrated with a blood pressure of 90/60. Initial laboratory tests disclosed severe hyperglycaemia, hyperosmolarity , azotaemia, and mild ketosis without acidosis. A diagnosis of hyperosmolar non - ketotic coma was made. The patient was vigorously treated with fluids, electrolytes, insulin, and broad-spectrum antibiotics, although no source for infection was documented. Within 72 hours, the patient’s hyperosmolar, hyperglycaemic state was resolved. However, she remained anuric with progressive azotaemia . Attempts at renal dialysis were unsuccessful, and the patient died on the 8th hospital day in severe acute renal failure."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": [
+    "auto"
+  ],
+  "intruder": "S07"
+}

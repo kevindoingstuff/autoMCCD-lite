@@ -1,0 +1,27 @@
+{
+  "id": "S21-clean",
+  "parent": "S21",
+  "variant": "clean",
+  "source": "vs_scenarios",
+  "tags": [
+    "coroner"
+  ],
+  "expected": "out_of_scope",
+  "record": {
+    "record_id": "S21-clean",
+    "sex": "female",
+    "age": 2,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "On January 12, 2003, a 2-year-old female was admitted to the hospital with salicylate poisoning. She had been under treatment for tonsillitis and upper respiratory infection. She had been given multiple excessive doses of aspirin (adult rather than baby tablets). She died on January 13, 2003."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": null,
+  "answer_note": "",
+  "must_not": []
+}

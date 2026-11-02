@@ -1,0 +1,69 @@
+{
+  "id": "S01",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S01-clean",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+      }
+    ]
+  },
+  "answer_note": "Type II diabetes and renal transplant contributed to death and hence included in Part II of the death certificate.\nSequence of events:\nStaphylococcus aureus meningitis- > Staphylococcus aureus sepsis-> Septic shock -> Death",
+  "reference": {
+    "gold_source": "certificate_image",
+    "source_image": "slide04_image9.png",
+    "template": "WHO_MCCD",
+    "transcribed": true,
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Septic shock",
+        "interval": {
+          "value": 2,
+          "unit": "days",
+          "certainty": "documented",
+          "display": "2 days"
+        }
+      },
+      {
+        "line": "1b",
+        "certified_term": "Staphylococcus aureus sepsis",
+        "interval": {
+          "value": 3,
+          "unit": "days",
+          "certainty": "documented",
+          "display": "3 days"
+        }
+      },
+      {
+        "line": "1c",
+        "certified_term": "Staphylococcus aureus meningitis",
+        "interval": {
+          "value": 6,
+          "unit": "days",
+          "certainty": "estimated",
+          "display": "> 6 days"
+        }
+      }
+    ],
+    "part2": [
+      "Diabetes Mellitus (10 years)",
+      "Renal transplant (6 years)"
+    ],
+    "part2_structured": true,
+    "has_intervals": true,
+    "exceeds_who_lines": false,
+    "text_sequence_forward_chain": [
+      "Staphylococcus aureus meningitis",
+      "Staphylococcus aureus sepsis",
+      "Septic shock"
+    ],
+    "part2_note": "Type II diabetes and renal transplant contributed to death and hence included in Part II of the death certificate."
+  }
+}

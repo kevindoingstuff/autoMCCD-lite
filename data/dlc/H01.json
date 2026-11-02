@@ -1,0 +1,42 @@
+{
+  "id": "H01",
+  "parent": "H01",
+  "variant": "handwritten",
+  "source": "handwritten",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "chronic_only",
+    "clinic_book",
+    "home_death"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "H01",
+    "sex": "male",
+    "age": 63,
+    "age_unit": "years",
+    "registry_info": "Death occurred at home. This clinic book is the only medical record available. Family report he became unwell at night and died before reaching hospital.",
+    "notes": [
+      {
+        "name": "past_medical_history",
+        "text": "Medical Clinic BH Kegalle. k/c/o DM 15 yrs, HTN 8 yrs."
+      },
+      {
+        "name": "progress_notes",
+        "text": "12/01 FBS 186. BP 150/90. On Metformin 500mg bd, Gliclazide 80mg bd, Losartan 50mg mane, Atorvastatin 20mg nocte. Adv diet. Review 2/12.\n15/03 c/o burning feet. FBS 201. BP 140/90. Cont same. Add vit B. Review 2/12.\n20/05 c/o occasional chest tightness on walking. ECG - ? old changes. Refer cardiology clinic. Cont same."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": null,
+  "acceptable_causes": [
+    "Type 2 diabetes mellitus",
+    "Ischaemic heart disease",
+    "Hypertension"
+  ],
+  "must_not": [
+    "auto"
+  ],
+  "forbidden_terms": []
+}

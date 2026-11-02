@@ -1,0 +1,35 @@
+{
+  "id": "S01-trunc_tail",
+  "parent": "S01",
+  "variant": "trunc_tail",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "trunc_tail"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S01-trunc_tail",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was"
+      }
+    ]
+  },
+  "reference_chain": [
+    "Septic shock",
+    "Staphylococcus aureus sepsis",
+    "Staphylococcus aureus meningitis"
+  ],
+  "reference_cause": "Staphylococcus aureus meningitis",
+  "acceptable_causes": [
+    "Staphylococcus aureus meningitis"
+  ],
+  "must_not": []
+}

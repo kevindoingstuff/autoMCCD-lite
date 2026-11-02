@@ -1,0 +1,55 @@
+{
+  "id": "S15",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S15-clean",
+    "sex": "male",
+    "age": 45,
+    "age_unit": "days",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A 1,480-gram male infant was born at 32-weeks gestation to a 20-year-old primiparous woman. Newborn screening found elevated levels of immunoreactive trypsinogen in the blood. The infant developed respiratory dis- tress syndrome and required mechanical ventilation for 7 days. Despite receiving adequate calories for growth, the infant gained weight poorly and had persistent diarrhoea. Steatorrhea was confirmed upon microscopic examination. Results from a sweat chloride test given on the 21st day after birth were negative, but the patient had an elevated sweat chloride con- centration of 85 millimoles per liter when the test was repeated at 35 days of age. On the 37th day after birth, the infant became lethargic and was noted to be oedematous. Escherichia coli was cultured from the infant’s cerebral spinal fluid, total serum proteins were reported to be low, and clotting studies were prolonged. The infant died at 45 days of age despite appropriate life-saving efforts. Gross autopsy confirmed the clinical impression of cystic fibrosis."
+      }
+    ]
+  },
+  "answer_note": "",
+  "reference": {
+    "gold_source": "certificate_image",
+    "source_image": "slide32_image13.png",
+    "template": "US_NCHS",
+    "transcribed": true,
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Escherichia coli meningitis",
+        "interval": {
+          "value": 7,
+          "unit": "days",
+          "certainty": "documented",
+          "display": "7 days"
+        }
+      },
+      {
+        "line": "1b",
+        "certified_term": "Cystic fibrosis",
+        "interval": {
+          "value": 45,
+          "unit": "days",
+          "certainty": "documented",
+          "display": "45 days"
+        }
+      }
+    ],
+    "part2": [
+      "Prematurity",
+      "Malabsorption",
+      "Respiratory distress syndrome",
+      "Failure to thrive"
+    ],
+    "part2_structured": true,
+    "has_intervals": true,
+    "exceeds_who_lines": false
+  }
+}

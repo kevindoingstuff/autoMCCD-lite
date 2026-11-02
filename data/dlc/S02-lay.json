@@ -1,0 +1,35 @@
+{
+  "id": "S02-lay",
+  "parent": "S02",
+  "variant": "lay",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "lay"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S02-lay",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": "No medical records were found. This is the family's account, recorded by the registrar.",
+    "notes": [
+      {
+        "name": "cause_of_death_information",
+        "text": "My father was 64. He used to drink arrack every day for about twenty years, and for ten years he took tablets for his heart. One day he had a stroke and we rushed him to hospital. He stayed there nearly two months, then they moved him to another place for exercises and care. He was mostly lying in bed there. After some time he got a chest infection, with fever and breathing trouble. They took him to the ICU, and the doctors said it was an infection in the chest. He died two days later. Thaththa never came home again."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": []
+}

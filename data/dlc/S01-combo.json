@@ -1,0 +1,35 @@
+{
+  "id": "S01-combo",
+  "parent": "S01",
+  "variant": "combo",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "combo"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S01-combo",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "M aged 49 yrs adm c h/o fever, disorientation & drowsiness for \nlast 2 days. Focal neurological findings iclentified on physical examinat-\nion & provisional Dx of meuingitis rnade. diagnostic lvmb cr puncture \nperformed for CSF examination. Stephyloccccus aureus organism \ni5olated from CSF & prcvisional Dx conflrmed as Staphylococcus aureu5 menin-\ng1tis. Despite IV antibiotic administration hi5 condition worsened & \non 3rd of admission blood cultures also positive for 5taphylococcus aureus-\n & pf expired on 4th day of admissiori due to septic shock. He Dx ca5e \nof type II DM for last 10 yrs & has had renal transplaut \n6 yrs back."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Septic shock",
+    "Staphylococcus aureus sepsis",
+    "Staphylococcus aureus meningitis"
+  ],
+  "reference_cause": "Staphylococcus aureus meningitis",
+  "acceptable_causes": [
+    "Staphylococcus aureus meningitis"
+  ],
+  "must_not": []
+}

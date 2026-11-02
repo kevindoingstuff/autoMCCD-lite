@@ -1,0 +1,42 @@
+{
+  "id": "S06",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S06-clean",
+    "sex": "male",
+    "age": 75,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A 75-year-old male had a 10-year history of chronic bronchitis associated with smoking two packs of cigarettes a day for more than 40 years. When seen by his physician approximately 2 years prior to his terminal episode, he had moderately reduced FEV1 and FVC with no response to bronchodilators. During his last year, he required corticosteroids to prevent wheezing and coughing at night; however, he was unable to reduce his smoking to less than one pack of cigarettes per day. When seen 3 months prior to his terminal episode, he had significantly reduced FEV1 and FVC with no response to bronchodilators. He awoke one evening complaining to his wife about coughing and worsening shortness of breath. He was taken to the emergency room where he was found to have an acute exacerbation of chronic obstructive airway disease. He was admitted to the hospital. At the patient’s request, no mechanical ventilation was employed, and he died 12 hours later in respiratory arrest."
+      }
+    ]
+  },
+  "answer_note": "Note:\nIn this case, respiratory arrest is considered a mode of death, and therefore it was not listed as the immediate Cause of Death. As cigarette smoking contributed significantly to his illness it is included in Part II of the death certificate.\nSequence of events:\nChronic Bronchitis -> Acute exacerbation of chronic obstructive airway disease -> Death",
+  "reference": {
+    "gold_source": "text_sequence",
+    "forward_chain": [
+      "Chronic Bronchitis",
+      "Acute exacerbation of chronic obstructive airway disease"
+    ],
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Acute exacerbation of chronic obstructive airway disease",
+        "interval": null
+      },
+      {
+        "line": "1b",
+        "certified_term": "Chronic Bronchitis",
+        "interval": null
+      }
+    ],
+    "part2": [],
+    "part2_structured": false,
+    "part2_note": "Note:\nIn this case, respiratory arrest is considered a mode of death, and therefore it was not listed as the immediate Cause of Death. As cigarette smoking contributed significantly to his illness it is included in Part II of the death certificate.",
+    "has_intervals": false,
+    "chain_truncated": false
+  }
+}

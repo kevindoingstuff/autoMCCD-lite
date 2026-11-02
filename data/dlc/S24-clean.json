@@ -1,0 +1,27 @@
+{
+  "id": "S24-clean",
+  "parent": "S24",
+  "variant": "clean",
+  "source": "vs_scenarios",
+  "tags": [
+    "coroner"
+  ],
+  "expected": "out_of_scope",
+  "record": {
+    "record_id": "S24-clean",
+    "sex": "male",
+    "age": 32,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "On July 26, 2003, a 32-year-old male was found along a roadway lying in some brambles. He was thrashing about and grinding his teeth. His body temperature was 103° F. He steadily went into full arrest and later died in the emergency room at a medical center . He had a history of cocaine and cannabis abuse. Toxicological examination revealed that he died of co­caine toxicity."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": null,
+  "answer_note": "",
+  "must_not": []
+}

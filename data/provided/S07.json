@@ -1,0 +1,48 @@
+{
+  "id": "S07",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S07-clean",
+    "sex": "female",
+    "age": 75,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A 75-year-old female had a 15-year history of non-insulin-dependent diabetes mellitus (NIDDM), a 13-year history of mild hypertension treated with thiazide diuretics, and an uncomplicated myocardial infarction 6 years prior to the present illness. She was found disoriented in her apartment and brought to the hospital. On admission she was noted to be unresponsive, without focal neurologic signs, and severely dehydrated with a blood pressure of 90/60. Initial laboratory tests disclosed severe hyperglycaemia, hyperosmolarity , azotaemia, and mild ketosis without acidosis. A diagnosis of hyperosmolar non - ketotic coma was made. The patient was vigorously treated with fluids, electrolytes, insulin, and broad-spectrum antibiotics, although no source for infection was documented. Within 72 hours, the patient’s hyperosmolar, hyperglycaemic state was resolved. However, she remained anuric with progressive azotaemia . Attempts at renal dialysis were unsuccessful, and the patient died on the 8th hospital day in severe acute renal failure."
+      }
+    ]
+  },
+  "answer_note": "In this case, hypertension and a previous myocardial infarction would both be considered factors that contributed to the death. However, they would not be in the direct causal sequence of Part I, so they were placed in Part II.\nSequence of events:\nNIDDM -> Hyperosmolar non -\nketotic\ncoma -> Acute renal failure -> Death",
+  "reference": {
+    "gold_source": "text_sequence",
+    "forward_chain": [
+      "NIDDM",
+      "Hyperosmolar non - ketotic coma",
+      "Acute renal failure"
+    ],
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Acute renal failure",
+        "interval": null
+      },
+      {
+        "line": "1b",
+        "certified_term": "Hyperosmolar non - ketotic coma",
+        "interval": null
+      },
+      {
+        "line": "1c",
+        "certified_term": "NIDDM",
+        "interval": null
+      }
+    ],
+    "part2": [],
+    "part2_structured": false,
+    "part2_note": "In this case, hypertension and a previous myocardial infarction would both be considered factors that contributed to the death. However, they would not be in the direct causal sequence of Part I, so they were placed in Part II.",
+    "has_intervals": false,
+    "chain_truncated": false
+  }
+}

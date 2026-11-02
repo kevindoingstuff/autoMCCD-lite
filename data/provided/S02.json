@@ -1,0 +1,48 @@
+{
+  "id": "S02",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S02-clean",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      }
+    ]
+  },
+  "answer_note": "As the arteriosclerosis was the condition beginning the sequence of morbid events, this will be selected as the underlying cause of death. Ischaemic heart disease and alcohol addiction contributed to death but was not related to the condition that led him to death and hence included in Part II of the death certificate.\nSequence of events:\nArteriosclerosis -> Cerebral infarction ->\nKlebsiella\npneumonia -> Death",
+  "reference": {
+    "gold_source": "text_sequence",
+    "forward_chain": [
+      "Arteriosclerosis",
+      "Cerebral infarction",
+      "Klebsiella pneumonia"
+    ],
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Klebsiella pneumonia",
+        "interval": null
+      },
+      {
+        "line": "1b",
+        "certified_term": "Cerebral infarction",
+        "interval": null
+      },
+      {
+        "line": "1c",
+        "certified_term": "Arteriosclerosis",
+        "interval": null
+      }
+    ],
+    "part2": [],
+    "part2_structured": false,
+    "part2_note": "As the arteriosclerosis was the condition beginning the sequence of morbid events, this will be selected as the underlying cause of death. Ischaemic heart disease and alcohol addiction contributed to death but was not related to the condition that led him to death and hence included in Part II of the death certificate.",
+    "has_intervals": false,
+    "chain_truncated": false
+  }
+}

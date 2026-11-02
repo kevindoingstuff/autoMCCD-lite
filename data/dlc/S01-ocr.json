@@ -1,0 +1,35 @@
+{
+  "id": "S01-ocr",
+  "parent": "S01",
+  "variant": "ocr",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "ocr"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S01-ocr",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 49 years was admitted to hospital with a history of fever, \ndisorientation and drowsiness f0r the last 2 day5.Focal neurclogical fi-\nndin9s were identified on phy5ical examination ancl a provisional diagno-\nsis of mening1tis was made. A diagnostic lumber puncture was \nperformed for CSF examination. Staphyloeoccus aureus organism w es isolafe-\nd from CSF arid thc provisional diagnosis was confirmed as \nStaphyloc0ccu5 aurcus meningitis. Despite IV antibiotic \nadmiriistration his condition worsened and on 3rd ofadmission \nblood cultureswere also positive for Sfaphylococcu5 aureusand the pat-\nient expired on4th doy of admission due to septic shock. \nHe was a diagnosed case of type II diabetes forthe last \n1O years and has had a renal transplant 6 years back."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Septic shock",
+    "Staphylococcus aureus sepsis",
+    "Staphylococcus aureus meningitis"
+  ],
+  "reference_cause": "Staphylococcus aureus meningitis",
+  "acceptable_causes": [
+    "Staphylococcus aureus meningitis"
+  ],
+  "must_not": []
+}

@@ -1,0 +1,60 @@
+{
+  "id": "S18",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S18-clean",
+    "sex": "male",
+    "age": 34,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A 34-year-old male was admitted to the hospital with severe shortness of breath. He had a 9-month history of unintentional weight loss, night sweats, and diarrhoea. The patient had no history of any medical condition that would cause immunodeficiency. An Elisa test and confirmatory West- ern Blot test for human immunodeficiency virus (HIV) were positive. T-lymphocyte tests indicated a low T helper -suppressor ratio. A lung biopsy was positive for pneumocystis carinii pneumonia (PCP), indicating a diagnosis of acquired immunodeficiency syndrome (AIDS). The patient’s pneumonia responded to pentamidine therapy, and the patient was discharged. The patient had two additional admissions for PCP. Seventeen months after the patient was first discovered to be HIV positive, he again developed PCP but did not respond to therapy. He died 2 weeks later."
+      }
+    ]
+  },
+  "answer_note": "",
+  "reference": {
+    "gold_source": "certificate_image",
+    "source_image": "slide38_image16.png",
+    "template": "US_NCHS",
+    "transcribed": true,
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Pneumocystis carinii pneumonia",
+        "interval": {
+          "value": 2,
+          "unit": "weeks",
+          "certainty": "documented",
+          "display": "2 weeks"
+        }
+      },
+      {
+        "line": "1b",
+        "certified_term": "Acquired immunodeficiency syndrome",
+        "interval": {
+          "value": 17,
+          "unit": "months",
+          "certainty": "documented",
+          "display": "17 months"
+        }
+      },
+      {
+        "line": "1c",
+        "certified_term": "HIV infection",
+        "interval": {
+          "value": 17,
+          "unit": "months",
+          "certainty": "estimated",
+          "display": "Over 17 months"
+        }
+      }
+    ],
+    "part2": [],
+    "part2_structured": true,
+    "has_intervals": true,
+    "exceeds_who_lines": false
+  }
+}

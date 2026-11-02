@@ -1,0 +1,33 @@
+{
+  "id": "PMC6708822_1",
+  "parent": "PMC6708822_1",
+  "variant": "real",
+  "source": "pmc_patients",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "external"
+  ],
+  "expected": "out_of_scope",
+  "record": {
+    "record_id": "PMC6708822_1",
+    "sex": "male",
+    "age": 56,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "The patient was a 56-year-old man with a past medical history significant for gout and chronic kidney disease. After eating and drinking wine late at night, he felt discomfort in his right knee, with local redness and swelling, and ingested 12 colchicine tablets (1 mg per tablet, a total of 12 mg; weight 70 kg, 0.17 mg/kg) for pain relief. Approximately 12 hours later, the patient experienced acute abdominal symptoms, including severe abdominal pain, nausea, frequent diarrhea, and vomiting. He attended the local community hospital where he was diagnosed with acute gastroenteritis and admitted to receive infusion therapy. When he came to the emergency department of our hospital, it had been nearly 40 hours after ingesting colchicine, his symptoms had progressed to scleral yellow stain, chest tightness, shortness of breath, and difficulty breathing. Oliguria, peripheral cyanosis, low body temperature (35.9 °C), low blood pressure (77/55 mmHg), and rapid heart rate (113 bpm) were indicative of shock. Emergency blood tests showed a 20.1 × 109/L white blood cell count, 92.6% neutrophils, 162 g/L hemoglobin, 123 × 109/L platelet count, 90.9 seconds activated partial thromboplastin time, and 70932 μg/L fibrinogen equivalent units D-dimer levels. Blood gas analysis indicated severe metabolic acidosis (pH 7.12) and respiratory alkalosis. Whole body computerized tomography scan displayed bilateral lung inflammation with a small amount of pleural effusion, kidney stones, right renal cyst, and cholecystitis. He was diagnosed with colchicine overdose, multiple organ failure, metabolic acidosis, and respiratory alkalosis.\\nWe performed a gastric lavage despite the 40-hour interval since colchicine ingestion, but the patient's condition did not improve. He rapidly progressed to abdominal pain, respiratory insufficiency, circulatory failure, acute liver failure, acute renal failure, and coagulopathy. His creatine kinase levels continued to rise. Considering his acute renal failure and unstable circulation, we treated the patient with continuous renal replacement therapy, norepinephrine, frozen plasma, proton-pump inhibitors, adenosylmethionine, antibiotics, granulocyte colony stimulating factor, and total parenteral nutrition. The patient developed complete hematopoietic inhibition and cardiac damage at 32 hours post-admission (Tables and ). After 60 hours of active treatment, the patient required tracheal intubation for progressive deterioration of respiratory function. Seventy-two hours after admission, the patient's cardiovascular circulatory function deteriorated further, and he was treated with noradrenaline (80 μg/min) and adrenaline (18.67 μg/min) to maintain adequate blood pressure. The patient developed additional comorbidities, including worsening hepatic dysfunction, rhabdomyolysis, and systemic inflammatory response syndrome. His condition continued to deteriorate, and he died approximately 132 hours after admission."
+      }
+    ]
+  },
+  "reference_chain": [],
+  "reference_cause": null,
+  "acceptable_causes": [],
+  "must_not": [
+    "certify",
+    "auto"
+  ],
+  "silver": true
+}

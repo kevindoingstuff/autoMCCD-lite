@@ -1,0 +1,35 @@
+{
+  "id": "S02-trunc_tail",
+  "parent": "S02",
+  "variant": "trunc_tail",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "trunc_tail"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S02-trunc_tail",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In"
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": []
+}

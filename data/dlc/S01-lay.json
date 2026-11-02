@@ -1,0 +1,35 @@
+{
+  "id": "S01-lay",
+  "parent": "S01",
+  "variant": "lay",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "lay"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S01-lay",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": "No medical records were found. This is the family's account, recorded by the registrar.",
+    "notes": [
+      {
+        "name": "cause_of_death_information",
+        "text": "My husband was 49. He had sugar for about ten years, and six years ago he got a new kidney from a donor. For two days he had fever and became drowsy and confused, not knowing where he was. We took him to hospital eke. The doctors did a test with a needle in his back and told us it was an infection in the brain covering. They gave him drips of medicine, but he kept getting worse. On the third day they said the infection had gone into his blood. On the fourth day he died. The doctors said it was an infection in the blood that made his body fail."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Septic shock",
+    "Staphylococcus aureus sepsis",
+    "Staphylococcus aureus meningitis"
+  ],
+  "reference_cause": "Staphylococcus aureus meningitis",
+  "acceptable_causes": [
+    "Staphylococcus aureus meningitis"
+  ],
+  "must_not": []
+}

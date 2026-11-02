@@ -1,0 +1,27 @@
+{
+  "id": "S22-clean",
+  "parent": "S22",
+  "variant": "clean",
+  "source": "vs_scenarios",
+  "tags": [
+    "coroner"
+  ],
+  "expected": "out_of_scope",
+  "record": {
+    "record_id": "S22-clean",
+    "sex": "male",
+    "age": 54,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "On May 5, 2003, a 54-year-old male was found dead from carbon monoxide poisoning in an automobile in a closed garage. A hose, running into the passenger compartment of the car, was attached to the exhaust pipe. The deceased had been despondent for some time as a result of a malignancy, and letters found in the car indicated intent to take his own life."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": null,
+  "answer_note": "",
+  "must_not": []
+}

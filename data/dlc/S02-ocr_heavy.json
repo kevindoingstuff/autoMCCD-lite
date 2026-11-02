@@ -1,0 +1,37 @@
+{
+  "id": "S02-ocr_heavy",
+  "parent": "S02",
+  "variant": "ocr_heavy",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "ocr_heavy"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S02-ocr_heavy",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 64 years admlttedto hcspital with an arteriosclerotic \nccrebral iufarction. H e was transferred to rehabilltafion fwo\nmonths later where he cleveloped hypostaticpnevmonia. Iri ICU sputum cultur-\ncdKlebsiella pneumoniae ancl the potient died 2 days oftcr aclmission to \nthe ICU. He was oIso addicted to alcohol for the pest 20 years and on re-\ngular medicatioriforIschacmic heart clisea5c for the last 10 year s"
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": [
+    "auto"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "id": "S01-trunc_head",
+  "parent": "S01",
+  "variant": "trunc_head",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "trunc_head"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S01-trunc_head",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Septic shock",
+    "Staphylococcus aureus sepsis",
+    "Staphylococcus aureus meningitis"
+  ],
+  "reference_cause": "Staphylococcus aureus meningitis",
+  "acceptable_causes": [
+    "Staphylococcus aureus meningitis"
+  ],
+  "must_not": []
+}

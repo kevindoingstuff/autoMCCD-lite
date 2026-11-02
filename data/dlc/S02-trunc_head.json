@@ -1,0 +1,35 @@
+{
+  "id": "S02-trunc_head",
+  "parent": "S02",
+  "variant": "trunc_head",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "trunc_head"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S02-trunc_head",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": []
+}

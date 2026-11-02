@@ -1,0 +1,55 @@
+{
+  "id": "H02",
+  "parent": "H02",
+  "variant": "handwritten",
+  "source": "handwritten",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "brought_dead",
+    "etu",
+    "shorthand"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "H02",
+    "sex": "male",
+    "age": 68,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "presenting_complaint_hpi",
+        "text": "ETU BH Matale 0640hrs. 68M BROUGHT DEAD by relatives. Hx from son: c/o chest pain & sweating ~2hrs at home, then collapsed."
+      },
+      {
+        "name": "past_medical_history",
+        "text": "k/c/o IHD 5 yrs, on aspirin 75mg, ISMN 30mg."
+      },
+      {
+        "name": "clinical_examination",
+        "text": "No pulse. No resp effort. Pupils fixed & dilated."
+      },
+      {
+        "name": "imaging_investigations",
+        "text": "ECG - asystole."
+      },
+      {
+        "name": "cause_of_death_information",
+        "text": "Pronounced dead 0650hrs. Inform police for inquest? - discussed with JMO, natural death suspected."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": "Ischaemic heart disease",
+  "acceptable_causes": [
+    "Ischaemic heart disease",
+    "Acute myocardial infarction",
+    "Chronic ischaemic heart disease"
+  ],
+  "must_not": [
+    "auto",
+    "mode_of_dying_1a"
+  ],
+  "forbidden_terms": []
+}

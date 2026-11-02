@@ -50,7 +50,7 @@ from automccd_lite.models import Draft, Record, RuleCheck
 #
 # NOTE the qualifier logic. "Heart failure" unqualified is barred; "congestive
 # heart failure" is NOT -- the avoid-list explicitly asks for the type to be
-# specified, and S17's gold certificate puts congestive heart failure on line
+# specified, and S17's reference certificate puts congestive heart failure on line
 # 1a. A validator that flags it is over-matching, and S17 exists to catch that.
 MODES_OF_DYING = [
     r"cardiac arrest",
@@ -101,7 +101,7 @@ ABBREVIATIONS = {
     "CVS", "CNS", "PCP", "ESRD", "ESRF", "MODS", "SIRS", "DIC",
 }  # fmt: skip
 # HIV and AIDS are conventional on certificates and appear expanded in the
-# gold for S18; keep them out of the error path.
+# reference for S18; keep them out of the error path.
 ABBREVIATION_ALLOWED = {"HIV", "AIDS", "TB"}
 
 # V3. Conjunctions that indicate two diagnoses crammed onto one line.
@@ -328,7 +328,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
 
     # ---- V5: structure ----------------------------------------------------
     # The WHO international form has four Part I lines. WHO's own DORIS and
-    # CoDEdit endpoints accept five (causeOfDeathCodeA..E), and S14's gold
+    # CoDEdit endpoints accept five (causeOfDeathCodeA..E), and S14's reference
     # certificate uses all five, so five is a warning rather than an error.
     # Six is beyond anything the API can take.
     if len(part1) > 5:
@@ -491,7 +491,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
         cert_ = interval.get("certainty")
         if val is None or unit == "unknown" or cert_ == "unknown":
             # An unknown cannot be ordered. Skipped in the comparison and
-            # counted, not treated as a violation -- S22's own gold gives
+            # counted, not treated as a violation -- S22's own reference gives
             # "Unknown" for both Part I intervals.
             n_unknown += 1
             continue

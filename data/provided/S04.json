@@ -1,0 +1,42 @@
+{
+  "id": "S04",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S04-clean",
+    "sex": "male",
+    "age": 75,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "This 75-year-old male was admitted to the hospital complaining of severe chest pain. He had a 10-year history of arteriosclerotic heart disease with ECG findings of myocardial ischemia and several episodes of congestive heart failure controlled by digitalis preparations and diuretics. Five months before this admission, the patient was found to be anaemic, with a haematocrit of 17, and to have occult blood in the stool. A barium enema revealed a large polypoid mass in the cecum diagnosed as carcinoma by biopsy. Because of the patient’s cardiac status, he was not considered to be a surgical candidate. Instead, he was treated with a 5-week course of radiation therapy and periodic packed red cell transfusions. He completed this course 3 months before this hospital admission. On this admission the ECG was diagnostic of an acute anterior wall myocardial infarction. He expired 2 days later."
+      }
+    ]
+  },
+  "answer_note": "Note:\nCarcinoma of cecum is listed in Part II because it caused anaemia and weakened the patient, but it did not cause arteriosclerotic heart disease. Congestive heart failure is also listed in Part II because it also weakened the patient. Although it was caused by the arteriosclerotic heart disease, it was not part of the causal sequence leading to the acute myocardial infarction.\nSequence of events:\nArteriosclerotic Heart Disease -> Acute Anterior Myocardial Infarction -> Death",
+  "reference": {
+    "gold_source": "text_sequence",
+    "forward_chain": [
+      "Arteriosclerotic Heart Disease",
+      "Acute Anterior Myocardial Infarction"
+    ],
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Acute Anterior Myocardial Infarction",
+        "interval": null
+      },
+      {
+        "line": "1b",
+        "certified_term": "Arteriosclerotic Heart Disease",
+        "interval": null
+      }
+    ],
+    "part2": [],
+    "part2_structured": false,
+    "part2_note": "Note:\nCarcinoma of cecum is listed in Part II because it caused anaemia and weakened the patient, but it did not cause arteriosclerotic heart disease. Congestive heart failure is also listed in Part II because it also weakened the patient. Although it was caused by the arteriosclerotic heart disease, it was not part of the causal sequence leading to the acute myocardial infarction.",
+    "has_intervals": false,
+    "chain_truncated": false
+  }
+}

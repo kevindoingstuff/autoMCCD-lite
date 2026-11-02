@@ -1,0 +1,44 @@
+{
+  "id": "S02-form",
+  "parent": "S02",
+  "variant": "form",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "form"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S02-form",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "progress_notes",
+        "text": "BED HEAD TICKET  No: 7700/20   Ward: 10   Unit: Medical\nName: ______________  Address: ______________  Tel (next of kin): 0769425806\nReligion: [ ] B [ ] H [ ] I [ ] C   Civil status: ____\nAllergies: NKDA   Blood group: ____\n\nHISTORY / NOTES:\nA male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      },
+      {
+        "name": "diagnoses",
+        "text": "Diagnosis on discharge: ________________________"
+      },
+      {
+        "name": "dates_timeline",
+        "text": "Date of admission: __/__/____   Date of discharge/death: __/__/____"
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": [],
+  "forbidden_terms": []
+}

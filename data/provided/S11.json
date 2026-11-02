@@ -1,0 +1,48 @@
+{
+  "id": "S11",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S11-clean",
+    "sex": "male",
+    "age": 54,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 54 years admitted to hospital for surgery to remove the colon due to carcinoma of the sigmoid colon. The patient developed a postoperative deep vein thrombosis. A pulmonary embolism later developed and the patient died shortly after. He was diagnosed as having arteriosclerosis and ischaemic heart disease for the last 5 years."
+      }
+    ]
+  },
+  "answer_note": "Note:\nAs the carcinoma of the sigmoid colon was the condition necessitating the surgery, this will be selected as the underlying cause of death. As ischaemic heart disease and arteriosclerosis was not directly related to death but may have contributed they will be documented in Part II of the certificate.\nSequence of events:\nCarcinoma of the sigmoid colon -> Deep vein thrombosis -> Pulmonary embolism -> Death",
+  "reference": {
+    "gold_source": "text_sequence",
+    "forward_chain": [
+      "Carcinoma of the sigmoid colon",
+      "Deep vein thrombosis",
+      "Pulmonary embolism"
+    ],
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Pulmonary embolism",
+        "interval": null
+      },
+      {
+        "line": "1b",
+        "certified_term": "Deep vein thrombosis",
+        "interval": null
+      },
+      {
+        "line": "1c",
+        "certified_term": "Carcinoma of the sigmoid colon",
+        "interval": null
+      }
+    ],
+    "part2": [],
+    "part2_structured": false,
+    "part2_note": "Note:\nAs the carcinoma of the sigmoid colon was the condition necessitating the surgery, this will be selected as the underlying cause of death. As ischaemic heart disease and arteriosclerosis was not directly related to death but may have contributed they will be documented in Part II of the certificate.",
+    "has_intervals": false,
+    "chain_truncated": false
+  }
+}

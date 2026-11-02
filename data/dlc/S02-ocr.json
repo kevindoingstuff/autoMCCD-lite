@@ -1,0 +1,35 @@
+{
+  "id": "S02-ocr",
+  "parent": "S02",
+  "variant": "ocr",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "ocr"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S02-ocr",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 64 ycars admittcd to hospital with an arteriosclerotic \ncerebral infarcticn. He was transferred to rehabllifation \ntwo months later where he developed hypostatic pneumonia. In\nICU sputum cultured Klebsiella pneumoniae and the patient \nd1ed 2 days after adm1ss1on to the ICU. He was also addicted \nto alcohol for the pa5t 20 years and on regular meclication for \nIscheemicheart diseese for thc last 10 vcar5."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": []
+}

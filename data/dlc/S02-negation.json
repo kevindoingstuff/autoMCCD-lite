@@ -1,0 +1,41 @@
+{
+  "id": "S02-negation",
+  "parent": "S02",
+  "variant": "negation",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "negation"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S02-negation",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 64 years admitted to hospital with an arteriosclerotic cerebral infarction. He was transferred to rehabilitation two months later where he developed hypostatic pneumonia. ? Malaria - smear negative, excluded. No h/o TB. Sputum AFB negative. In ICU sputum cultured Klebsiella pneumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for Ischaemic heart disease for the last 10 years."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": [
+    "negated_term"
+  ],
+  "forbidden_terms": [
+    "malaria",
+    "tuberculosis"
+  ]
+}

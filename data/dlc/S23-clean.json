@@ -1,0 +1,27 @@
+{
+  "id": "S23-clean",
+  "parent": "S23",
+  "variant": "clean",
+  "source": "vs_scenarios",
+  "tags": [
+    "coroner"
+  ],
+  "expected": "out_of_scope",
+  "record": {
+    "record_id": "S23-clean",
+    "sex": "male",
+    "age": 32,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A 32-year-old male was admitted to the hospital on August 23, 2003, with several stab wounds. He had been found in an alley off Smith Street at 4 a.m. by the police. No weapon was discovered. He died at 6:30 p.m. on the same day. Autopsy revealed that the intrathoracic hemorrhage due to the stab wound of the lung could be considered fatal."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": null,
+  "answer_note": "",
+  "must_not": []
+}

@@ -1,0 +1,35 @@
+{
+  "id": "S02-shorthand",
+  "parent": "S02",
+  "variant": "shorthand",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "shorthand"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S02-shorthand",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "M aged 64 yrs adm c arteriosclerotic CVA. He transferred to rehabilitation two mths later where he developed hypostatic pneumonia. In ICU sputum cultured Klebsiella pneumoniae & pt died 2 days after admission to ICU. He also addicted to alcohol for past 20 yrs & on regular medication for IHD for last 10 yrs."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": []
+}

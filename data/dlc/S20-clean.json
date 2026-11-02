@@ -1,0 +1,27 @@
+{
+  "id": "S20-clean",
+  "parent": "S20",
+  "variant": "clean",
+  "source": "vs_scenarios",
+  "tags": [
+    "coroner"
+  ],
+  "expected": "out_of_scope",
+  "record": {
+    "record_id": "S20-clean",
+    "sex": "male",
+    "age": 25,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "On May 10, 2003, a 25-year-old male was admitted to the hospital with a gunshot wound to the head. He had been at home in his study cleaning his gun when the shot was fired at approximately 9 p.m. He died at 11:05 p.m. on the same day. Autopsy showed contact gunshot wound of right temple."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": null,
+  "answer_note": "",
+  "must_not": []
+}

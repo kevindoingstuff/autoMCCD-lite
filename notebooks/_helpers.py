@@ -52,14 +52,17 @@ plt.rcParams.update(
 
 
 def load_record(record_id: str) -> Record:
-    """One of the shipped example records, data/records/<id>.json."""
+    """One of the shipped example records, data/examples/<id>.json."""
     return Record.model_validate(
-        json.loads((DATA_DIR / "records" / f"{record_id}.json").read_text(encoding="utf-8"))
+        json.loads((DATA_DIR / "examples" / f"{record_id}.json").read_text(encoding="utf-8"))
     )
 
 
-def load_gold(parent: str) -> dict:
-    return json.loads((DATA_DIR / "gold" / f"{parent}.json").read_text(encoding="utf-8"))
+def load_reference(parent: str) -> dict:
+    """The reference certificate (gold) of a provided scenario."""
+    from automccd_lite.eval import load_reference as _load
+
+    return _load(parent)
 
 
 def show_json(obj: Any, keys: list[str] | None = None, width: int = 110) -> None:
@@ -420,7 +423,7 @@ __all__ = [
     "display",
     "flow_diagram",
     "highlight_spans",
-    "load_gold",
+    "load_reference",
     "load_record",
     "reason_table",
     "render_mccd",

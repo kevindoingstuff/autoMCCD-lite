@@ -1,0 +1,36 @@
+{
+  "id": "S02-typos",
+  "parent": "S02",
+  "variant": "typos",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "typos"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S02-typos",
+    "sex": "male",
+    "age": 64,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A male aged 64 years admited to hospital with an arteriosclerotic cerebral infraction. He was transferred to rehabilitation two months later where he developed hypostatic neumonia. In ICU sputum cultured Klebsiella neumoniae and the patient died 2 days after admission to the ICU. He was also addicted to alcohol for the past 20 years and on regular medication for ischemik heart disease for the last 10 years."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Klebsiella pneumonia",
+    "Cerebral infarction",
+    "Arteriosclerosis"
+  ],
+  "reference_cause": "Arteriosclerosis",
+  "acceptable_causes": [
+    "Arteriosclerosis"
+  ],
+  "must_not": [],
+  "forbidden_terms": []
+}

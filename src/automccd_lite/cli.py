@@ -149,7 +149,7 @@ def serve() -> None:
 
 
 def smoke() -> None:
-    """readyz -> POST /certify with data/records/S01.json -> the row -> the file."""
+    """readyz -> POST /certify with data/examples/S01.json -> the row -> the file."""
     from automccd_lite.store import latest_row, stored_file
 
     cfg = settings()
@@ -169,7 +169,7 @@ def smoke() -> None:
     say(f"   ready: {ready.text}")
 
     say("2. POST /certify (S01)")
-    body = json.loads((DATA_DIR / "records" / "S01.json").read_text(encoding="utf-8"))
+    body = json.loads((DATA_DIR / "examples" / "S01.json").read_text(encoding="utf-8"))
     r = httpx.post(f"{api}/certify", json=body, timeout=300)
     if r.status_code != 200:
         fail(f"/certify returned {r.status_code}: {r.text[:300]}")

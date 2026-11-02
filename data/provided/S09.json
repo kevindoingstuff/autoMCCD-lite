@@ -1,0 +1,54 @@
+{
+  "id": "S09",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S09-clean",
+    "sex": "male",
+    "age": 36,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A 36 year old man with chronic alcoholism for 10 years had a previous history of duodenal ulcer with antacids treatment for 3 years. On the day of admission he had symptoms of acute abdominal pain with high fever. Initial chest X-rays showed free air under both domes of diaphragm. The patient was diagnosed as having peritonitis from peptic ulcer perforation. Emergency exploratory laparotomy was performed on the 1st day of admission. The surgeon found perforated duodenal ulcer size 2cm at anterior wall of first part duodenum. Five days later, the patient had high fever with chills, his abdominal ultrasound revealed sub-phrenic abscess under the right diaphragm. A revision exploratory laparotomy was planned. However the patient suddenly showed signs of septic shock that night and had a sudden cardiac arrest and the patient died within 2 hours of septic shock."
+      }
+    ]
+  },
+  "answer_note": "Note:\nChronic alcoholism contributed, but not directly related to the death therefore recorded in Part II of the certificate. The term “cardiac arrest” is a mode of dying and should not be written in the certificate.\nThe sequence of events:\nDuodenal ulcer -> Perforated duodenal ulcer -> Right sub-phrenic abscess -> Septic shock -> Death",
+  "reference": {
+    "gold_source": "text_sequence",
+    "forward_chain": [
+      "Duodenal ulcer",
+      "Perforated duodenal ulcer",
+      "Right sub-phrenic abscess",
+      "Septic shock"
+    ],
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Septic shock",
+        "interval": null
+      },
+      {
+        "line": "1b",
+        "certified_term": "Right sub-phrenic abscess",
+        "interval": null
+      },
+      {
+        "line": "1c",
+        "certified_term": "Perforated duodenal ulcer",
+        "interval": null
+      },
+      {
+        "line": "1d",
+        "certified_term": "Duodenal ulcer",
+        "interval": null
+      }
+    ],
+    "part2": [],
+    "part2_structured": false,
+    "part2_note": "Note:\nChronic alcoholism contributed, but not directly related to the death therefore recorded in Part II of the certificate. The term “cardiac arrest” is a mode of dying and should not be written in the certificate.\nThe sequence of events:\nDuodenal ulcer -> Perforated duodenal ulcer -> Right sub-phrenic abscess -> Septic shock -> Death",
+    "has_intervals": false,
+    "chain_truncated": false
+  }
+}

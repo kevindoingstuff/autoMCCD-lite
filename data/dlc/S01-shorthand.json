@@ -1,0 +1,35 @@
+{
+  "id": "S01-shorthand",
+  "parent": "S01",
+  "variant": "shorthand",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "shorthand"
+  ],
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S01-shorthand",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "M aged 49 yrs adm c h/o fever, disorientation & drowsiness for last 2 days. Focal neurological findings identified on physical examination & provisional Dx of meningitis made. diagnostic lumber puncture performed for CSF examination. Staphylococcus aureus organism isolated from CSF & provisional Dx confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened & on 3rd of admission blood cultures also positive for Staphylococcus aureus & pt expired on 4th day of admission due to septic shock. He Dx case of type II DM for last 10 yrs & has had renal transplant 6 yrs back."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Septic shock",
+    "Staphylococcus aureus sepsis",
+    "Staphylococcus aureus meningitis"
+  ],
+  "reference_cause": "Staphylococcus aureus meningitis",
+  "acceptable_causes": [
+    "Staphylococcus aureus meningitis"
+  ],
+  "must_not": []
+}

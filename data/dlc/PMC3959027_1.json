@@ -1,0 +1,33 @@
+{
+  "id": "PMC3959027_1",
+  "parent": "PMC3959027_1",
+  "variant": "real",
+  "source": "pmc_patients",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "external"
+  ],
+  "expected": "insufficient_information",
+  "record": {
+    "record_id": "PMC3959027_1",
+    "sex": "female",
+    "age": 80,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "Mrs. SM, an 80-year-old woman admitted to the surgical unit for a gluteal abscess, was referred for psychiatric evaluation. The referring physician said that the patient believed that her deceased son was still alive. She had two sons and a daughter, who provided the psychiatric history. The deceased son was her favorite, but her relationship with other family members was depleted. When he was in his twenties, he was accused of fraud at his workplace, following which he developed depressive symptoms. At 10 days later he committed suicide by consuming poison, leaving separate notes for his mother and sister. When taken to the morgue, the patient claimed that he was not dead. The suicide note was not shown to her.\\nOver the next few months, the patient displayed behaviors indicating that she believed her son was alive. She maintained his room and belongings exactly as before. She often rushed up to the terrace at the sound of airplanes and would say that her son was returning home. The above behaviors persisted for the next 35 years. Her self-care, sleep and appetite were unchanged. Her daughter reported that during the current admission the patient had been looking for her son among the medical interns.\\nPatient was an emotionally restrained person who was not demonstrative about her affection for her children. There was a family history of suicide in her paternal uncle, sister and her son as described above and depression in her grandson.\\nOn mental status examination, her higher mental functions were intact. When asked about her son she said she could not talk about him, but requested us to arrange for his return.\\nBased on the history and examination, we considered differential diagnoses of delusional disorder and atypical bereavement. The family refused any psychiatric intervention for her. She passed away 2 months later. Her daughter subsequently presented to us with depression."
+      }
+    ]
+  },
+  "reference_chain": [],
+  "reference_cause": null,
+  "acceptable_causes": [],
+  "must_not": [
+    "certify",
+    "auto"
+  ],
+  "silver": true
+}

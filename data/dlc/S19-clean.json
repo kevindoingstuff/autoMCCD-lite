@@ -1,0 +1,27 @@
+{
+  "id": "S19-clean",
+  "parent": "S19",
+  "variant": "clean",
+  "source": "vs_scenarios",
+  "tags": [
+    "coroner"
+  ],
+  "expected": "out_of_scope",
+  "record": {
+    "record_id": "S19-clean",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "On May 15, 2003, a 49-year-old male gardener was brought to the emergency room with an infected wound of the right foot. Because of repeated convulsions, he was admitted to the hospital. The examining physician made a diagnosis of tetanus. His wife reported that while employed as a gardener on April 1, 2003, he stepped on a garden rake. He treated the laceration himself. Patient died of asphyxia during convulsions May 16, 2003. Autopsy supported diagnosis."
+      }
+    ]
+  },
+  "reference_chain": null,
+  "reference_cause": null,
+  "answer_note": "",
+  "must_not": []
+}

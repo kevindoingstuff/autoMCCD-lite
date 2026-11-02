@@ -1,0 +1,48 @@
+{
+  "id": "S08",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S08-clean",
+    "sex": "male",
+    "age": 53,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "This 53-year-old male was admitted to the hospital following 2 days of intermittent mid epigastric and left-sided chest pain. The pain radiated to his left arm and was accompanied by nausea and vomiting. He gave a history that included 2 years of occasional chest discomfort, a near syncopal episode 6 months prior, hypertension, a 30-year history of one-pack per-day cigarette smoking, congenital blindness, and insulin-dependent diabetes mellitus. He was noted to be markedly obese and to have severe hypercholesterolemia. At the time of admission, his enzyme studies were normal, but the ECG suggested myocardial ischemia. Two days later, he experienced an episode of severe chest pain that did not respond to nitro-glycerine and was accompanied by ST-segment elevation. A cardiac catheterization demonstrated severe multi-vessel coronary artery stenosis. He underwent quadruple coronary artery bypass surgery. Shortly, after being taken off the cardiopulmonary bypass machine, he went into cardiac arrest. As resuscitation was being attempted by open cardiac massage, a rupture developed in his left ventricular wall that resulted in rapid exsanguination and death."
+      }
+    ]
+  },
+  "answer_note": "Note:\nIn this case, IDDM, cigarette smoking, hypertension, hypercholesterolemia and obesity would all be considered factors that contributed to the death. However, they would not be in the direct causal sequence of Part I, so they would be placed in Part II.\nSequence of events:\nCoronary arteriosclerosis -> Acute myocardial infarction -> Rupture of L/ventricle -> Death",
+  "reference": {
+    "gold_source": "text_sequence",
+    "forward_chain": [
+      "Coronary arteriosclerosis",
+      "Acute myocardial infarction",
+      "Rupture of L/ventricle"
+    ],
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Rupture of L/ventricle",
+        "interval": null
+      },
+      {
+        "line": "1b",
+        "certified_term": "Acute myocardial infarction",
+        "interval": null
+      },
+      {
+        "line": "1c",
+        "certified_term": "Coronary arteriosclerosis",
+        "interval": null
+      }
+    ],
+    "part2": [],
+    "part2_structured": false,
+    "part2_note": "Note:\nIn this case, IDDM, cigarette smoking, hypertension, hypercholesterolemia and obesity would all be considered factors that contributed to the death. However, they would not be in the direct causal sequence of Part I, so they would be placed in Part II.",
+    "has_intervals": false,
+    "chain_truncated": false
+  }
+}

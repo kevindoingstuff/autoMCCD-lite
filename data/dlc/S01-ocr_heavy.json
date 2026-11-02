@@ -1,0 +1,37 @@
+{
+  "id": "S01-ocr_heavy",
+  "parent": "S01",
+  "variant": "ocr_heavy",
+  "source": "vs_scenarios",
+  "corpus_version": "r5",
+  "tags": [
+    "stress",
+    "ocr_heavy"
+  ],
+  "expected": "certifiable_or_insufficient",
+  "record": {
+    "record_id": "S01-ocr_heavy",
+    "sex": "male",
+    "age": 49,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A malc ogccl 49 year5 was admitfed to hospital with a liistory cf fever, disor1ent-\nation and drowsiness for the last 2 days. Focal nenrologicol \nfindings wcre identified on physicaI examlnation ond a provlsional \ndiagnosi5 of mening1tis wos nnade, A diagnostic Iurnber puricture \nwas performed f orCSF examination  Sfaphylococcus aureus organi5m was i-\nsolated from C5F and thc provisional diagnosis was confirmed \nas Sfaphylococcusaureus meningifis. De5pite IV antibiotic admini5trotion \nhis condltion worsened and on 3rd of edrnissiori bloocl culfurcs were also \nposifive for Staphylococcus oureus and the patient ex pired on 4th \nclay of edmission clne toseptic shock. He wos a diagnosed case of type II \ndiabetes for the le5t 10 year5 and has had a renal transplant 6 \nyearsback."
+      }
+    ]
+  },
+  "reference_chain": [
+    "Septic shock",
+    "Staphylococcus aureus sepsis",
+    "Staphylococcus aureus meningitis"
+  ],
+  "reference_cause": "Staphylococcus aureus meningitis",
+  "acceptable_causes": [
+    "Staphylococcus aureus meningitis"
+  ],
+  "must_not": [
+    "auto"
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "id": "S12",
+  "expected": "certifiable",
+  "record": {
+    "record_id": "S12-clean",
+    "sex": "male",
+    "age": 68,
+    "age_unit": "years",
+    "registry_info": null,
+    "notes": [
+      {
+        "name": "case_narrative",
+        "text": "A 68-year-old male was admitted to the hospital with progressive right lower quadrant pain of several weeks’ duration. The patient had lost approximately 40 pounds, with progressive weakness and malaise. On physical examination, the patient had an enlarged liver span that was four finger breadths below the right costal margin. Rectal examination was normal and stool was negative for occult blood. Routine laboratory studies were within normal limits.A chestx ray and barium enema were negative. His EKG showed a right bundle branch block. CT scan showed numerous masses within both lobes of the liver. A needle biopsy of the liver was diagnostic of moderately differentiated hepatocellular carcinoma, and the patient was started on chemotherapy. Three months after the diagnosis, the patient developed sharp diminution of liver function as well as a deep venous thrombosis of his left thigh, and he was admitted to the hospital. On his third day, the patient developed a pulmonary embolism and died 30 minutes later"
+      }
+    ]
+  },
+  "answer_note": "",
+  "reference": {
+    "gold_source": "certificate_image",
+    "source_image": "slide26_image10.png",
+    "template": "US_NCHS",
+    "transcribed": true,
+    "part1": [
+      {
+        "line": "1a",
+        "certified_term": "Pulmonary embolism",
+        "interval": {
+          "value": 30,
+          "unit": "minutes",
+          "certainty": "documented",
+          "display": "30 minutes"
+        }
+      },
+      {
+        "line": "1b",
+        "certified_term": "Deep venous thrombosis in left thigh",
+        "interval": {
+          "value": 3,
+          "unit": "days",
+          "certainty": "documented",
+          "display": "3 days"
+        }
+      },
+      {
+        "line": "1c",
+        "certified_term": "Acute hepatic failure",
+        "interval": {
+          "value": 3,
+          "unit": "days",
+          "certainty": "documented",
+          "display": "3 days"
+        }
+      },
+      {
+        "line": "1d",
+        "certified_term": "Moderately differentiated hepatocellular carcinoma",
+        "interval": {
+          "value": 3,
+          "unit": "months",
+          "certainty": "estimated",
+          "display": "over 3 months"
+        }
+      }
+    ],
+    "part2": [],
+    "part2_structured": true,
+    "has_intervals": true,
+    "exceeds_who_lines": false
+  }
+}
