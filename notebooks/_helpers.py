@@ -20,7 +20,7 @@ from automccd_lite.config import DATA_DIR, settings
 from automccd_lite.models import Result, Record
 from automccd_lite.rules import _source_key, _span_key
 
-settings()  # loads .env, so db.engine() and the clients see PGPORT and the keys
+settings()  # loads .env, so the store and the clients see STORE_DIR and the keys
 
 # The reference data-viz palette: blue for a single measure, blue/orange as the
 # fixed order for auto/review, grey for anything that is not a series.
@@ -242,71 +242,54 @@ def highlight_spans(record: Record, mccd: dict | Result) -> HTML:
 # the flow diagram
 
 
-STAGES = [
-    ("build_prompt", "prompt"),
-    ("draft_certificate", "draft"),
-    ("validate_draft", "validate"),
-    ("revise_draft", "revise"),
-    ("code_draft", "code"),
-    ("route_draft", "route"),
-    ("generate_certificate", "generate"),
-]
+STEPS = [("Step 1. Draft", "draft"), ("Step 2. Check", "check"), ("Step 3. Decide", "decide")]
 
 
-def flow_diagram(cert: Result) -> Image | HTML:
-    """The seven stages left to right, each carrying what this certificate
-    did there: the model status, the rules fired, whether a revision ran, the
-    codes and the UCOD, the route and its reasons. Needs the Graphviz `dot`
+def flow_diagram(result: Result) -> Image | HTML:
+    """The three steps left to right, each carrying what this record did
+    there: the model status; the rules, the fixes, the codes and the
+    underlying cause; the route and its reasons. Needs the Graphviz `dot`
     binary; without it, a text fallback."""
-    v, coded, ms = cert.rule_check, cert.who_replies, cert.timings_ms
+    v, who, ms = result.rule_check, result.who_replies, result.timings_ms
+    if v:
+        rules = f"rules broken: {', '.join(v.broken_rules) or 'none'}"
+        fix = "rules fix: adopted" if v.rules_fixed else "rules fix: rejected" if v.fix_rejected else ""
+        terms = f"terms fix: {v.terms_fixed}" if v.terms_fixed else ""
+    else:
+        rules, fix, terms = "no certificate to check", "", ""
+    coding = (
+        f"underlying cause {who.doris.get('ucod_stem_code') or '-'}\n"
+        f"codes {', '.join(c or '-' for c in who.codes.get('part1') or [])}\n"
+        f"CoDEdit {', '.join(who.codedit.get('issue_ids') or []) or 'clean'}"
+        if who
+        else (result.icd_error or "not coded")
+    )
+    check = "\n".join(x for x in (rules, fix, terms, coding, f"{ms.get('check', 0)} ms") if x)
     notes = {
-        "prompt": f"sha1 {cert.versions.prompt_sha1[:8]}",
-        "draft": f"{cert.draft_status} · {cert.usage.calls} call(s)\\n{ms.get('draft', 0)} ms",
-        "validate": (
-            f"schema {'ok' if v.schema_ok else 'FAIL'}\\nrules {', '.join(v.broken_rules) or 'none'}"
-            if v
-            else "skipped"
-        ),
-        "revise": (
-            "rules: adopted"
-            if v and v.rules_fixed
-            else "rules: rejected"
-            if v and v.fix_rejected
-            else "rules: not needed"
-        )
-        + (f"\\nterms: {v.terms_fixed}" if v and v.terms_fixed else "")
-        + (f"\\n{ms['revise']} ms" if ms.get("revise") else ""),
-        "code": (
-            f"UCOD {coded.doris.get('ucod_stem_code') or '—'}\\n"
-            f"codes {', '.join(c or '∅' for c in coded.codes.get('part1') or [])}\\n"
-            f"CoDEdit {', '.join(coded.codedit.get('issue_ids') or []) or 'clean'}"
-            if coded
-            else (cert.icd_error or "skipped")
-        ),
-        "route": f"{cert.route.value.upper()}\\n{chr(10).join(cert.reasons) or 'no reasons'}".replace(
-            "\n", "\\n"
-        ),
-        "generate": "stored" if cert.coding is not None or cert.certificate else "built",
+        "draft": f"{result.draft_status} · {result.usage.calls} model call(s)\n"
+        f"prompt sha1 {result.versions.prompt_sha1[:8]}\n{ms.get('draft', 0)} ms",
+        "check": check,
+        "decide": f"{result.route.value.upper()}\n" + ("\n".join(result.reasons) or "no reasons"),
     }
+    clean = bool(v and v.rules_passed and v.schema_ok and not v.rules_fixed and who)
     fill = {
-        "validate": "#e8f1fb" if (v and v.rules_passed and v.schema_ok) else "#fde8d7",
-        "revise": "#fff6d6" if (v and (v.rules_fixed or v.terms_fixed == "applied")) else "#f3f3f1",
-        "code": "#e8f1fb" if coded else "#f3f3f1",
-        "route": "#e2f3ea" if cert.route.value == "auto" else "#fde8d7",
+        "draft": "#e8f1fb" if result.draft_status == "ok" else "#fde8d7",
+        "check": "#e8f1fb" if clean else "#fde8d7",
+        "decide": "#e2f3ea" if result.route.value == "auto" else "#fde8d7",
     }
     try:
         import graphviz
 
         g = graphviz.Digraph(graph_attr={"rankdir": "LR", "nodesep": "0.25", "pad": "0.2"})
         g.attr("node", shape="box", style="rounded,filled", fontname="Helvetica", fontsize="10")
-        for fn, key in STAGES:
-            g.node(key, f"{fn}\\n\\n{notes[key]}", fillcolor=fill.get(key, "#f3f3f1"))
-        for (_, a), (_, b) in zip(STAGES, STAGES[1:], strict=False):
+        for name, key in STEPS:
+            g.node(key, f"{name}\n\n{notes[key]}", fillcolor=fill[key])
+        for (_, a), (_, b) in zip(STEPS, STEPS[1:], strict=False):
             g.edge(a, b)
         return Image(g.pipe(format="png"))
     except Exception:  # noqa: BLE001 - no dot binary: fall back to text
-        lines = [f"{fn:<22} {notes[key].replace(chr(92) + 'n', ' | ')}" for fn, key in STAGES]
-        return HTML("<pre>" + html.escape("\n".join(lines)) + "</pre>")
+        lines = [f"{name:<15} {notes[key].replace(chr(10), ' | ')}" for name, key in STEPS]
+        return HTML("<pre>" + html.escape(chr(10).join(lines)) + "</pre>")
 
 
 # ---------------------------------------------------------------------------
@@ -326,15 +309,16 @@ def _bar(ax, labels, values, colors, title):
 
 
 def charts(rows: list[dict], save_to: str | None = None):
-    """Three small charts over a run's rows: the routes, the rules that fired
-    (first pass against final), and how the model's UCOD compared with the
-    gold's. Counts, not percentages: 17 cases are too few to pretend otherwise."""
+    """Three small charts over a run's rows: the routes, the rules broken
+    (first try against after the fix), and how the model's underlying cause
+    compared with the reference's. Counts, not percentages: 17 cases are too
+    few to pretend otherwise."""
     routes = Counter(r.get("route", "error") for r in rows)
-    first = Counter(x for r in rows if r.get("parsed") for x in r["first_pass"].get("broken_rules", []))
+    first = Counter(x for r in rows if r.get("parsed") for x in r["first_try"].get("broken_rules", []))
     final = Counter(x for r in rows if r.get("parsed") for x in r.get("broken_rules", []))
     rules = sorted(set(first) | set(final), key=lambda k: int(k[1:]))
-    match = Counter(r.get("ucod_code_match") or "not compared" for r in rows)
-    order = ["exact", "same_stem", "different", "not compared"]
+    match = Counter(r.get("cause_match") or "not compared" for r in rows)
+    order = ["exact", "same_family", "different", "not compared"]
 
     fig, axes = plt.subplots(1, 3, figsize=(13, 3.2), gridspec_kw={"width_ratios": [1, 1.4, 1.2]})
     _bar(
@@ -347,22 +331,22 @@ def charts(rows: list[dict], save_to: str | None = None):
     ax = axes[1]
     if rules:
         y = range(len(rules))
-        ax.barh([i - 0.18 for i in y], [first[k] for k in rules], height=0.34, color=ORANGE, label="first pass")
-        ax.barh([i + 0.18 for i in y], [final[k] for k in rules], height=0.34, color=BLUE, label="after revision")
+        ax.barh([i - 0.18 for i in y], [first[k] for k in rules], height=0.34, color=ORANGE, label="first try")
+        ax.barh([i + 0.18 for i in y], [final[k] for k in rules], height=0.34, color=BLUE, label="after the fix")
         ax.set_yticks(list(y), rules)
         ax.invert_yaxis()
         ax.legend(frameon=False, fontsize=9, loc="lower right")
         ax.set_xlim(0, max(list(first.values()) + list(final.values()) + [1]) * 1.18)
     else:
-        ax.text(0.5, 0.5, "no rule fired", ha="center", va="center", color=MUTED)
-    ax.set_title("Validator rules fired (cases)", loc="left", fontsize=11, color=INK)
+        ax.text(0.5, 0.5, "no rule broken", ha="center", va="center", color=MUTED)
+    ax.set_title("Rules broken (cases)", loc="left", fontsize=11, color=INK)
     ax.tick_params(axis="y", length=0)
     _bar(
         axes[2],
         order,
         [match.get(k, 0) for k in order],
         [BLUE, BLUE, BLUE, GRID],
-        "UCOD vs gold (cases)",
+        "Underlying cause vs reference (cases)",
     )
     for ax in axes:
         ax.set_xlabel("")
@@ -375,8 +359,8 @@ def charts(rows: list[dict], save_to: str | None = None):
 def timings_chart(rows: list[dict], save_to: str | None = None):
     """Where the seconds go, per case: nearly all of it is the model."""
     ids = [r["id"] for r in rows]
-    stages = ["draft", "revise", "code"]
-    colors = {"draft": BLUE, "revise": ORANGE, "code": AQUA}
+    stages = ["draft", "check", "decide"]
+    colors = {"draft": BLUE, "check": ORANGE, "decide": AQUA}
     fig, ax = plt.subplots(figsize=(10, 0.28 * len(ids) + 1))
     left = [0.0] * len(ids)
     for st in stages:
@@ -385,7 +369,7 @@ def timings_chart(rows: list[dict], save_to: str | None = None):
         left = [a + b for a, b in zip(left, vals, strict=True)]
     ax.invert_yaxis()
     ax.set_xlabel("seconds")
-    ax.set_title("Time per case by stage", loc="left", fontsize=11, color=INK)
+    ax.set_title("Time per case by step", loc="left", fontsize=11, color=INK)
     ax.legend(frameon=False, fontsize=9, ncol=3, loc="lower right")
     ax.tick_params(axis="y", length=0)
     fig.tight_layout()
@@ -395,18 +379,18 @@ def timings_chart(rows: list[dict], save_to: str | None = None):
 
 
 def reason_table(rows: list[dict]) -> HTML:
-    """One line per case: route, reasons, rules, UCOD against gold."""
-    head = "<tr><th>case</th><th>route</th><th>reasons</th><th>rules first → final</th><th>UCOD model / gold</th><th>match</th></tr>"
+    """One line per case: route, reasons, rules, underlying cause against the reference."""
+    head = "<tr><th>case</th><th>route</th><th>reasons</th><th>rules first → final</th><th>cause model / reference</th><th>match</th></tr>"
     body = ""
     for r in rows:
-        fp = ",".join((r.get("first_pass") or {}).get("broken_rules") or []) or "–"
+        fp = ",".join((r.get("first_try") or {}).get("broken_rules") or []) or "–"
         fn = ",".join(r.get("broken_rules") or []) or "–"
         color = ROUTE_COLOR.get(r.get("route", ""), MUTED)
         body += (
             f"<tr><td>{r['id']}</td><td><b style='color:{color}'>{r.get('route', '')}</b></td>"
             f"<td>{', '.join(r.get('reasons') or [])}</td><td>{fp} → {fn}</td>"
-            f"<td>{r.get('ucod_code') or '–'} / {r.get('gold_ucod_code') or '–'}</td>"
-            f"<td>{r.get('ucod_code_match') or ''}</td></tr>"
+            f"<td>{r.get('cause') or '–'} / {r.get('reference_cause_code') or '–'}</td>"
+            f"<td>{r.get('cause_match') or ''}</td></tr>"
         )
     return HTML(
         "<style>.rt td,.rt th{font:12px/1.4 system-ui;padding:3px 8px;text-align:left;border-bottom:1px solid #e6e5e1}</style>"
