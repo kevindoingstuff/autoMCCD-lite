@@ -21,10 +21,10 @@ from pydantic import BaseModel
 from sqlalchemy import text
 
 from automccd_lite import __version__
-from automccd_lite.certificate import as_response
-from automccd_lite.code import CodeCache, WhoClient
+from automccd_lite.coding import CodeCache, WhoClient
 from automccd_lite.config import Settings, settings
 from automccd_lite.db import SqliteCertificateStore, create_all, session_scope
+from automccd_lite.decide import as_response
 from automccd_lite.draft import Ask, ModelUnavailable, connect_model
 from automccd_lite.log import log_event
 from automccd_lite.models import Record, Result
@@ -74,8 +74,9 @@ class Runtime:
 
     def certify_one(self, record: Record) -> Result:
         with session_scope() as s:
-            deps = Deps(self.ask, self.icd, self.cache, self.storage, SqliteCertificateStore(s))
-            cert = certify_record(record, deps)
+            cert = certify_record(record, Deps(self.ask, self.icd, self.cache))
+            path = self.storage.put_certificate(cert)  # the file first; the row records its path
+            SqliteCertificateStore(s).insert_certificate(cert, path)
         log_event(
             log,
             "certified",

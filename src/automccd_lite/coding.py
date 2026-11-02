@@ -1,6 +1,7 @@
-"""code_draft: code the certificate with WHO's tools.
+"""Step 2. Check, part two: code the certificate with the WHO's own tools.
 
-autocode -> DORIS -> CoDEdit (whole certificate) -> CoDEdit (UCOD alone).
+code_terms: autocode each term -> DORIS (the underlying cause) -> CoDEdit on
+the whole certificate -> CoDEdit on the underlying cause alone.
 
 The client talks to the self-hosted WHO ICD-API container. Verified against
 the running container, not inferred from docs:
@@ -12,21 +13,30 @@ the running container, not inferred from docs:
     written diagnosis into a code is the separate `autocode` endpoint.
   * The API accepts FIVE Part I lines (A..E), not the four of the WHO form.
   * CoDEdit returns machine-readable `issueIds`, a comma-separated string.
-    A BER- validity error suppresses the clinical checks; see code_draft.
+    A BER- validity error suppresses the clinical checks; see code_terms.
   * All three headers below are required: no Accept -> 412, no API-Version -> 400.
 
-The second CoDEdit call asks the question the metric names (is the
-UNDERLYING cause uninformative) and is immune to validity blocking: a BER-
-error on the whole certificate suppresses the clinical checks, while the
-UCOD-alone call sends a single valid stem code DORIS just returned.
+The second CoDEdit call asks whether the UNDERLYING cause is uninformative
+and is immune to validity blocking: a BER- error on the whole certificate
+suppresses the clinical checks, while the cause-alone call sends the single
+valid stem code DORIS just returned.
 
 The autocode cache codes each term once and reuses the entry. Autocode error
 is indistinguishable from model error, so a stable code per term keeps runs
 comparable, and the entry carries the matched text and score for audit.
+
+fix_terms runs before coding when a Part I term scores under
+check.min_match_score. It asks the model once for the standard ICD-11 name
+of the same condition. Only the Part I certified_terms are taken over, and
+each restated term is kept only if it codes with a HIGHER score than the
+original: a fix may not make coding worse ("Rupture of ventricular wall"
+scored 0.11 and coded to a congenital malformation). Calling cache.code() in
+fix_terms IS the first autocode pass; code_terms reuses the entries.
 """
 
 from __future__ import annotations
 
+import copy
 import json
 import os
 import time
@@ -36,7 +46,9 @@ from pathlib import Path
 import httpx
 
 from automccd_lite.config import DATA_DIR
-from automccd_lite.models import Coding, iso_duration
+from automccd_lite.draft import Ask, render
+from automccd_lite.models import Coding, Draft, Record, RuleCheck, iso_duration
+from automccd_lite.rules import check_rules
 
 HEADERS = {"API-Version": "v2", "Accept-Language": "en", "Accept": "application/json"}
 
@@ -217,7 +229,7 @@ class CodeCache:
 
 
 # --------------------------------------------------------------------------
-# code_draft
+# code_terms
 # --------------------------------------------------------------------------
 
 
@@ -239,7 +251,7 @@ def who_certificate(cert: dict, cache: CodeCache, demographics: dict | None) -> 
     )
 
 
-def code_draft(
+def code_terms(
     cert: dict, cache: CodeCache, client: WhoClient, demographics: dict | None
 ) -> Coding:
     c = who_certificate(cert, cache, demographics)
@@ -263,3 +275,135 @@ def code_draft(
         codedit=codedit,
         codedit_cause=codedit_cause,
     )
+
+
+# --------------------------------------------------------------------------
+# fix_terms
+# --------------------------------------------------------------------------
+
+FIX_TERMS_TEMPLATE = """{record}
+
+---
+
+Your certificate for this record was:
+
+{previous}
+
+The WHO ICD-11 coding tool could not confidently match these certified terms:
+
+{terms}
+
+Restate each listed term as the standard ICD-11 name of the SAME condition (for example
+"Coronary atherosclerosis" rather than "Coronary artery stenosis"). Do not change which
+condition it is, its line, its evidence span, its basis or its interval, and do not touch
+any other line. Keep every detail the record supports -- site, organism, histology -- and
+never replace a named primary site with "unspecified". If the term is already the standard
+name, keep it. Return the full JSON object."""
+
+
+def low_score(score: float | None, min_score: float) -> bool:
+    """An autocode match too weak to trust; a term with no score is one."""
+    return score is None or float(score) < min_score
+
+
+def low_score_terms(cert: dict, cache: CodeCache, min_score: float) -> list[tuple[str, dict]]:
+    out = []
+    for c in cert.get("part1") or []:
+        t = c.get("certified_term") or ""
+        if t:
+            e = cache.code(t)
+            if low_score(e.get("match_score"), min_score):
+                out.append((t, e))
+    return out
+
+
+def fix_terms_message(record: Record, cert: dict, low: list[tuple[str, dict]]) -> str:
+    terms = "\n".join(
+        f"- '{t}' (closest ICD-11 match: '{e.get('matched_text')}', score {e.get('match_score')})"
+        for t, e in low
+    )
+    return FIX_TERMS_TEMPLATE.format(
+        record=render(record), terms=terms, previous=json.dumps(cert, ensure_ascii=False)
+    )
+
+
+def scoped_to_terms(old: dict, new: dict) -> dict | None:
+    """The old certificate with only the fix's Part I certified_terms
+    taken over: Part II and every other Part I field stay as they were.
+    None when the fix changed the number of Part I lines."""
+    old_p1, new_p1 = old.get("part1") or [], new.get("part1") or []
+    if len(old_p1) != len(new_p1):
+        return None
+    scoped = copy.deepcopy(old)
+    for line, line_new in zip(scoped.get("part1") or [], new_p1, strict=True):
+        if "certified_term" in line_new:
+            line["certified_term"] = line_new["certified_term"]
+    return scoped
+
+
+def fix_terms(
+    record: Record,
+    draft: Draft,
+    validation: RuleCheck,
+    cache: CodeCache,
+    ask: Ask,
+    min_score: float,
+) -> tuple[Draft, RuleCheck]:
+    """The (draft, check) the pipeline goes on with. Unchanged when no
+    Part I term scores low."""
+    cert = draft.certificate or {}
+    low = low_score_terms(cert, cache, min_score)
+    if not low:
+        return draft, validation
+
+    again = ask(fix_terms_message(record, cert, low))
+    total = draft.usage + again.usage
+    new = again.certificate
+    new_v = check_rules(new, record.fields) if new is not None else None
+    if (
+        new is None
+        or new_v is None
+        or not new_v.rules_passed
+        or new_v.assessment != validation.assessment
+        or len(new_v.model_chain) != len(validation.model_chain)
+    ):
+        validation.terms_fixed = "rejected"
+        draft.usage = total
+        return draft, validation
+
+    new = scoped_to_terms(cert, new)
+    if new is None:
+        validation.terms_fixed = "rejected"
+        draft.usage = total
+        return draft, validation
+    again.certificate = new
+    new_v = check_rules(new, record.fields)
+
+    # Per-term guard: a restated term must code better than the original.
+    reverted: list[list] = []
+    for line_new, line_old in zip(new.get("part1") or [], cert.get("part1") or [], strict=False):
+        t_new, t_old = line_new.get("certified_term", ""), line_old.get("certified_term", "")
+        if t_new != t_old:
+            s_new = cache.code(t_new).get("match_score") or 0
+            s_old = cache.code(t_old).get("match_score") or 0
+            if float(s_new) <= float(s_old):
+                line_new["certified_term"] = t_old
+                reverted.append([t_old, t_new, round(float(s_old), 2), round(float(s_new), 2)])
+    if reverted:
+        new_v = check_rules(new, record.fields)
+        new_v.term_reverted = reverted
+    changes = [
+        [x, y] for x, y in zip(validation.model_chain, new_v.model_chain, strict=False) if x != y
+    ]
+    if not changes:
+        validation.term_reverted = reverted
+        validation.terms_fixed = "unchanged"
+        draft.usage = total
+        return draft, validation
+
+    new_v.rules_fixed, new_v.before_fix = validation.rules_fixed, validation.before_fix
+    new_v.fix_rejected = validation.fix_rejected
+    new_v.terms_fixed = "applied"
+    new_v.term_changes = changes
+    again.usage = total
+    return again, new_v

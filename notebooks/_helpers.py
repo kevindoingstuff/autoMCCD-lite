@@ -18,7 +18,7 @@ from IPython.display import HTML, Image, display
 
 from automccd_lite.config import DATA_DIR, settings
 from automccd_lite.models import Result, Record
-from automccd_lite.validate import _source_key, _span_key
+from automccd_lite.rules import _source_key, _span_key
 
 settings()  # loads .env, so db.engine() and the clients see PGPORT and the keys
 
@@ -255,7 +255,7 @@ def flow_diagram(cert: Result) -> Image | HTML:
     did there: the model status, the rules fired, whether a revision ran, the
     codes and the UCOD, the route and its reasons. Needs the Graphviz `dot`
     binary; without it, a text fallback."""
-    v, coded, ms = cert.validation, cert.coded, cert.timings_ms
+    v, coded, ms = cert.rule_check, cert.who_replies, cert.timings_ms
     notes = {
         "prompt": f"sha1 {cert.versions.prompt_sha1[:8]}",
         "draft": f"{cert.draft_status} · {cert.usage.calls} call(s)\\n{ms.get('draft', 0)} ms",

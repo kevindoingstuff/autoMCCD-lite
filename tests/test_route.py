@@ -2,9 +2,9 @@
 
 import pytest
 
+from automccd_lite.decide import decide
 from automccd_lite.models import Coding, Draft, Route
-from automccd_lite.route import route_draft
-from automccd_lite.validate import validate_draft
+from automccd_lite.rules import check_rules
 from tests.conftest import cond, good_cert, make_record, ok
 
 MIN = 0.5
@@ -27,8 +27,8 @@ CLEAN = object()  # "use a clean Coding"; None means "not coded"
 def route(cert=None, draft=None, c=CLEAN, icd_error=None, rec=None):
     rec = rec or make_record()
     draft = draft or ok(cert or good_cert())
-    v = validate_draft(draft.certificate, rec.fields) if draft.certificate else None
-    return route_draft(rec, draft, v, coded() if c is CLEAN else c, icd_error, MIN)
+    v = check_rules(draft.certificate, rec.fields) if draft.certificate else None
+    return decide(rec, draft, v, coded() if c is CLEAN else c, icd_error)
 
 
 def test_clean_coded_certificate_is_auto():
@@ -57,12 +57,6 @@ def test_declined_records_are_review_with_an_assessment_reason():
     ins = {**oos, "assessment": "insufficient_information", "decline_reason": "record_too_sparse"}
     d = route(ins, c=None)
     assert d.route == Route.REVIEW and d.reasons == ["declined:insufficient"]
-
-
-def test_declined_triage_is_review():
-    oos = {**good_cert(), "assessment": "out_of_scope", "decline_reason": "external_cause",
-           "part1": [], "part2": []}  # fmt: skip
-    assert validate_draft(oos, make_record().fields).triage == Route.REVIEW
 
 
 def test_validator_errors_name_the_rule():
@@ -108,7 +102,7 @@ def test_missing_demographics_is_review_even_when_clean():
 def test_revised_never_auto():
     rec = make_record()
     draft = ok(good_cert())
-    v = validate_draft(draft.certificate, rec.fields)
+    v = check_rules(draft.certificate, rec.fields)
     v.rules_fixed = True
-    d = route_draft(rec, draft, v, coded(), None, MIN)
+    d = decide(rec, draft, v, coded())
     assert d.route == Route.REVIEW and d.reasons == ["fix:rules"]

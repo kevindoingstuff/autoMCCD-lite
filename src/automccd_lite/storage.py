@@ -29,7 +29,7 @@ class FileStorage:
         (self.store_dir / CERTIFICATES_DIR).mkdir(parents=True, exist_ok=True)
 
     def put_certificate(self, cert: Result) -> str:
-        from automccd_lite.certificate import as_response  # the file holds the response body
+        from automccd_lite.decide import as_response  # the file holds the response body
 
         rel = certificate_path(cert.record_id)
         path = self.store_dir / rel

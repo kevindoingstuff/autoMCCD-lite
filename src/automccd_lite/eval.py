@@ -31,13 +31,12 @@ from pathlib import Path
 from typing import Any
 
 from automccd_lite import __version__
-from automccd_lite.code import CodeCache, WhoClient, WhoError, WhoUnavailable, code_draft
+from automccd_lite.coding import CodeCache, WhoClient, WhoError, WhoUnavailable, code_terms
 from automccd_lite.config import DATA_DIR, ROOT, settings
-from automccd_lite.draft import ModelUnavailable, connect_model
+from automccd_lite.draft import ModelUnavailable, connect_model, system_prompt
 from automccd_lite.models import Record, Result
 from automccd_lite.pipeline import Deps, certify_record
-from automccd_lite.prompt import system_prompt
-from automccd_lite.validate import verbatim_in
+from automccd_lite.rules import verbatim_in
 
 GOLD = DATA_DIR / "gold"
 RUNS = ROOT / "runs"
@@ -195,7 +194,7 @@ def load_cases(set_name: str, only: tuple[str, ...] = ()) -> list[EvalCase]:
 
 
 def gold_to_cert(gold: dict) -> dict:
-    """Gold certificate -> the MCCD shape code_draft consumes."""
+    """Gold certificate -> the MCCD shape code_terms consumes."""
 
     def cond(c: dict) -> dict:
         iv = c.get("interval") or {}
@@ -272,7 +271,7 @@ class Reference:
                 else chain_to_cert(case.gold_chain or ())
             )
             try:
-                coded = code_draft(mccd, self.cache, self.icd, case.record.demographics)
+                coded = code_terms(mccd, self.cache, self.icd, case.record.demographics)
                 self.codes[case.parent] = coded.doris.get("ucod_stem_code")
             except (WhoError, WhoUnavailable):
                 self.codes[case.parent] = None
@@ -358,7 +357,7 @@ def score(case: EvalCase, cert: Result | None, err: str | None = None) -> dict[s
         timings_ms=dict(cert.timings_ms),
         icd_error=cert.icd_error,
     )
-    v = cert.validation
+    v = cert.rule_check
     if cert.draft_status != "ok" or cert.certificate is None or v is None:
         row.update(parsed=False, parse_error=cert.draft_status, behaviour_ok=False)
         row["must_not_violations"] = []
@@ -393,14 +392,15 @@ def score(case: EvalCase, cert: Result | None, err: str | None = None) -> dict[s
         gold_chain=list(case.gold_chain) if case.gold_chain else None,
         ref_ucod=case.ref_ucod,
     )
-    if cert.coded is not None:
-        cu = cert.coded.codedit_cause or {}
+    if cert.who_replies is not None:
+        w = cert.who_replies
+        cu = w.codedit_cause or {}
         row.update(
-            codes=list(cert.coded.codes.get("part1") or []),
-            match_scores=list(cert.coded.match_scores),
-            ucod_code=cert.coded.doris.get("ucod_stem_code"),
-            underlying_cause_full=cert.coded.doris.get("ucod_code"),
-            quality_issues=list(cert.coded.codedit.get("issue_ids") or []),
+            codes=list(w.codes.get("part1") or []),
+            match_scores=list(w.match_scores),
+            ucod_code=w.doris.get("ucod_stem_code"),
+            underlying_cause_full=w.doris.get("ucod_code"),
+            quality_issues=list(w.codedit.get("issue_ids") or []),
             ill_defined=bool(cu.get("ill_defined")),
         )
     row["behaviour_ok"] = behaviour_ok(case.expected, v.assessment, row["route"])
@@ -455,7 +455,7 @@ def default_deps() -> Deps:
         cfg.code.timeout_s,
         cfg.code.max_retries,
     )
-    return Deps(ask=connect_model(cfg), icd=icd, cache=CodeCache(icd))
+    return Deps(ask=connect_model(cfg), who=icd, cache=CodeCache(icd))
 
 
 def run(
@@ -472,7 +472,7 @@ def run(
     started = datetime.now(UTC)
     run_dir = out_dir or RUNS / f"{set_name}_{started:%H%M%S}Z"
     run_dir.mkdir(parents=True, exist_ok=True)
-    reference = Reference(deps.icd, deps.cache)  # type: ignore[arg-type]
+    reference = Reference(deps.who, deps.cache)
 
     rows = []
     t0 = time.perf_counter()

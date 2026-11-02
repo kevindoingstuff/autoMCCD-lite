@@ -20,7 +20,7 @@ from automccd_lite.eval import (
     scenarios,
     sets,
 )
-from automccd_lite.validate import UNIT_HOURS
+from automccd_lite.rules import UNIT_HOURS
 
 # Underlying causes stated in prose on the answer slides.
 STATED_UCOD = {

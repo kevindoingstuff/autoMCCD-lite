@@ -1,28 +1,35 @@
-"""validate_draft: the deterministic gate, rules V1-V10, then the triage route.
+"""Step 2. Check, part one: the ten rules, and one fix when they fail.
 
-The AICOD prompt asks the model to self-check five things. Self-validation by
-the thing being validated is the weakest form of assurance available and it
-fails in exactly the cases that matter, so every rule that is a RULE lives
-here instead, in code that cannot be talked out of its answer.
+check_rules runs the deterministic gate: the schema again, then the rules
+V1 to V10 against the text of the notes. The model is asked to self-check
+too, but a check by the thing being checked fails in exactly the cases that
+matter, so every rule lives here, in code that cannot be talked out of its
+answer.
 
-V1   evidence_span is verbatim in the field named by evidence_field
-V2   no Part I line is a mode of dying
+V1   exact quote: evidence_span is verbatim in the note named by evidence_field
+V2   mode of dying: no Part I line is one
 V3   one cause per line
 V4   no abbreviations
-V5   Part I length 1-4, no empty or duplicated terms
-V6   intervals non-decreasing 1a -> 1d
-V7   Part II disjoint from Part I, at most 4 entries
-V8   a non-certifiable assessment carries no chain and states a reason
-V9   no ICD-10 or ICD-11 codes in a certified term
-V10  no phone, NIC, email or street address in a term, span, review.note or
-decline_reason (names have no pattern and are not checked)
+V5   chain shape: Part I has 1-4 lines, none empty or repeated
+V6   interval order: intervals do not decrease from 1a down
+V7   Part II overlap: Part II shares nothing with Part I, at most 4 entries
+V8   decline consistency: a declined record has no chain and states a reason
+V9   no codes in terms: no ICD-10 or ICD-11 code in a certified term
+V10  no identifiers: no phone, NIC, email or street address in a term, span,
+     review.note or decline_reason (names have no pattern and are not checked)
 
-Severity: "error" blocks auto-acceptance and triggers the revision; "warning"
-is recorded and surfaced to the reviewer but does not block.
+Severity: an error blocks auto and triggers the fix; a warning is recorded
+for the reviewer and does not block.
+
+fix_rules gives the model one chance to fix what failed. The fix replaces
+the first draft only if it still answers the same question: it parses, and
+it keeps the assessment unless the first draft broke V8 itself. Adopted or
+rejected, the router adds fix:rules, so the draft never goes auto.
 """
 
 from __future__ import annotations
 
+import json
 import re
 import unicodedata
 from dataclasses import dataclass, field
@@ -30,8 +37,8 @@ from functools import lru_cache
 
 import jsonschema
 
-from automccd_lite.models import Route, RuleCheck
-from automccd_lite.prompt import system_prompt
+from automccd_lite.draft import Ask, render, system_prompt
+from automccd_lite.models import Draft, Record, RuleCheck
 
 # --------------------------------------------------------------------------
 # Rule tables
@@ -560,7 +567,7 @@ def validate_schema(cert: dict) -> list[str]:
     """Schema conformance, reported separately from the rules.
 
     Under strict structured outputs this should always pass; it stays as the
-    cheap defence, and a failure feeds the revision like any other.
+    cheap defence, and a failure feeds the fix like any other.
     """
     return [
         f"{'/'.join(str(p) for p in e.path) or '<root>'}: {e.message}"
@@ -568,26 +575,8 @@ def validate_schema(cert: dict) -> list[str]:
     ]
 
 
-def pre_icd_route(
-    assessment: str | None, schema_ok: bool, rules_passed: bool, confidence: str | None
-) -> Route:
-    """Triage from the deterministic half alone.
-
-    A declined record goes to a human; a certificate that does not match the
-    output contract is not auto-accepted, however clean its rules and
-    confident its review. The final route is route_draft's; this is the
-    gate's own opinion, kept for provenance.
-    """
-    if assessment != "certifiable":
-        return Route.REVIEW
-    if schema_ok and rules_passed and confidence == "high":
-        return Route.AUTO
-    return Route.REVIEW
-
-
-def validate_draft(cert: dict, fields: dict[str, str]) -> RuleCheck:
-    """Schema conformance, rules V1-V10 against the source fields, and the
-    triage route they give."""
+def check_rules(cert: dict, fields: dict[str, str]) -> RuleCheck:
+    """Schema conformance and the rules V1-V10 against the notes."""
     schema_errors = validate_schema(cert)
     res = apply_rules(cert, fields)
     review = cert.get("review") or {}
@@ -604,11 +593,89 @@ def validate_draft(cert: dict, fields: dict[str, str]) -> RuleCheck:
         confidence=confidence,
         flags=list(review.get("flags") or []),
         model_chain=[c.get("certified_term", "") for c in (cert.get("part1") or [])],
-        triage=pre_icd_route(assessment, not schema_errors, res.passed, confidence),
     )
 
 
-def never_auto(v: RuleCheck) -> None:
-    """A revised or revision-rejected draft goes to a human whatever else holds."""
-    if v.triage == Route.AUTO:
-        v.triage = Route.REVIEW
+# --------------------------------------------------------------------------
+# fix_rules
+# --------------------------------------------------------------------------
+
+PREVIOUS_MAX_CHARS = 6000  # the budget the fix rates were measured with
+
+REVISE_TEMPLATE = """{record}
+
+---
+
+Your previous answer for this record was:
+
+{previous}
+
+It failed these checks:
+
+{failures}
+
+Return the corrected JSON object in full. Change only what these failures require; keep
+everything else as it was. If a span cannot be copied verbatim from the field you named,
+shorten it to a few words that appear exactly in that field, or change the field."""
+
+
+def needs_fix(draft: Draft, validation: RuleCheck | None) -> bool:
+    if draft.status == "unparsable":
+        return True
+    return validation is not None and validation.needs_fix
+
+
+def previous_text(draft: Draft) -> str:
+    if draft.certificate is not None:
+        return json.dumps(draft.certificate, ensure_ascii=False)[:PREVIOUS_MAX_CHARS]
+    return ""
+
+
+def fix_message(record: Record, draft: Draft, validation: RuleCheck | None) -> str:
+    if validation is None or draft.certificate is None:
+        fails = [f"The reply is not valid JSON ({draft.reason})."]
+    else:
+        # The failures in the wording the fix rates were measured with.
+        cert = draft.certificate
+        fails = [f"schema: {e}" for e in validate_schema(cert)[:5]]
+        fails += [f.brief() for f in apply_rules(cert, record.fields).errors]
+    return REVISE_TEMPLATE.format(
+        record=render(record),
+        previous=previous_text(draft),
+        failures="\n".join(f"- {f}" for f in fails),
+    )
+
+
+def fix_rules(
+    record: Record, draft: Draft, validation: RuleCheck | None, ask: Ask
+) -> tuple[Draft, RuleCheck | None]:
+    """One fix call. Returns the (draft, check) the pipeline goes on with:
+    the fix when adopted, the first draft when rejected. Either way the
+    returned draft's usage includes the fix call."""
+    again = ask(fix_message(record, draft, validation))
+    new_validation = (
+        check_rules(again.certificate, record.fields) if again.certificate is not None else None
+    )
+    keeps_question = (
+        validation is None
+        or (new_validation is not None and new_validation.assessment == validation.assessment)
+        or "V8" in validation.broken_rules
+    )
+    if new_validation is not None and keeps_question:
+        new_validation.rules_fixed = True
+        new_validation.before_fix = (
+            {
+                "schema_ok": validation.schema_ok,
+                "rules_passed": validation.rules_passed,
+                "broken_rules": validation.broken_rules,
+            }
+            if validation is not None
+            else {"status": draft.status, "reason": draft.reason}
+        )
+        again.usage = draft.usage + again.usage
+        return again, new_validation
+    why = again.reason if again.certificate is None else "changed the assessment"
+    if validation is not None:
+        validation.fix_rejected = f"rejected: {why}"
+    draft.usage = draft.usage + again.usage
+    return draft, validation

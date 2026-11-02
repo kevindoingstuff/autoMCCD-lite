@@ -7,7 +7,7 @@ from collections.abc import Iterable
 
 import pytest
 
-from automccd_lite.code import WhoCertificate
+from automccd_lite.coding import WhoCertificate
 from automccd_lite.models import Draft, Note, Record, Usage
 
 NARRATIVE = (

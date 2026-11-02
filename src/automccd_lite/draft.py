@@ -1,17 +1,24 @@
-"""draft_certificate: ask the model for a draft certificate.
+"""Step 1. Draft: the record becomes a prompt, and one model call returns a draft.
+
+The system prompt is the prompt file, the output schema and the reply rule,
+assembled once at import. Its sha1 goes into every result's versions block.
+Neither the assembly nor the rule may change by a byte: evaluated runs are
+identified by this hash.
 
 `complete` is the only function that talks to the model. The first draft and
-both revisions use it with different user messages. It returns a Draft and
-never raises on what the model said; it raises ModelUnavailable only when the
-service could not be reached after the SDK's own retries.
+both fixes in the Check step use it with different user messages. It returns
+a Draft and never raises on what the model said; it raises ModelUnavailable
+only when the service could not be reached after the SDK's own retries.
 """
 
 from __future__ import annotations
 
+import hashlib
 import json
 import time
 from collections.abc import Callable
-from functools import partial
+from dataclasses import dataclass
+from functools import lru_cache, partial
 from typing import Any
 
 from openai import (
@@ -22,9 +29,90 @@ from openai import (
     RateLimitError,
 )
 
-from automccd_lite.config import DraftCfg, Settings, settings
+from automccd_lite.config import PROMPTS_DIR, DraftCfg, Settings, settings
 from automccd_lite.models import Draft, Record, Usage
-from automccd_lite.prompt import build_prompt, system_prompt
+
+__all__ = ["Ask", "ModelUnavailable", "connect_model", "draft_certificate"]
+
+# ---------------------------------------------------------------------------
+# the prompt
+
+REPLY_RULE = """\
+Return one JSON object and nothing else — no commentary, no markdown fences,
+no explanation before or after. Set `record_id` to the record_id exactly as given."""
+
+
+def assemble(prompt: str, schema_text: str, reply_rule: str = REPLY_RULE) -> str:
+    """The prompt, the schema, the reply rule."""
+    return (
+        prompt
+        + "\n\n---\n\n"
+        + "## Output schema\n\n```json\n"
+        + schema_text
+        + "\n```\n\n"
+        + reply_rule
+        + "\n"
+    )
+
+
+@dataclass(frozen=True)
+class SystemPrompt:
+    text: str
+    sha1: str
+    version: str
+    schema: dict[str, Any]
+    schema_version: str
+
+
+@lru_cache(maxsize=1)
+def system_prompt() -> SystemPrompt:
+    cfg = settings().prompt
+    prompt_text = (PROMPTS_DIR / "mccd" / f"v{cfg.version}.md").read_text(encoding="utf-8")
+    schema_text = (PROMPTS_DIR / "schemas" / f"{cfg.schema_name}.schema.json").read_text(
+        encoding="utf-8"
+    )
+    text = assemble(prompt_text, schema_text)
+    schema = json.loads(schema_text)
+    return SystemPrompt(
+        text=text,
+        sha1=hashlib.sha1(text.encode("utf-8")).hexdigest(),  # noqa: S324 - identity, not security
+        version=cfg.version,
+        schema=schema,
+        schema_version=str(schema.get("$id", "")).rsplit("/", 1)[-1] or "unknown",
+    )
+
+
+def render(record: Record) -> str:
+    """The exact text the model sees."""
+    sex = record.sex or "not recorded"
+    age = record.age_iso or "not recorded"
+    lines = [f"record_id: {record.record_id}", f"decedent: sex={sex}; age={age}"]
+    if record.registry_info:
+        # The label stays "context": the model was evaluated on this exact text.
+        label = "context (registry metadata, not a record field -- do not cite)"
+        lines.append(f"{label}: {record.registry_info}")
+    lines.append("")
+    for name, text in record.fields.items():
+        lines.append(f"=== field: {name} ===")
+        lines.append(text)
+        lines.append("")
+    return "\n".join(lines)
+
+
+@dataclass(frozen=True)
+class Prompt:
+    system: str
+    user: str
+    sha1: str
+
+
+def build_prompt(record: Record) -> Prompt:
+    sp = system_prompt()
+    return Prompt(system=sp.text, user=render(record), sha1=sp.sha1)
+
+
+# ---------------------------------------------------------------------------
+# the model call
 
 Ask = Callable[[str], Draft]
 """A call to the model with a user message, system prompt and schema fixed."""

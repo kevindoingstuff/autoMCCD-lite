@@ -1,9 +1,9 @@
-"""Domain types that flow between the stages.
+"""The types that flow through the three steps.
 
-Record -> Draft -> RuleCheck -> Coding -> Route -> Result.
+    Record -> Draft (step 1) -> RuleCheck, Coding (step 2) -> Result (step 3)
 
 The MCCD itself stays a dict: it is the JSON the model returned under the
-strict schema, and the validators and the ICD client read it as such.
+strict schema, and the rules and the WHO client read it as such.
 """
 
 from __future__ import annotations
@@ -116,7 +116,7 @@ class Route(StrEnum):
 
 
 class RuleCheck(BaseModel):
-    """The gate's verdict on one draft."""
+    """What check_rules found in one draft, and what the fixes did."""
 
     schema_ok: bool
     rules_passed: bool
@@ -127,8 +127,7 @@ class RuleCheck(BaseModel):
     confidence: str | None = None
     flags: list[str] = Field(default_factory=list)
     model_chain: list[str] = Field(default_factory=list)
-    triage: Route
-    # Revision outcome, read by routing and provenance.
+    # What the fixes did, read by decide and kept in the stored row.
     rules_fixed: bool = False
     before_fix: dict[str, Any] | None = None
     fix_rejected: str | None = None
@@ -153,11 +152,6 @@ class Coding(BaseModel):
     codedit_cause: dict[str, Any] | None = None
 
 
-class Decision(BaseModel):
-    route: Route
-    reasons: list[str] = Field(default_factory=list)
-
-
 class CodingSummary(BaseModel):
     underlying_cause: str | None = None
     underlying_cause_full: str | None = None
@@ -177,7 +171,8 @@ class Versions(BaseModel):
 
 
 class Result(BaseModel):
-    """What the API returns and what Blob stores."""
+    """What decide returns. The api returns it without the provenance fields
+    (as_response) and saves it whole."""
 
     record_id: str
     route: Route
@@ -189,6 +184,6 @@ class Result(BaseModel):
     timings_ms: dict[str, int]
     # Provenance: everything a reviewer or an audit needs, kept whole.
     draft_status: DraftStatus
-    validation: RuleCheck | None
-    coded: Coding | None
-    icd_error: str | None = None
+    rule_check: RuleCheck | None
+    who_replies: Coding | None
+    icd_error: str | None = None  # who:unavailable or who:error

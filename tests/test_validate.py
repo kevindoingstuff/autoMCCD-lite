@@ -8,7 +8,7 @@ from dataclasses import dataclass
 
 import pytest
 
-from automccd_lite.validate import apply_rules, validate_schema
+from automccd_lite.rules import apply_rules, validate_schema
 
 NARRATIVE = (
     "The patient was admitted with fever and drowsiness. A diagnosis of "
