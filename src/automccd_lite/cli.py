@@ -1,9 +1,11 @@
 """The `automccd-lite` command: everything an apprentice runs from a terminal.
 
-    automccd-lite serve             start the WHO icd-api container, create the store, run the api
-    automccd-lite icd start|stop|status   the container alone (the eval and the notebooks need it)
-    automccd-lite smoke             the end-to-end check against a running `serve`
-    automccd-lite eval [...]        the mini harness (python -m automccd_lite.eval)
+    automccd-lite serve                 start the icd-api container, create the store, run the api
+    automccd-lite icd start|stop|status the container alone (the eval and the notebooks need it)
+    automccd-lite example [S01]         certify one example record through the running api
+    automccd-lite eval --set provided   the mini harness; --set dlc for the 40 harder records
+    automccd-lite notebooks             execute both notebooks against the running api
+    automccd-lite docs                  build the Sphinx site into docs/_build
 
 The WHO ships the ICD-API only as a Docker image, so Docker is the one
 prerequisite beside uv and a model key. The container is named, pinned to a
@@ -128,7 +130,7 @@ def icd_status() -> None:
 
 
 # ---------------------------------------------------------------------------
-# serve and smoke
+# serve
 
 
 def serve() -> None:
@@ -148,46 +150,111 @@ def serve() -> None:
     )
 
 
-def smoke() -> None:
-    """readyz -> POST /certify with data/examples/S01.json -> the row -> the file."""
-    from automccd_lite.store import latest_row, stored_file
+def wait_ready(api: str, seconds: int = 90) -> str:
+    """The /readyz body once the api answers ready; a clear error otherwise.
+    No answer at all for 5 s means no api; an answer of not ready (the
+    container still loading its release) is waited out."""
+    last = None
+    t0 = time.monotonic()
+    while time.monotonic() - t0 < seconds:
+        try:
+            last = httpx.get(f"{api}/readyz", timeout=10)
+            if last.status_code == 200:
+                return last.text
+        except httpx.HTTPError:
+            if last is None and time.monotonic() - t0 > 5:
+                break
+        time.sleep(1)
+    if last is None:
+        fail(f"no api at {api}; start it with `uv run automccd-lite serve` in another terminal")
+    fail(f"the api is not ready after {seconds} s: {last.text}")
+    raise AssertionError("unreachable")
 
+
+def print_certificate(resp: dict) -> None:
+    """The response as the WHO form: Part I with intervals and codes, Part II,
+    the underlying cause."""
+    cert = resp.get("certificate") or {}
+    coding = resp.get("coding") or {}
+    codes = coding.get("codes") or {}
+
+    def line(label: str, c: dict, code: str | None) -> str:
+        iv = c.get("interval") or {}
+        when = f"{iv.get('value')} {iv.get('unit')}" if iv.get("value") is not None else "unknown"
+        return f"  {label:<4}{c.get('certified_term', ''):<46}{when:<16}{code or '-'}"
+
+    say("")
+    say(f"Record {resp['record_id']}    route: {resp['route']}")
+    say(f"Reasons: {', '.join(resp['reasons']) or 'none (every check passed)'}")
+    if cert.get("assessment") != "certifiable":
+        reason = cert.get("decline_reason") or "-"
+        say(f"Declined: {cert.get('assessment')} ({reason})")
+        return
+    say("")
+    say(f"  {'':<4}{'Part I: the chain, immediate cause first':<46}{'interval':<16}ICD-11")
+    for i, c in enumerate(cert.get("part1") or []):
+        say(line("1" + "abcde"[i], c, (codes.get("part1") or [None] * 9)[i]))
+    part2 = cert.get("part2") or []
+    if part2:
+        say(f"  {'':<4}Part II: other significant conditions")
+        for i, c in enumerate(part2):
+            p2 = codes.get("part2") or []
+            say(line("", c, p2[i] if i < len(p2) else None))
+    say("")
+    say(f"Underlying cause (UCOD): {coding.get('underlying_cause') or '-'}")
+
+
+def example(record_id: str) -> None:
+    """POST one example record to the running api, print the result as the
+    WHO form, and confirm the row and the file were saved."""
+    from automccd_lite.store import db_path, latest_row, stored_file
+
+    path = DATA_DIR / "examples" / f"{record_id}.json"
+    if not path.exists():
+        names = ", ".join(p.stem for p in sorted(path.parent.glob("*.json")))
+        fail(f"no example {record_id}; one of {names}")
     cfg = settings()
     api = os.environ.get("API_URL", f"http://localhost:{cfg.env.api_port}")
-    say(f"1. waiting for {api}/readyz")
-    ready = None
-    for _ in range(90):
-        try:
-            ready = httpx.get(f"{api}/readyz", timeout=10)
-            if ready.status_code == 200:
-                break
-        except httpx.HTTPError:
-            pass
-        time.sleep(1)
-    if ready is None or ready.status_code != 200:
-        fail(f"not ready after 90 s: {ready.text if ready is not None else 'no answer'}")
-    say(f"   ready: {ready.text}")
-
-    say("2. POST /certify (S01)")
-    body = json.loads((DATA_DIR / "examples" / "S01.json").read_text(encoding="utf-8"))
+    say(f"Waiting for {api}/readyz ...")
+    say(f"  {wait_ready(api)}")
+    say(f"POST /certify with {path.relative_to(ROOT).as_posix()} (one model call, a few seconds)")
+    body = json.loads(path.read_text(encoding="utf-8"))
     r = httpx.post(f"{api}/certify", json=body, timeout=300)
     if r.status_code != 200:
         fail(f"/certify returned {r.status_code}: {r.text[:300]}")
     resp = r.json()
-    if resp.get("route") not in ("auto", "review"):
-        fail(f"bad route {resp.get('route')!r}")
-    if "prompt_sha1" not in (resp.get("versions") or {}):
-        fail("no versions block")
-    say(f"   route={resp['route']} reasons={resp['reasons']}")
+    print_certificate(resp)
 
-    say("3. the stored row and its file")
-    row = latest_row("S01")
-    if row is None:
-        fail("no certificates row for S01")
-    if not row.file_path or not stored_file(row.file_path).is_file():
-        fail(f"row {row.id} has no file: {row.file_path}")
-    say(f"   row {row.id}: {row.route} {row.file_path}")
-    say("SMOKE OK")
+    row = latest_row(body["record_id"])
+    if row is None or not row.file_path or not stored_file(row.file_path).is_file():
+        fail(f"the result for {body['record_id']} was not saved")
+    store = cfg.env.store_dir
+    say("")
+    say(f"Saved: row {row.id} in {db_path().relative_to(store.parent).as_posix()}")
+    say(f"       {(store / row.file_path).relative_to(store.parent).as_posix()}")
+    say("EXAMPLE OK")
+
+
+def run_module(group: str, *args: str) -> None:
+    """Run a tool from one of the optional dependency groups."""
+    import importlib.util
+
+    if importlib.util.find_spec(args[0]) is None:
+        fail(f"{args[0]} is not installed; run `uv sync --group {group}` first")
+    raise SystemExit(subprocess.call([sys.executable, "-m", *args], cwd=ROOT))  # noqa: S603
+
+
+def notebooks() -> None:
+    run_module(
+        "notebooks",
+        "jupyter", "nbconvert", "--execute", "--inplace",
+        "--ExecutePreprocessor.timeout=1800", "--ExecutePreprocessor.kernel_name=python3",
+        "notebooks/how-to-guide.ipynb", "notebooks/mccd_guide.ipynb",
+    )  # fmt: skip
+
+
+def docs() -> None:
+    run_module("docs", "sphinx", "-b", "html", "docs", "docs/_build")
 
 
 # ---------------------------------------------------------------------------
@@ -200,8 +267,11 @@ def main(argv: list[str] | None = None) -> None:
     sub.add_parser("serve", help="start the icd-api container, create the store, run the api")
     icd = sub.add_parser("icd", help="the WHO icd-api container alone")
     icd.add_argument("action", choices=["start", "stop", "status"])
-    sub.add_parser("smoke", help="the end-to-end check against a running serve")
-    sub.add_parser("eval", help="the mini harness; every other argument goes to automccd_lite.eval")
+    ex = sub.add_parser("example", help="certify one example record through the running api")
+    ex.add_argument("record_id", nargs="?", default="S01", help="S01, S02 or S05")
+    sub.add_parser("eval", help="the mini harness: --set provided|dlc, --only <ids>")
+    sub.add_parser("notebooks", help="execute both notebooks against the running api")
+    sub.add_parser("docs", help="build the Sphinx site into docs/_build")
     a, rest = p.parse_known_args(argv)
     if a.cmd != "eval" and rest:
         p.error(f"unrecognized arguments: {' '.join(rest)}")
@@ -210,12 +280,16 @@ def main(argv: list[str] | None = None) -> None:
         serve()
     elif a.cmd == "icd":
         {"start": icd_start, "stop": icd_stop, "status": icd_status}[a.action]()
-    elif a.cmd == "smoke":
-        smoke()
+    elif a.cmd == "example":
+        example(a.record_id)
     elif a.cmd == "eval":
         from automccd_lite.eval import main as eval_main
 
         eval_main(rest)
+    elif a.cmd == "notebooks":
+        notebooks()
+    elif a.cmd == "docs":
+        docs()
 
 
 if __name__ == "__main__":
