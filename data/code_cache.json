@@ -111,6 +111,14 @@
     "query": "Acute pancreatitis",
     "uri": "http://id.who.int/icd/entity/698285441"
   },
+  "acute pancreatitis with pancreatic fibrosis and necrosis": {
+    "adjudicated": false,
+    "code": "DC31.Y",
+    "match_score": 0.7390042620807894,
+    "matched_text": "acute necrotic pancreatitis",
+    "query": "Acute pancreatitis with pancreatic fibrosis and necrosis",
+    "uri": "http://id.who.int/icd/entity/2063881303"
+  },
   "acute pulmonary embolism": {
     "adjudicated": false,
     "code": "BB00.0",
@@ -255,6 +263,14 @@
     "query": "Atrial fibrillation",
     "uri": "http://id.who.int/icd/entity/171698302"
   },
+  "bacteremia due to pseudomonas aeruginosa": {
+    "adjudicated": false,
+    "code": "MA15.0",
+    "match_score": 0.46340064930825053,
+    "matched_text": "Bacteraemia",
+    "query": "Bacteremia due to Pseudomonas aeruginosa",
+    "uri": "http://id.who.int/icd/entity/770483821"
+  },
   "bedridden status": {
     "adjudicated": false,
     "code": "MB44.3",
@@ -309,6 +325,14 @@
     "match_score": 0.7728967222591625,
     "matched_text": "collapse cardiovascular",
     "query": "Cardiovascular collapse due to circulatory failure",
+    "uri": "http://id.who.int/icd/entity/1164022950"
+  },
+  "cardiovascular collapse due to widespread vascular occlusion": {
+    "adjudicated": false,
+    "code": "MG40.Z",
+    "match_score": 0.6853436637989314,
+    "matched_text": "collapse cardiovascular",
+    "query": "Cardiovascular collapse due to widespread vascular occlusion",
     "uri": "http://id.who.int/icd/entity/1164022950"
   },
   "cecal carcinoma": {
@@ -446,6 +470,14 @@
     "matched_text": "coagulopathy NOS",
     "query": "Coagulopathy",
     "uri": "http://id.who.int/icd/entity/1016799900"
+  },
+  "colonic bleeding": {
+    "adjudicated": false,
+    "code": "DA26.00/1F86.1",
+    "match_score": -0.22731213579522677,
+    "matched_text": "Oesophageal varices with bleeding[schistosomiasis of colon]",
+    "query": "Colonic bleeding",
+    "uri": "http://id.who.int/icd/entity/949012083 / http://id.who.int/icd/entity/927022506"
   },
   "congenital blindness": {
     "adjudicated": false,
@@ -647,6 +679,14 @@
     "query": "Dysrhythmia",
     "uri": "http://id.who.int/icd/entity/1457291912"
   },
+  "elevated sweat chloride": {
+    "adjudicated": false,
+    "code": "EE01.Z",
+    "match_score": 0.0963390656731246,
+    "matched_text": "Impaired sweating",
+    "query": "Elevated sweat chloride",
+    "uri": "http://id.who.int/icd/entity/1299624490"
+  },
   "escherichia coli meningitis": {
     "adjudicated": false,
     "code": "1D01.0Y&XN6P4",
@@ -735,6 +775,14 @@
     "query": "HIV infection",
     "uri": "http://id.who.int/icd/entity/1508081745"
   },
+  "hospital-acquired infection": {
+    "adjudicated": false,
+    "code": "1B7Y/MG51.00",
+    "match_score": -0.7399771594172715,
+    "matched_text": "Skin infection classified elsewhere due to hospital-acquired methicillin resistant Staphylococcus aureus",
+    "query": "Hospital-acquired infection",
+    "uri": "http://id.who.int/icd/entity/1564207544"
+  },
   "hypercholesterolemia": {
     "adjudicated": false,
     "code": "5C80.0Z",
@@ -807,6 +855,14 @@
     "query": "Hypotension",
     "uri": "http://id.who.int/icd/entity/1663360295"
   },
+  "hypovolemia": {
+    "adjudicated": false,
+    "code": "5C70.1",
+    "match_score": 1,
+    "matched_text": "Hypovolaemia",
+    "query": "Hypovolemia",
+    "uri": "http://id.who.int/icd/entity/592509093"
+  },
   "hypovolemic shock": {
     "adjudicated": false,
     "code": "MG40.1",
@@ -830,6 +886,14 @@
     "matched_text": "Disorder of bladder, unspecified",
     "query": "In-dwelling bladder catheter",
     "uri": "http://id.who.int/icd/entity/1468065226"
+  },
+  "infectious or respiratory causes": {
+    "adjudicated": false,
+    "code": "CA4Y",
+    "match_score": 0.595832898229532,
+    "matched_text": "Acute respiratory infection NOS",
+    "query": "Infectious or respiratory causes",
+    "uri": "http://id.who.int/icd/entity/798529914"
   },
   "internal bleeding": {
     "adjudicated": false,
@@ -1015,6 +1079,14 @@
     "query": "Noninsulin dependent diabetes mellitus",
     "uri": "http://id.who.int/icd/entity/119724091"
   },
+  "noninsulin-dependent diabetes mellitus": {
+    "adjudicated": false,
+    "code": "5A11",
+    "match_score": 1,
+    "matched_text": "non-insulin dependent diabetes mellitus",
+    "query": "Noninsulin-dependent diabetes mellitus",
+    "uri": "http://id.who.int/icd/entity/119724091"
+  },
   "obesity": {
     "adjudicated": false,
     "code": "5B81.Z",
@@ -1079,6 +1151,14 @@
     "query": "Pancreatic fibrosis with acute inflammation and necrosis",
     "uri": "http://id.who.int/icd/entity/2063881303"
   },
+  "pancreatic necrosis": {
+    "adjudicated": false,
+    "code": "DC3Y",
+    "match_score": 1,
+    "matched_text": "Necrotic pancreas",
+    "query": "Pancreatic necrosis",
+    "uri": "http://id.who.int/icd/entity/1107204291"
+  },
   "pediatric congenital heart disease": {
     "adjudicated": false,
     "code": "LA8Z",
@@ -1103,6 +1183,14 @@
     "query": "Perforated duodenal ulcer",
     "uri": "http://id.who.int/icd/entity/1982276025"
   },
+  "peritonitis": {
+    "adjudicated": false,
+    "code": "DC50.Z",
+    "match_score": 1,
+    "matched_text": "Peritonitis",
+    "query": "Peritonitis",
+    "uri": "http://id.who.int/icd/entity/775356003"
+  },
   "peritonitis due to duodenal ulcer perforation": {
     "adjudicated": false,
     "code": "DC50.Z",
@@ -1118,6 +1206,14 @@
     "matched_text": "Acute perforative peritonitis",
     "query": "Peritonitis due to perforated duodenal ulcer",
     "uri": "http://id.who.int/icd/entity/1307641658"
+  },
+  "placental abruption": {
+    "adjudicated": false,
+    "code": "JA8C.Z",
+    "match_score": 1,
+    "matched_text": "placental abruption",
+    "query": "Placental abruption",
+    "uri": "http://id.who.int/icd/entity/1153253585"
   },
   "pneumocystis carinii pneumonia": {
     "adjudicated": false,
@@ -1518,6 +1614,22 @@
     "matched_text": "sepsis due to Staphylococcus aureus NOS",
     "query": "Staphylococcus aureus sepsis",
     "uri": "http://id.who.int/icd/entity/460403634"
+  },
+  "steatorrhea": {
+    "adjudicated": false,
+    "code": "ME0Y",
+    "match_score": 1,
+    "matched_text": "steatorrhoea",
+    "query": "Steatorrhea",
+    "uri": "http://id.who.int/icd/entity/1611008596"
+  },
+  "stillbirth": {
+    "adjudicated": false,
+    "code": "KD3B.Z",
+    "match_score": 1,
+    "matched_text": "stillbirth NOS",
+    "query": "Stillbirth",
+    "uri": "http://id.who.int/icd/entity/505744734"
   },
   "subphrenic abscess": {
     "adjudicated": false,
