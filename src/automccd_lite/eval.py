@@ -33,7 +33,7 @@ from typing import Any
 from automccd_lite import __version__
 from automccd_lite.code import CodeCache, WhoClient, WhoError, WhoUnavailable, code_draft
 from automccd_lite.config import DATA_DIR, ROOT, settings
-from automccd_lite.draft import ModelUnavailable, asker, make_client
+from automccd_lite.draft import ModelUnavailable, connect_model
 from automccd_lite.models import Record, Result
 from automccd_lite.pipeline import Deps, certify_record
 from automccd_lite.prompt import system_prompt
@@ -79,7 +79,7 @@ def robust_sample() -> dict[str, Any]:
 
 
 @dataclass(frozen=True)
-class Case:
+class EvalCase:
     """One record to certify and what is known about the right answer."""
 
     id: str
@@ -115,7 +115,7 @@ def age_from_iso(iso: str | None) -> tuple[float | None, str | None]:
     return float(m.group("v")), _UNITS[m.group("u")]
 
 
-def headline_cases() -> list[Case]:
+def headline_cases() -> list[EvalCase]:
     """The 17 headline scenarios as `<parent>-clean` records, the same ids
     the full autoMCCD harness uses, so the two runs compare case by case."""
     out = []
@@ -131,7 +131,7 @@ def headline_cases() -> list[Case]:
         )
         chain = tuple(c["certified_term"] for c in g.get("part1") or [])
         out.append(
-            Case(
+            EvalCase(
                 id=record.record_id,
                 parent=parent,
                 variant="clean",
@@ -147,7 +147,7 @@ def headline_cases() -> list[Case]:
     return out
 
 
-def robust_cases() -> list[Case]:
+def robust_cases() -> list[EvalCase]:
     out = []
     for raw in robust_sample()["cases"]:
         age, unit = age_from_iso(raw.get("age_iso"))
@@ -160,7 +160,7 @@ def robust_cases() -> list[Case]:
             notes=[{"name": n, "text": t} for n, t in raw["fields"].items()],
         )
         out.append(
-            Case(
+            EvalCase(
                 id=raw["id"],
                 parent=raw["parent"],
                 variant=raw["variant"],
@@ -179,7 +179,7 @@ def robust_cases() -> list[Case]:
     return out
 
 
-def load_cases(set_name: str, only: tuple[str, ...] = ()) -> list[Case]:
+def load_cases(set_name: str, only: tuple[str, ...] = ()) -> list[EvalCase]:
     """The cases of a set, in id order. `only` keeps case ids, parents or variants."""
     if set_name not in SETS:
         raise ValueError(f"unknown set {set_name!r}; one of {', '.join(SETS)}")
@@ -264,7 +264,7 @@ class Reference:
         self.icd, self.cache = icd, cache
         self.codes: dict[str, str | None] = {}
 
-    def ucod(self, case: Case) -> str | None:
+    def ucod(self, case: EvalCase) -> str | None:
         if case.parent not in self.codes:
             mccd = (
                 gold_to_cert(case.gold)
@@ -308,7 +308,7 @@ def behaviour_ok(expected: str, assessment: str | None, route: str | None) -> bo
     raise ValueError(expected)
 
 
-def must_not_violations(case: Case, row: dict) -> list[str]:
+def must_not_violations(case: EvalCase, row: dict) -> list[str]:
     v = []
     terms = [t.casefold() for t in (row.get("model_chain") or []) + (row.get("model_part2") or [])]
     for m in case.must_not:
@@ -337,7 +337,7 @@ def must_not_violations(case: Case, row: dict) -> list[str]:
     return v
 
 
-def score(case: Case, cert: Result | None, err: str | None = None) -> dict[str, Any]:
+def score(case: EvalCase, cert: Result | None, err: str | None = None) -> dict[str, Any]:
     """The row for one case. `cert` is None when the pipeline raised."""
     row: dict[str, Any] = {
         "id": case.id,
@@ -455,7 +455,7 @@ def default_deps() -> Deps:
         cfg.code.timeout_s,
         cfg.code.max_retries,
     )
-    return Deps(ask=asker(make_client(cfg)), icd=icd, cache=CodeCache(icd))
+    return Deps(ask=connect_model(cfg), icd=icd, cache=CodeCache(icd))
 
 
 def run(

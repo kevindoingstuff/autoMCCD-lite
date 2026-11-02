@@ -25,7 +25,7 @@ from automccd_lite.certificate import as_response
 from automccd_lite.code import CodeCache, WhoClient
 from automccd_lite.config import Settings, settings
 from automccd_lite.db import SqliteCertificateStore, create_all, session_scope
-from automccd_lite.draft import Ask, ModelUnavailable, asker, make_client
+from automccd_lite.draft import Ask, ModelUnavailable, connect_model
 from automccd_lite.log import log_event
 from automccd_lite.models import Record, Result
 from automccd_lite.pipeline import Deps, certify_record
@@ -66,7 +66,7 @@ class Runtime:
         icd = icd_client(cfg)
         return cls(
             settings=cfg,
-            ask=asker(make_client(cfg)),
+            ask=connect_model(cfg),
             icd=icd,
             cache=CodeCache(icd),
             storage=FileStorage(cfg.env.store_dir),

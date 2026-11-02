@@ -35,16 +35,6 @@ class ModelUnavailable(RuntimeError):
     request fails without a stored certificate; the caller may retry."""
 
 
-def make_client(cfg: Settings | None = None) -> OpenAI:
-    cfg = cfg or settings()
-    return OpenAI(
-        base_url=cfg.env.openai_base_url,
-        api_key=cfg.env.openai_api_key,
-        max_retries=cfg.draft.max_retries,
-        timeout=cfg.draft.timeout_s,
-    )
-
-
 def response_format(schema: dict[str, Any]) -> dict[str, Any]:
     return {
         "type": "json_schema",
@@ -114,12 +104,19 @@ def complete(
     return Draft(status="ok", certificate=parsed, **base)
 
 
-def asker(client: OpenAI) -> Ask:
+def connect_model(cfg: Settings | None = None) -> Ask:
     """The model call with everything but the user message fixed. The first
-    draft and both revisions go through the same one, so the same strict
-    schema applies to every reply."""
+    draft and both fixes go through the same one, so the same strict schema
+    applies to every reply."""
+    cfg = cfg or settings()
+    client = OpenAI(
+        base_url=cfg.env.openai_base_url,
+        api_key=cfg.env.openai_api_key,
+        max_retries=cfg.draft.max_retries,
+        timeout=cfg.draft.timeout_s,
+    )
     sp = system_prompt()
-    return partial(complete, client, sp.text, schema=sp.schema, cfg=settings().draft)
+    return partial(complete, client, sp.text, schema=sp.schema, cfg=cfg.draft)
 
 
 def draft_certificate(record: Record, ask: Ask) -> Draft:

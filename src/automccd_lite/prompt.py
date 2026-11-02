@@ -17,12 +17,12 @@ from typing import Any
 from automccd_lite.config import PROMPTS_DIR, settings
 from automccd_lite.models import Record
 
-ONE_CASE_RULE = """\
+REPLY_RULE = """\
 Return one JSON object and nothing else — no commentary, no markdown fences,
 no explanation before or after. Set `record_id` to the record_id exactly as given."""
 
 
-def assemble(prompt: str, schema_text: str, reply_rule: str = ONE_CASE_RULE) -> str:
+def assemble(prompt: str, schema_text: str, reply_rule: str = REPLY_RULE) -> str:
     """The prompt, the schema, the reply rule."""
     return (
         prompt
