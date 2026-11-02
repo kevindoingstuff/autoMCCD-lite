@@ -18,13 +18,11 @@ extensions = [
 autosummary_generate = True
 autodoc_default_options = {"members": True, "undoc-members": True, "show-inheritance": True}
 autodoc_mock_imports = [
-    "azure",
     "dotenv",
     "fastapi",
     "httpx",
     "jsonschema",
     "openai",
-    "psycopg",
     "pydantic",
     "sqlalchemy",
     "uvicorn",
