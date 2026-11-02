@@ -109,7 +109,7 @@ class Draft(BaseModel):
 
 class Route(StrEnum):
     """Two routes. A declined record (out of scope, insufficient information)
-    is `review` with an `assessment:*` reason, not a route of its own."""
+    is `review` with a `declined:*` reason, not a route of its own."""
 
     AUTO = "auto"
     REVIEW = "review"

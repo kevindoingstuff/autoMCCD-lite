@@ -75,9 +75,9 @@ def certify_record(record: Record, deps: Deps) -> Result:
                     draft.certificate or {}, deps.cache, deps.icd, record.demographics
                 )
             except ICDUnavailable:
-                icd_error = "icd_unavailable"
+                icd_error = "who:unavailable"
             except IcdError:
-                icd_error = "icd_error"
+                icd_error = "who:error"
             t.mark("code")
 
     decision = route_draft(record, draft, validation, coded, icd_error, cfg.code.min_match_score)

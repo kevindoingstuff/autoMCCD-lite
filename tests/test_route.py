@@ -39,9 +39,9 @@ def test_clean_coded_certificate_is_auto():
 @pytest.mark.parametrize(
     ("draft", "reason"),
     [
-        (Draft(status="refused", reason="filter"), "model_refused"),
-        (Draft(status="truncated", reason="length"), "model_truncated"),
-        (Draft(status="unparsable", reason="junk"), "model_invalid"),
+        (Draft(status="refused", reason="filter"), "model:refused"),
+        (Draft(status="truncated", reason="length"), "model:truncated"),
+        (Draft(status="unparsable", reason="junk"), "model:unparsable"),
     ],
 )
 def test_model_failures_go_to_review(draft, reason):
@@ -53,10 +53,10 @@ def test_declined_records_are_review_with_an_assessment_reason():
     oos = {**good_cert(), "assessment": "out_of_scope", "decline_reason": "external_cause",
            "part1": [], "part2": []}  # fmt: skip
     d = route(oos, c=None)
-    assert d.route == Route.REVIEW and d.reasons == ["assessment:out_of_scope"]
+    assert d.route == Route.REVIEW and d.reasons == ["declined:out_of_scope"]
     ins = {**oos, "assessment": "insufficient_information", "decline_reason": "record_too_sparse"}
     d = route(ins, c=None)
-    assert d.route == Route.REVIEW and d.reasons == ["assessment:insufficient"]
+    assert d.route == Route.REVIEW and d.reasons == ["declined:insufficient"]
 
 
 def test_declined_triage_is_review():
@@ -69,24 +69,24 @@ def test_validator_errors_name_the_rule():
     c = good_cert()
     c["part1"][0] = cond("Cardiac arrest", "septic shock", 1)
     d = route(c)
-    assert d.route == Route.REVIEW and "validator:V2" in d.reasons
+    assert d.route == Route.REVIEW and "rule:V2" in d.reasons
 
 
 def test_low_confidence_is_review():
     c = good_cert()
     c["review"]["confidence"] = "moderate"
-    assert route(c).reasons == ["low_confidence"]
+    assert route(c).reasons == ["model:low_confidence"]
 
 
 @pytest.mark.parametrize(
     ("kw", "reason"),
     [
-        ({"uncoded": [1]}, "part1_line_uncoded"),
-        ({"scores": (0.9, 0.3)}, "autocode_low_score"),
-        ({"scores": (0.9, None)}, "autocode_low_score"),
-        ({"ucod": None}, "no_ucod"),
-        ({"issues": ["FER-CE-993"]}, "codedit:FER-CE-993"),
-        ({"ucod_issues": ["FER-CE-931"]}, "codedit:FER-CE-931"),
+        ({"uncoded": [1]}, "who:line_uncoded"),
+        ({"scores": (0.9, 0.3)}, "who:low_match"),
+        ({"scores": (0.9, None)}, "who:low_match"),
+        ({"ucod": None}, "who:no_cause"),
+        ({"issues": ["FER-CE-993"]}, "quality:FER-CE-993"),
+        ({"ucod_issues": ["FER-CE-931"]}, "quality:FER-CE-931"),
     ],
 )
 def test_coding_findings_are_review(kw, reason):
@@ -95,14 +95,14 @@ def test_coding_findings_are_review(kw, reason):
 
 
 def test_icd_unavailable_means_no_auto():
-    d = route(c=None, icd_error="icd_unavailable")
-    assert d.route == Route.REVIEW and d.reasons == ["icd_unavailable"]
+    d = route(c=None, icd_error="who:unavailable")
+    assert d.route == Route.REVIEW and d.reasons == ["who:unavailable"]
 
 
 def test_missing_demographics_is_review_even_when_clean():
     rec = make_record(sex=None, age=None, age_unit=None)
     d = route(rec=rec)
-    assert d.route == Route.REVIEW and d.reasons == ["demographics_missing"]
+    assert d.route == Route.REVIEW and d.reasons == ["record:demographics_missing"]
 
 
 def test_revised_never_auto():
@@ -111,4 +111,4 @@ def test_revised_never_auto():
     v = validate_draft(draft.certificate, rec.fields)
     v.rules_fixed = True
     d = route_draft(rec, draft, v, coded(), None, MIN)
-    assert d.route == Route.REVIEW and d.reasons == ["revised"]
+    assert d.route == Route.REVIEW and d.reasons == ["fix:rules"]
