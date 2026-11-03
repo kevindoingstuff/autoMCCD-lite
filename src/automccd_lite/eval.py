@@ -85,8 +85,8 @@ class EvalCase:
 
 
 def provided_cases() -> list[EvalCase]:
-    """The 17 clean scenarios as `<id>-clean` records, the ids the full
-    autoMCCD harness uses, so the two runs compare case by case."""
+    """The 17 clean scenarios as `<id>-clean` records, each with its
+    reference certificate."""
     out = []
     for path in sorted(PROVIDED.glob("*.json")):
         raw = _read(path)
