@@ -28,7 +28,7 @@ You see the certificate as the WHO form, its route and reasons, and where it was
 ends with `EXAMPLE OK`. To run the unit tests:
 
 ```bash
-uv run pytest
+uv run --extra dev pytest
 ```
 
 ## Read next

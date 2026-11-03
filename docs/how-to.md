@@ -89,5 +89,5 @@ The api saves every certified record twice: a JSON file with the response body f
 To run the unit tests, which need neither the container nor a model key:
 
 ```
-uv run pytest                        # pyproject.toml:72
+uv run --extra dev pytest            # pyproject.toml:23
 ```
