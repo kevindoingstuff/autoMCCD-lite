@@ -70,16 +70,16 @@ You provide the draft, the rule check (`RuleCheck`), the coding (`Coding`) and t
 | `declined:out_of_scope` | The model assessed the record as out of scope: an external cause, an undetermined manner of death, or a case for forensic expertise. The only reason. | `src/automccd_lite/decide.py:49` |
 | `declined:insufficient` | The model assessed the record as insufficient information. The only reason. | `src/automccd_lite/decide.py:51` |
 | `schema:invalid` | The certificate does not match the output schema. | `src/automccd_lite/decide.py:55` |
-| `rule:1` | Rule 1, exact quote, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:158` |
-| `rule:2` | Rule 2, mode of dying, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:159` |
-| `rule:3` | Rule 3, one cause per line, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:160` |
-| `rule:4` | Rule 4, no abbreviations, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:161` |
-| `rule:5` | Rule 5, chain shape, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:162` |
-| `rule:6` | Rule 6, interval order, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:163` |
-| `rule:7` | Rule 7, Part II overlap, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:164` |
-| `rule:8` | Rule 8, decline consistency, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:165` |
-| `rule:9` | Rule 9, no codes in terms, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:166` |
-| `rule:10` | Rule 10, no identifiers, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:167` |
+| `rule:1` | An evidence span is not copied word for word from the note it names, so the model may have invented the words that support a condition. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:158` |
+| `rule:2` | A Part I line is a mode of dying, such as cardiac arrest, respiratory failure or old age, or line 1a is a bare "heart failure" or "shock" with no type named. A mode of dying says how the heart or lungs stopped, not the disease that caused it. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:159` |
+| `rule:3` | A Part I term joins two conditions on one line, for example "meningitis and septicaemia". Each line must hold one condition. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:160` |
+| `rule:4` | A term uses an abbreviation such as MI, CVA, COPD or CKD instead of the full name. HIV, AIDS and TB are allowed. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:161` |
+| `rule:5` | Part I has an empty term, the same term twice, or six or more lines. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:162` |
+| `rule:6` | A known interval gets shorter going down Part I, so a condition lower in the chain started after the condition it caused. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:163` |
+| `rule:7` | A Part II term repeats a Part I term. A condition belongs in the chain or in the contributing conditions, not in both. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:164` |
+| `rule:8` | The assessment and the chain disagree: a declined certificate still has a Part I chain or gives no decline reason, or a certifiable one has no chain or gives a decline reason. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:165` |
+| `rule:9` | A certified term has an ICD-10 or ICD-11 code written into it. The WHO tools assign the codes, not the model. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:166` |
+| `rule:10` | A term, an evidence span, `review.note` or `decline_reason` holds a phone number, an identity card number (NIC), an email or a street address. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:167` |
 | `fix:rules` | The rules fix ran, whether its certificate was adopted or rejected. | `src/automccd_lite/decide.py:58` |
 | `fix:terms` | The terms fix changed at least one Part I term. | `src/automccd_lite/decide.py:60` |
 | `model:low_confidence` | The model's own confidence in `review.confidence` is not `high`. | `src/automccd_lite/decide.py:62` |
