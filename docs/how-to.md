@@ -16,7 +16,7 @@ This page takes you from a fresh clone to one certified record: you set up the e
    - `OPENAI_BASE_URL`: the address of your OpenAI-compatible endpoint (e.g. `https://api.openai.com/v1`, the value in `.env.example`).
    - `OPENAI_API_KEY`: your key for that endpoint. The server refuses to start while it is empty (`src/automccd_lite/cli.py:57`).
 
-   The other settings have working defaults; the full list is on the [Technical Documentation](technical.md#configuration) page.
+   The other settings have working defaults; the full list is on the [Supporting Modules](supporting-modules.md#configuration) page.
 5. Run the server again. It starts the WHO ICD-API container on port 8082, waits until the container has loaded its ICD-11 release, creates the `store/` folder, and runs the api on `127.0.0.1:8000`.
 
    ```
@@ -36,6 +36,28 @@ This page takes you from a fresh clone to one certified record: you set up the e
 
    The other examples are `S02` and `S05` (`src/automccd_lite/cli.py:271`).
 
+### Example input
+
+The example record is one death record with a single note, the case narrative, as the api receives it on `POST /certify` (`data/examples/S01.json`):
+
+```json
+{
+  "record_id": "S01",
+  "sex": "male",
+  "age": 49,
+  "age_unit": "years",
+  "registry_info": null,
+  "notes": [
+    {
+      "name": "case_narrative",
+      "text": "A male aged 49 years was admitted to hospital with a history of fever, disorientation and drowsiness for the last 2 days. Focal neurological findings were identified on physical examination and a provisional diagnosis of meningitis was made. A diagnostic lumber puncture was performed for CSF examination. Staphylococcus aureus organism was isolated from CSF and the provisional diagnosis was confirmed as Staphylococcus aureus meningitis. Despite IV antibiotic administration his condition worsened and on 3rd of admission blood cultures were also positive for Staphylococcus aureus and the patient expired on 4th day of admission due to septic shock. He was a diagnosed case of type II diabetes for the last 10 years and has had a renal transplant 6 years back."
+    }
+  ]
+}
+```
+
+### Expected output
+
 You should see the certificate, its route and reasons, and the two places it was saved, ending with `EXAMPLE OK`:
 
 ```
@@ -53,6 +75,45 @@ EXAMPLE OK
 ```
 
 The model does not return the same draft twice: the seed in `config/default.yaml` is best effort and the model is not deterministic (`config/default.yaml:9`). Your route, reasons and codes can differ from this output, and from one run to the next.
+
+The api returns the same result as a JSON response body, and the store keeps a copy of it. This is the body of the run above, with the evidence spans of Part II, the review note and the timings shortened to `...`:
+
+```javascript
+{
+  "record_id": "S01",
+  "route": "review",
+  "reasons": ["fix:rules", "model:low_confidence", "quality:BER-CE-1"],
+  "certificate": {
+    "record_id": "S01",
+    "assessment": "certifiable",
+    "decline_reason": null,
+    "part1": [
+      {
+        "certified_term": "Septic shock",
+        "evidence_field": "case_narrative",
+        "evidence_span": "expired on 4th day of admission due to septic shock",
+        "basis": "explicit_diagnosis",
+        "interval": {"value": null, "unit": "unknown", "certainty": "unknown"}
+      }
+    ],
+    "part2": [
+      {"certified_term": "Staphylococcus aureus meningitis", ...},
+      {"certified_term": "Diabetes mellitus type 2", ...},
+      {"certified_term": "Renal transplant", ...}
+    ],
+    "review": {"confidence": "moderate", "flags": [...], "note": "..."}
+  },
+  "coding": {
+    "underlying_cause": "1G41",
+    "codes": {"part1": ["1G41"], "part2": ["1B54", "5A11", "NE84"]},
+    "match_scores": [1.0],
+    "quality_issues": ["BER-CE-1"],
+    ...
+  },
+  "versions": {"prompt_version": "4.7", "schema_version": "v1.1", "icd_release": "2026-01", ...},
+  ...
+}
+```
 
 How to read the output:
 
@@ -78,7 +139,7 @@ The api saves every certified record twice: a JSON file with the response body f
    - `who_replies`: the raw replies of the term coder (autocode), the cause selector (DORIS) and the quality checks (CoDEdit) (`src/automccd_lite/store.py:80`).
    - `file_path`: the JSON file of this row, relative to the `store/` folder (`src/automccd_lite/store.py:84`).
 
-   Every column is listed on the [Technical Documentation](technical.md#the-stored-row) page.
+   Every column is listed on the [Supporting Modules](supporting-modules.md#the-stored-row) page.
 3. Open the how-to notebook, `notebooks/how-to-guide.ipynb`. It sends one record through the running api and shows the response, the certificate as the WHO form, the record with its evidence highlighted, the saved row and file, and the flow diagram with that record's live values. Install its dependencies once, then run both notebooks against the running api:
 
    ```
