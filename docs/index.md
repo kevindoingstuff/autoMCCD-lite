@@ -53,18 +53,18 @@ The Check step tests the drafted certificate against ten rules and codes it with
 The Decide step turns everything the first two steps found into a route and the reasons behind it.
 :::
 
-:::{grid-item-card} Technical Documentation
-:link: technical
-:link-type: doc
-
-The supporting modules, the request and response fields, the store, the configuration and the commands.
-:::
-
 :::{grid-item-card} API reference
 :link: reference/api
 :link-type: doc
 
 The code reference, generated from the docstrings.
+:::
+
+:::{grid-item-card} Supporting Modules
+:link: supporting-modules
+:link-type: doc
+
+The supporting modules, the request and response fields, the store, the configuration and the commands.
 :::
 ::::
 
@@ -156,6 +156,6 @@ decide
 :caption: Reference
 :hidden:
 
-technical
 reference/api
+supporting-modules
 ```
