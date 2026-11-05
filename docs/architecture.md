@@ -38,7 +38,7 @@ The system has four parts, and only the WHO tools run in a container, because th
 
 ### The Model Writes the Certificate and the Code Checks It
 
-The model writes the certificate and nothing else, because it is the only part that understands a clinical narrative and also the only part that can be wrong without any sign of it. Every check after it is code that gives the same answer for the same input, so a certificate goes `auto` only when every check that code can make has passed.
+The model only writes the certificate, because it is the only part that understands a clinical narrative and also the only part that can be wrong without any sign of it. Every check after it is code that gives the same answer for the same input, so a certificate goes `auto` only when every check that code can make has passed.
 
 - The route is `auto` only when the reason list is empty (`src/automccd_lite/decide.py:127`).
 

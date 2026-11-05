@@ -78,7 +78,7 @@ config/
 ## Quickstart
 
 :::{note}
-The Draft step needs a model endpoint and nothing else: fill `OPENAI_BASE_URL` and `OPENAI_API_KEY` in `.env` first. Run the code from the repository root, so the relative path to `data/examples/S01.json` resolves.
+The Draft step needs only a model endpoint: fill `OPENAI_BASE_URL` and `OPENAI_API_KEY` in `.env` first. Run the code from the repository root, so the relative path to `data/examples/S01.json` resolves.
 :::
 
 ### 1. Load an example record
