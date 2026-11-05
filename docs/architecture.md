@@ -14,7 +14,7 @@ The pipeline runs in three steps:
 
 You provide one record per request; the pipeline produces the certificate, its ICD-11 codes, a route and the reasons, and saves them as a JSON file and a database row.
 
-## Overall Architecture
+## The Parts of the System
 
 The system has four parts, and only the WHO tools run in a container, because that is the only form in which the WHO ships them.
 
@@ -25,7 +25,7 @@ The system has four parts, and only the WHO tools run in a container, because th
 | The WHO ICD-API | Codes each term (autocode), selects the underlying cause (DORIS) and runs the quality checks (CoDEdit). | A Docker container named `automccd-lite-icd`, on port 8082 | `src/automccd_lite/cli.py:31` |
 | The store | Keeps one SQLite file and one folder of JSON files. | `store/` in the repo, or `STORE_DIR` | `src/automccd_lite/config.py:81` |
 
-### One Request
+### What Happens to One Request
 
 1. The api receives your record and calls `certify_record` (`src/automccd_lite/api.py:72`).
 2. Step 1 builds the prompt and makes one model call (`src/automccd_lite/pipeline.py:68`).
@@ -36,26 +36,26 @@ The system has four parts, and only the WHO tools run in a container, because th
 
 ## Design Choices
 
-### The Model Proposes, the Code Checks
+### The Model Writes the Certificate and the Code Checks It
 
 The model writes the certificate and nothing else, because it is the only part that understands a clinical narrative and also the only part that can be wrong without any sign of it. Every check after it is code that gives the same answer for the same input, so a certificate goes `auto` only when every check that code can make has passed.
 
 - The route is `auto` only when the reason list is empty (`src/automccd_lite/decide.py:127`).
 
-### Strict JSON Output
+### The Model Replies in Strict JSON
 
 The model call uses strict JSON schema decoding, so the reply has the certificate's shape by construction and no parser has to guess at its structure. Step 2 still checks the schema again, because the check costs microseconds and catches an endpoint that does not enforce strict mode.
 
 - The call sends the schema with `strict: True` (`src/automccd_lite/draft.py:129`).
 - Step 2 checks the schema before the rules (`src/automccd_lite/rules.py:578`).
 
-### Evidence Spans Make the Medicine Checkable
+### Each Line Quotes the Words of the Record That Support It
 
 Every certified line carries the exact words of your record that support it (the evidence span) and the name of the note they came from. A quote can be checked by string comparison even when the diagnosis cannot, so an invented diagnosis needs an invented quote, and rule 1 (exact quote) catches that quote.
 
 - Rule 1 is the first of the ten rules that `check_rules` runs (`src/automccd_lite/rules.py:576`).
 
-### The WHO Tools Do the Coding
+### The WHO Tools Assign the ICD-11 Codes
 
 The ICD-11 codes and the underlying cause of death (UCOD) come from the WHO ICD-API, not from the model, because the cause selector (DORIS) applies the WHO's own selection rules and returns the same answer for the same certificate. A model asked for codes gives plausible codes with no guarantee that they follow those rules.
 
@@ -65,7 +65,7 @@ The ICD-11 codes and the underlying cause of death (UCOD) come from the WHO ICD-
 The first `serve` pulls the WHO image and loads the release, which takes about a minute. The container then stays running between serves, so later starts take seconds. `uv run automccd-lite icd stop` removes it.
 :::
 
-### One Bounded Fix per Problem
+### The Model Gets One Chance to Fix Each Problem
 
 When a rule breaks, the model gets its draft back with the list of failures and one chance to fix it; when a term codes weakly, the model gets one chance to restate it as the standard ICD-11 name. One attempt each keeps the cost of a record predictable at three model calls or fewer, where a loop until the checks pass has no upper bound on calls or time.
 
@@ -76,38 +76,38 @@ Each fix has a guard. A rules fix is kept only if it keeps the same assessment, 
 - The terms fix puts a restated term back when it does not code better (`src/automccd_lite/coding.py:382`).
 - A fix adds `fix:rules` or `fix:terms` to the reasons (`src/automccd_lite/decide.py:58`).
 
-### Reasons Instead of a Score
+### Reason Codes Set the Route, Not a Confidence Score
 
 Step 3 has no confidence score and no threshold: every problem becomes a reason code in the form `source:what`, such as `rule:2` or `quality:FER-CE-931`, and any reason means `review`. A reviewer reads the list as a worklist, and you can trust that `auto` means every check passed, where a score needs a tuned threshold that hides which check failed. The full list of reasons is on the [Step 3. Decide](decide.md) page.
 
 - Each broken rule becomes one `rule:<id>` reason (`src/automccd_lite/decide.py:56`).
 
-### A Pure Pipeline and a Separate Save
+### The Pipeline Returns the Result and the API Saves It
 
 `certify_record` runs the three steps and returns a result without writing anything, and the api saves that result in a separate call. The same function therefore runs in the api, in the evaluation harness, which must not fill the store, and in the tests, where fakes replace the model and the WHO client.
 
 - The model call, the WHO client and the term cache come in through `Deps` (`src/automccd_lite/pipeline.py:34`).
 
-### A File and a Row, Written in That Order
+### The API Writes the JSON File First and the Database Row Second
 
 The api writes the response body to a JSON file and then one row to the `certificates` table with everything the body leaves out: the rule check, both fixes and the raw WHO replies. The row records the file's path and is written second, so a row never points at a missing file. SQLite and a folder need no database server and no cloud account, so the whole system runs on one laptop.
 
 - The file goes to `store/certificates/{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json`; the time prefix means a rerun of the same record never overwrites the first (`src/automccd_lite/store.py:45`).
 - The row goes to `store/certificates.sqlite` in one transaction (`src/automccd_lite/store.py:134`).
 
-### The Term Cache
+### A Cache Keeps the ICD-11 Code of Every Term
 
 The pipeline keeps every term the term coder (autocode) has seen in `data/code_cache.json`, which is tracked in git. A rerun makes no container call for a known term, and two people who run the same cases get the same codes.
 
 - A save merges the entries that other writers added, so the api, the evaluation and the notebooks can share the file (`src/automccd_lite/coding.py:218`).
 
-### Versions in Every Result
+### Every Result Records the Versions That Made It
 
 Every result carries the prompt version and its SHA-1 hash, the schema version, the model and the ICD release, so you can tell whether two results are comparable. The hash changes with any edit to the prompt, so results from different prompts never mix by accident.
 
 - The versions block is built for every result (`src/automccd_lite/decide.py:101`).
 
-### Records Stay Private
+### Patient Text Stays on Your Machine and out of the Logs
 
 The api listens on the loopback address only, and the log writes only an allowlist of fields, so no note text and no certificate text reaches a log line. When the model endpoint is unreachable, the api answers 503 and saves nothing, so a retry starts clean. When the WHO container is down, your record still gets a result, routed `review` with the reason `who:unavailable`.
 
