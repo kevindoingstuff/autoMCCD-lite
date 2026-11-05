@@ -49,7 +49,7 @@ The model call uses strict JSON schema decoding, so the reply has the certificat
 - The call sends the schema with `strict: True` (`src/automccd_lite/draft.py:129`).
 - Step 2 checks the schema before the rules (`src/automccd_lite/rules.py:578`).
 
-### Each Line Quotes the Words of the Record That Support It
+### Every Line of the MCCD Inference Is Cited
 
 Every certified line carries the exact words of your record that support it (the evidence span) and the name of the note they came from. A quote can be checked by string comparison even when the diagnosis cannot, so an invented diagnosis needs an invented quote, and rule 1 (exact quote) catches that quote.
 
@@ -88,26 +88,26 @@ Step 3 has no confidence score and no threshold: every problem becomes a reason 
 
 - The model call, the WHO client and the term cache come in through `Deps` (`src/automccd_lite/pipeline.py:34`).
 
-### The API Writes the JSON File First and the Database Row Second
+### The API Writes the JSON First and the DB Row Second
 
 The api writes the response body to a JSON file and then one row to the `certificates` table with everything the body leaves out: the rule check, both fixes and the raw WHO replies. The row records the file's path and is written second, so a row never points at a missing file. SQLite and a folder need no database server and no cloud account, so the whole system runs on one laptop.
 
 - The file goes to `store/certificates/{yyyy-mm-dd}/{hhmmss}Z_{record_id}.json`; the time prefix means a rerun of the same record never overwrites the first (`src/automccd_lite/store.py:45`).
 - The row goes to `store/certificates.sqlite` in one transaction (`src/automccd_lite/store.py:134`).
 
-### A Cache Keeps the ICD-11 Code of Every Term
+### Every ICD-11 Code Is Cached Once Seen
 
 The pipeline keeps every term the term coder (autocode) has seen in `data/code_cache.json`, which is tracked in git. A rerun makes no container call for a known term, and two people who run the same cases get the same codes.
 
 - A save merges the entries that other writers added, so the api, the evaluation and the notebooks can share the file (`src/automccd_lite/coding.py:218`).
 
-### Every Result Records the Versions That Made It
+### Every Result Records the Versions
 
 Every result carries the prompt version and its SHA-1 hash, the schema version, the model and the ICD release, so you can tell whether two results are comparable. The hash changes with any edit to the prompt, so results from different prompts never mix by accident.
 
 - The versions block is built for every result (`src/automccd_lite/decide.py:101`).
 
-### Patient Text Stays on Your Machine and out of the Logs
+### Patient Text Stays Out of the Logs
 
 The api listens on the loopback address only, and the log writes only an allowlist of fields, so no note text and no certificate text reaches a log line. When the model endpoint is unreachable, the api answers 503 and saves nothing, so a retry starts clean. When the WHO container is down, your record still gets a result, routed `review` with the reason `who:unavailable`.
 
