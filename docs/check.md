@@ -209,11 +209,23 @@ The rules fix gives the model one bounded second chance when the certificate fai
 
 #### Inputs and Outputs
 
-| Direction | What | Source |
-|---|---|---|
-| In | The record, the draft, its `RuleCheck` (or `None` when the reply did not parse) and the `Ask` | `src/automccd_lite/rules.py:647` |
-| Out | The fixed draft and its new `RuleCheck`, with `rules_fixed` and `before_fix` set | `src/automccd_lite/rules.py:662` |
-| Out | The first draft and its `RuleCheck`, with `fix_rejected` set, when the fix did not parse or changed the assessment | `src/automccd_lite/rules.py:675` |
+The pipeline calls `fix_rules` only when the draft needs a fix: the reply did not parse, the certificate does not match the schema, or a rule broke with an error (`src/automccd_lite/pipeline.py:84`).
+
+| Input | Type | Description | Source |
+|---|---|---|---|
+| `record` | `Record` | Your death record. Its notes go into the fix request again, so the model reads the same text as in Step 1. | `src/automccd_lite/rules.py:647` |
+| `draft` | `Draft` | The first draft from Step 1. Its certificate goes into the fix request as the previous answer, cut to 6000 characters. | `src/automccd_lite/rules.py:601` |
+| `validation` | `RuleCheck` or `None` | What `check_rules` found in the first draft. Its schema errors and rule errors become the list of failures in the fix request. `None` means the reply did not parse, and the failure says so. | `src/automccd_lite/rules.py:632` |
+| `ask` | `Ask` | The function that sends one message to the model and returns a new `Draft`. `fix_rules` calls it once. | `src/automccd_lite/draft.py:117` |
+
+`fix_rules` returns a pair: the draft and the rule check that the pipeline continues with. The result is one of two outcomes.
+
+| Outcome | When | What you get back | Source |
+|---|---|---|---|
+| The fix is kept | The model's reply parses, and it keeps the assessment of the first draft (for example, `certifiable` stays `certifiable`). A first draft that broke rule 8 may change its assessment, because rule 8 is about the assessment. | The new draft and a new `RuleCheck` of it. In that check, `rules_fixed` is `true` and `before_fix` holds what the first check found: `schema_ok`, `rules_passed` and `broken_rules`. The new check can still have broken rules: the fix gets no second try. | `src/automccd_lite/rules.py:663` |
+| The fix is rejected | The model's reply does not parse, or it changes the assessment, for example to `out_of_scope` to escape a broken quote. | The first draft and its first `RuleCheck`, with `fix_rejected` set to the reason, for example `rejected: changed the assessment`. | `src/automccd_lite/rules.py:677` |
+
+In both outcomes, the token usage of the returned draft includes the fix call, and Step 3 adds the reason `fix:rules`.
 
 #### Configuration
 
@@ -229,12 +241,27 @@ The terms fix helps a condition the term coder (autocode) cannot match well: it 
 
 #### Inputs and Outputs
 
-| Direction | What | Source |
-|---|---|---|
-| In | The record, the draft, its `RuleCheck`, the term cache, the `Ask` and the minimum score | `src/automccd_lite/coding.py:344` |
-| Out | The same draft and check, unchanged, when no Part I term scores low | `src/automccd_lite/coding.py:356` |
-| Out | The first draft with `terms_fixed` set to `rejected` when the reply broke a rule, changed the assessment or changed the chain length | `src/automccd_lite/coding.py:363` |
-| Out | The new draft with `terms_fixed` set to `applied` and the changes listed, or the first draft with `unchanged` when every restated term was reverted | `src/automccd_lite/coding.py:395` |
+The pipeline calls `fix_terms` after the rules fix, for a certifiable certificate only (`src/automccd_lite/pipeline.py:88`).
+
+| Input | Type | Description | Source |
+|---|---|---|---|
+| `record` | `Record` | Your death record. Its notes go into the fix request again. | `src/automccd_lite/coding.py:344` |
+| `draft` | `Draft` | The draft after the rules fix. Each Part I term of its certificate is coded to find the terms that match weakly. | `src/automccd_lite/coding.py:309` |
+| `validation` | `RuleCheck` | The rule check of that draft. The reply must keep its assessment and its number of Part I lines. | `src/automccd_lite/coding.py:363` |
+| `cache` | `CodeCache` | The term cache. It gives the match score of each term, and it codes a term with the term coder (autocode) when the term is new. | `src/automccd_lite/coding.py:309` |
+| `ask` | `Ask` | The function that sends one message to the model and returns a new `Draft`. `fix_terms` calls it at most once. | `src/automccd_lite/draft.py:117` |
+| `min_score` | `float` | The lowest match score that counts as a good match, from `check.min_match_score`. A term with a lower score, or with no score, is a weak term. | `src/automccd_lite/coding.py:304` |
+
+`fix_terms` returns a pair: the draft and the rule check that the pipeline continues with. The `terms_fixed` field of the check tells which of four outcomes happened.
+
+| Outcome | When | What you get back | Source |
+|---|---|---|---|
+| No fix needed (`terms_fixed` stays `null`) | Every Part I term matches with a score of `min_score` or more. The model gets no call. | The same draft and the same check, with no change. | `src/automccd_lite/coding.py:357` |
+| The fix is rejected (`rejected`) | The model's reply does not parse, breaks a rule, changes the assessment, or changes the number of Part I lines. | The draft and check from before the fix. | `src/automccd_lite/coding.py:370` |
+| The fix changes nothing (`unchanged`) | The reply is valid, but no restated term codes with a higher score than its original term, so each original term comes back. | The draft from before the fix. `term_reverted` lists each term that came back, as `[original, restated, original score, restated score]`. | `src/automccd_lite/coding.py:400` |
+| The fix is kept (`applied`) | At least one restated term codes with a higher score than its original term. | A new draft that takes only the Part I terms from the reply; every other field stays as it was. `term_changes` lists each change as `[original, restated]`, and `term_reverted` lists the terms that came back. | `src/automccd_lite/coding.py:406` |
+
+When the model gets a call, the token usage of the returned draft includes it. Only the `applied` outcome adds the reason `fix:terms` in Step 3.
 
 #### Configuration
 
