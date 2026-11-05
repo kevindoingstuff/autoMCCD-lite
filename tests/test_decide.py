@@ -63,7 +63,7 @@ def test_validator_errors_name_the_rule():
     c = good_cert()
     c["part1"][0] = cond("Cardiac arrest", "septic shock", 1)
     d = route(c)
-    assert d.route == Route.REVIEW and "rule:V2" in d.reasons
+    assert d.route == Route.REVIEW and "rule:2" in d.reasons
 
 
 def test_low_confidence_is_review():

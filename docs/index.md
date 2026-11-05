@@ -76,7 +76,7 @@ The api receives your record as a JSON request and hands it to the pipeline, whi
 
 The [Draft step](draft.md) builds the prompt from your record's notes and asks the model for one certificate under a strict JSON schema. It hands the Check step a draft with a status: `ok`, `refused`, `truncated` or `unparsable`.
 
-The [Check step](check.md) tests the draft against the rules V1 to V10 and, when a rule breaks, asks the model once for a fix. It then codes each Part I and Part II term with the WHO term coder (autocode), asks the WHO cause selector (DORIS) for the underlying cause, and runs the WHO quality checks (CoDEdit). Each term's code is kept in a cache file, so a term is coded once and a rerun makes no container call for it. It hands the Decide step the rule check and the coding.
+The [Check step](check.md) tests the draft against the rules 1 to 10 and, when a rule breaks, asks the model once for a fix. It then codes each Part I and Part II term with the WHO term coder (autocode), asks the WHO cause selector (DORIS) for the underlying cause, and runs the WHO quality checks (CoDEdit). Each term's code is kept in a cache file, so a term is coded once and a rerun makes no container call for it. It hands the Decide step the rule check and the coding.
 
 The [Decide step](decide.md) lists every reason the certificate needs a human, in a fixed order. No reasons means `auto`; any reason means `review`. The api then saves the result in the store as a JSON file and a SQLite row.
 
@@ -129,10 +129,10 @@ autoMCCD-lite/
 | Quality checks (CoDEdit) | The WHO endpoint that checks a coded certificate and returns issue ids, for example an ill-defined cause or a sex the condition does not fit. | `src/automccd_lite/coding.py:167` |
 | Record | One death record as the api receives it: an id, optional sex and age, optional registry metadata, and one or more notes. | `src/automccd_lite/models.py:41` |
 | Note | One named piece of record text, for example `case_narrative`. Note names are unique within a record. | `src/automccd_lite/models.py:36` |
-| Evidence span | A fragment copied word for word from a note to support one condition. Rule V1 checks it against the note text. | `prompts/schemas/mccd.schema.json:58` |
+| Evidence span | A fragment copied word for word from a note to support one condition. Rule 1 checks it against the note text. | `prompts/schemas/mccd.schema.json:58` |
 | Reference certificate | The answer certificate for a provided case, transcribed from the client's teaching material. The eval codes it through the same WHO tools and compares underlying causes. | `src/automccd_lite/eval.py:58` |
 | Route | Where the certificate goes next: `auto` (accepted without a human) or `review` (a human looks at it). | `src/automccd_lite/models.py:110` |
-| Reason code | A stable code of the form `source:what`, for example `rule:V2`, that says why the certificate needs a human. | `src/automccd_lite/decide.py:5` |
+| Reason code | A stable code of the form `source:what`, for example `rule:2`, that says why the certificate needs a human. | `src/automccd_lite/decide.py:5` |
 | The provided set | 17 clean teaching cases, each with its reference certificate. | `src/automccd_lite/eval.py:6` |
 | The dlc set | 40 harder cases: 34 stress cases (OCR noise, cut pages, a mixed-in patient and more) and 6 coroner cases the pipeline must decline, expected `out_of_scope`. | `src/automccd_lite/eval.py:8` |
 

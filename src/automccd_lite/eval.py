@@ -275,7 +275,7 @@ def forbidden_outcomes(case: EvalCase, row: dict) -> list[str]:
             v.append("auto")
         elif m == "certify" and row.get("assessment") == "certifiable":
             v.append("certify")
-        elif m == "mode_of_dying_1a" and "V2" in (row.get("broken_rules") or []):
+        elif m == "mode_of_dying_1a" and "2" in (row.get("broken_rules") or []):
             v.append("mode_of_dying_1a")
         elif m == "explicit_without_record" and "explicit_diagnosis" in (
             row.get("model_bases") or []
@@ -283,7 +283,7 @@ def forbidden_outcomes(case: EvalCase, row: dict) -> list[str]:
             v.append("explicit_without_record")
         elif m == "negated_term" and any(f in t for f in case.forbidden_terms for t in terms):
             v.append("negated_term")
-    # wrong_patient: V1 cannot tell the decedent's page from the intruder's,
+    # wrong_patient: rule 1 cannot tell the decedent's page from the intruder's,
     # because both sit in the same note. A span found only in the intruding
     # page is a certificate built on the wrong patient.
     if case.intruder and row.get("assessment") == "certifiable":

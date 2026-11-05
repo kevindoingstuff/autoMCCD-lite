@@ -1,21 +1,21 @@
 """Step 2. Check, part one: the ten rules, and one fix when they fail.
 
-check_rules runs the deterministic gate: the schema again, then the rules
-V1 to V10 against the text of the notes. The model is asked to self-check
+check_rules runs the deterministic gate: the schema again, then the
+rules 1 to 10 against the text of the notes. The model is asked to self-check
 too, but a check by the thing being checked fails in exactly the cases that
 matter, so every rule lives here, in code that cannot be talked out of its
 answer. The rules::
 
-    V1   exact quote: evidence_span is verbatim in the note named by evidence_field
-    V2   mode of dying: no Part I line is one
-    V3   one cause per line
-    V4   no abbreviations
-    V5   chain shape: Part I has 1-4 lines, none empty or repeated
-    V6   interval order: intervals do not decrease from 1a down
-    V7   Part II overlap: Part II shares nothing with Part I, at most 4 entries
-    V8   decline consistency: a declined record has no chain and states a reason
-    V9   no codes in terms: no ICD-10 or ICD-11 code in a certified term
-    V10  no identifiers: no phone, NIC, email or street address in a term, span,
+    1    exact quote: evidence_span is verbatim in the note named by evidence_field
+    2    mode of dying: no Part I line is one
+    3    one cause per line
+    4    no abbreviations
+    5    chain shape: Part I has 1-4 lines, none empty or repeated
+    6    interval order: intervals do not decrease from 1a down
+    7    Part II overlap: Part II shares nothing with Part I, at most 4 entries
+    8    decline consistency: a declined record has no chain and states a reason
+    9    no codes in terms: no ICD-10 or ICD-11 code in a certified term
+    10   no identifiers: no phone, NIC, email or street address in a term, span,
          review.note or decline_reason (names have no pattern and are not checked)
 
 Severity: an error blocks auto and triggers the fix; a warning is recorded
@@ -23,7 +23,7 @@ for the reviewer and does not block.
 
 fix_rules gives the model one chance to fix what failed. The fix replaces
 the first draft only if it still answers the same question: it parses, and
-it keeps the assessment unless the first draft broke V8 itself. Adopted or
+it keeps the assessment unless the first draft broke rule 8 itself. Adopted or
 rejected, the router adds fix:rules, so the draft never goes auto.
 """
 
@@ -44,7 +44,7 @@ from automccd_lite.models import Draft, Record, RuleCheck
 # Rule tables
 # --------------------------------------------------------------------------
 
-# V2. Modes of dying: the manner in which the heart or lungs stopped, which
+# Rule 2. Modes of dying: the manner in which the heart or lungs stopped, which
 # every death shares and which therefore carries no information. The AICOD
 # avoid-list names five; WHO's guidance is broader, so this is broader.
 #
@@ -92,7 +92,7 @@ BARE_ONLY_EXCEPTIONS = [
     r"\bheart failure with (?:reduced|preserved|mildly reduced|mid[- ]range) ejection fraction\b",
 ]
 
-# V4. Abbreviations that must be expanded on a certificate. Matched as whole
+# Rule 4. Abbreviations that must be expanded on a certificate. Matched as whole
 # tokens so that "CAD" is caught but "Cadaveric" is not.
 ABBREVIATIONS = {
     "MI", "AMI", "CVA", "COPD", "CKD", "CRF", "IHD", "CAD", "DM", "T2DM",
@@ -104,7 +104,7 @@ ABBREVIATIONS = {
 # reference for S18; keep them out of the error path.
 ABBREVIATION_ALLOWED = {"HIV", "AIDS", "TB"}
 
-# V3. Conjunctions that indicate two diagnoses crammed onto one line.
+# Rule 3. Conjunctions that indicate two diagnoses crammed onto one line.
 MULTI_CAUSE = re.compile(r"\b(?:and|with|plus)\b|[,;/]|\+", re.I)
 # ... except where the conjunction is part of a single accepted diagnosis name.
 MULTI_CAUSE_EXCEPTIONS = [
@@ -116,7 +116,7 @@ MULTI_CAUSE_EXCEPTIONS = [
     r"heart failure with (?:reduced|preserved|mildly reduced|mid[- ]range) ejection fraction",
 ]
 
-# V9. ICD-10 (A00.0) and ICD-11 (2D42, CB41.0Z) code shapes.
+# Rule 9. ICD-10 (A00.0) and ICD-11 (2D42, CB41.0Z) code shapes.
 # An ICD-11 stem is chapter, letter, digit, alphanumeric. Demanding the letter
 # in second place keeps four-letter words ("AIDS") and ISO durations ("P49Y")
 # out.
@@ -128,7 +128,7 @@ ICD_FALSE_POSITIVES = re.compile(
     re.I,
 )
 
-# V10. Personal identifiers. Sri Lankan NIC is 9 digits + V/X, or 12 digits.
+# Rule 10. Personal identifiers. Sri Lankan NIC is 9 digits + V/X, or 12 digits.
 # A phone number is ten digits from a leading 0, or nine after +94, with at
 # most one separator between digits. Dates ("2003-04-01", "08 10 2020") have
 # eight digits or fewer, so they do not match.
@@ -155,16 +155,16 @@ NOTE_MAX_CHARS = 300
 
 # The short name that goes with each rule id in messages and docs.
 RULE_NAMES = {
-    "V1": "exact quote",
-    "V2": "mode of dying",
-    "V3": "one cause per line",
-    "V4": "no abbreviations",
-    "V5": "chain shape",
-    "V6": "interval order",
-    "V7": "Part II overlap",
-    "V8": "decline consistency",
-    "V9": "no codes in terms",
-    "V10": "no identifiers",
+    "1": "exact quote",
+    "2": "mode of dying",
+    "3": "one cause per line",
+    "4": "no abbreviations",
+    "5": "chain shape",
+    "6": "interval order",
+    "7": "Part II overlap",
+    "8": "decline consistency",
+    "9": "no codes in terms",
+    "10": "no identifiers",
 }
 
 
@@ -179,13 +179,13 @@ class Finding:
     location: str = ""
 
     def __str__(self) -> str:
-        """For people: 'V2 mode of dying (error, 1a): ...'."""
+        """For people: 'Rule 2 mode of dying (error, 1a): ...'."""
         where = f", {self.location}" if self.location else ""
-        return f"{self.rule} {RULE_NAMES[self.rule]} ({self.severity}{where}): {self.message}"
+        return f"Rule {self.rule} {RULE_NAMES[self.rule]} ({self.severity}{where}): {self.message}"
 
     def brief(self) -> str:
-        """For the model, in the fix request: 'V2 [1a]: ...'."""
-        return f"{self.rule} [{self.location}]: {self.message}"
+        """For the model, in the fix request: 'Rule 2 [1a]: ...'."""
+        return f"Rule {self.rule} [{self.location}]: {self.message}"
 
 
 @dataclass
@@ -226,7 +226,7 @@ def _norm(s: str) -> str:
 
 
 def _drop_word_hyphens(s: str) -> str:
-    """Hyphens between two letters are ignored on BOTH sides of V1: joining a
+    """Hyphens between two letters are ignored on BOTH sides of rule 1: joining a
     line-end hyphen cannot tell 'anticoagu-/lants' (a split word) from
     'non-/insulin' (a real compound hyphen that landed on a line break), so a
     faithful quote of either form must pass. A hyphen next to
@@ -236,7 +236,7 @@ def _drop_word_hyphens(s: str) -> str:
 
 
 def _span_key(span: str) -> str:
-    """The span side of V1. A span copied exactly up to an end-of-line hyphen
+    """The span side of rule 1. A span copied exactly up to an end-of-line hyphen
     ('congestive h-') is verbatim; _norm joins the source's line-end hyphen,
     so the span's trailing layout hyphen is dropped to match.
     Only a hyphen directly after a letter at the very end is dropped."""
@@ -246,12 +246,12 @@ def _span_key(span: str) -> str:
 
 
 def _source_key(text: str) -> str:
-    """The source side of V1."""
+    """The source side of rule 1."""
     return _drop_word_hyphens(_norm(text))
 
 
 def verbatim_in(span: str, text: str) -> bool:
-    """V1's test: `span` is quoted from `text`, up to layout -- whitespace,
+    """Rule 1's test: `span` is quoted from `text`, up to layout -- whitespace,
     case, typographic quotes and dashes, and hyphens a line break made."""
     return _span_key(span) in _source_key(text)
 
@@ -298,11 +298,11 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
     part2 = cert.get("part2") or []
     assessment = cert.get("assessment")
 
-    # ---- V8: decline consistency (checked first; it gates the rest) --------
+    # ---- Rule 8: decline consistency (checked first; it gates the rest) ------
     if assessment != "certifiable":
         if part1:
             res.add(
-                "V8",
+                "8",
                 "error",
                 f"assessment is {assessment!r} but Part I has {len(part1)} line(s); "
                 "a declined case must not also emit a chain",
@@ -310,7 +310,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
             )
         if not cert.get("decline_reason"):
             res.add(
-                "V8",
+                "8",
                 "error",
                 f"assessment is {assessment!r} but decline_reason is null",
                 "decline_reason",
@@ -318,29 +318,29 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
     else:
         if cert.get("decline_reason"):
             res.add(
-                "V8",
+                "8",
                 "error",
                 "assessment is 'certifiable' but decline_reason is set",
                 "decline_reason",
             )
         if not part1:
-            res.add("V8", "error", "certifiable but Part I is empty", "part1")
+            res.add("8", "error", "certifiable but Part I is empty", "part1")
 
-    # ---- V5: structure ----------------------------------------------------
+    # ---- Rule 5: structure --------------------------------------------------
     # The WHO international form has four Part I lines. WHO's own DORIS and
     # CoDEdit endpoints accept five (causeOfDeathCodeA..E), and S14's reference
     # certificate uses all five, so five is a warning rather than an error.
     # Six is beyond anything the API can take.
     if len(part1) > 5:
         res.add(
-            "V5",
+            "5",
             "error",
             f"Part I has {len(part1)} lines; DORIS accepts at most five (A-E)",
             "part1",
         )
     elif len(part1) == 5:
         res.add(
-            "V5",
+            "5",
             "warning",
             "Part I has five lines; the WHO international form has four (1a-1d), "
             "though DORIS accepts five",
@@ -351,13 +351,11 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
         line = line_label(i)
         term = (c.get("certified_term") or "").strip()
         if not term:
-            res.add("V5", "error", "empty certified_term", line)
+            res.add("5", "error", "empty certified_term", line)
             continue
         key = _norm(term)
         if key in seen:
-            res.add(
-                "V5", "error", f"{term!r} already appears on line {line_label(seen[key])}", line
-            )
+            res.add("5", "error", f"{term!r} already appears on line {line_label(seen[key])}", line)
         seen[key] = i
 
     # ---- per-condition checks ---------------------------------------------
@@ -369,21 +367,21 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
             ev_field = c.get("evidence_field")
             ev_span = (c.get("evidence_span") or "").strip()
 
-            # ---- V1: span is verbatim in the named field ------------------
+            # ---- Rule 1: span is verbatim in the named field ----------------
             inferred = basis in ("clinical_inference", "absent")
             if inferred:
                 if ev_field != "none":
                     res.add(
-                        "V1",
+                        "1",
                         "warning",
                         f"basis is {basis!r} so evidence_field should be 'none', got {ev_field!r}",
                         line,
                     )
             elif not ev_span:
-                res.add("V1", "error", f"basis is {basis!r} but evidence_span is empty", line)
+                res.add("1", "error", f"basis is {basis!r} but evidence_span is empty", line)
             elif ev_field not in source_fields:
                 res.add(
-                    "V1",
+                    "1",
                     "error",
                     f"evidence_field {ev_field!r} is not present in this record "
                     f"(available: {', '.join(sorted(source_fields))})",
@@ -391,7 +389,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
                 )
             elif not verbatim_in(ev_span, source_fields[ev_field]):
                 res.add(
-                    "V1",
+                    "1",
                     "error",
                     f"evidence_span is not verbatim in {ev_field}: {ev_span!r}",
                     line,
@@ -399,7 +397,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
 
             if inferred and not (cert.get("review", {}).get("note") or "").strip():
                 res.add(
-                    "V1",
+                    "1",
                     "warning",
                     f"basis is {basis!r} but review.note is empty; an inferred "
                     "condition needs an explanation for the reviewer",
@@ -409,13 +407,13 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
             if not term:
                 continue
 
-            # ---- V2: modes of dying on every Part I line ------------------
+            # ---- Rule 2: modes of dying on every Part I line ----------------
             if section == "part1":
                 t = _norm(term)
                 for pat in MODES_OF_DYING:
                     if re.search(pat, t):
                         res.add(
-                            "V2",
+                            "2",
                             "error",
                             f"line {line} is a mode of dying ({term!r}); state the "
                             "disease that caused it",
@@ -427,7 +425,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
                         for head, qual in BARE_ONLY.items():
                             if _is_bare(term, head, qual):
                                 res.add(
-                                    "V2",
+                                    "2",
                                     "error",
                                     f"line {line} is unqualified {head!r} ({term!r}); "
                                     "specify the type and, where known, the cause",
@@ -435,53 +433,53 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
                                 )
                                 break
 
-            # ---- V3: one cause per line -----------------------------------
+            # ---- Rule 3: one cause per line ---------------------------------
             t = _norm(term)
             if not any(re.search(x, t) for x in MULTI_CAUSE_EXCEPTIONS) and MULTI_CAUSE.search(
                 term
             ):
                 sev = "error" if section == "part1" else "warning"
                 res.add(
-                    "V3",
+                    "3",
                     sev,
                     f"{term!r} appears to carry more than one condition; "
                     "WHO allows one cause per line",
                     line,
                 )
 
-            # ---- V4: abbreviations ----------------------------------------
+            # ---- Rule 4: abbreviations --------------------------------------
             for w in _term_words(term):
                 if (
                     w.upper() in ABBREVIATIONS
                     and w.upper() not in ABBREVIATION_ALLOWED
                     and w.isupper()
                 ):
-                    res.add("V4", "error", f"{w!r} is an abbreviation; write it out in full", line)
+                    res.add("4", "error", f"{w!r} is an abbreviation; write it out in full", line)
 
-            # ---- V9: ICD codes --------------------------------------------
+            # ---- Rule 9: ICD codes ------------------------------------------
             m = ICD_CODE.search(ICD_FALSE_POSITIVES.sub("", term))
             if m:
                 res.add(
-                    "V9",
+                    "9",
                     "error",
                     f"certified_term contains what looks like an ICD code ({m.group(0)!r}); "
                     "coding is done downstream by WHO tooling, not here",
                     line,
                 )
 
-            # ---- V10: identifiers -----------------------------------------
+            # ---- Rule 10: identifiers ---------------------------------------
             for what, blob in (("certified_term", term), ("evidence_span", ev_span)):
                 kind = _pii(blob)
                 if kind:
                     res.add(
-                        "V10",
+                        "10",
                         "error",
                         f"{what} contains a possible {kind}; cite the clinical "
                         "fragment, not the record header",
                         line,
                     )
 
-    # ---- V6: interval monotonicity ----------------------------------------
+    # ---- Rule 6: interval monotonicity --------------------------------------
     prev_hours, prev_line = None, None
     n_unknown = 0
     for i, c in enumerate(part1[:5]):
@@ -498,11 +496,11 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
         try:
             hours = float(val) * UNIT_HOURS[unit]
         except (TypeError, KeyError):
-            res.add("V6", "error", f"uninterpretable interval {interval!r}", line)
+            res.add("6", "error", f"uninterpretable interval {interval!r}", line)
             continue
         if prev_hours is not None and hours < prev_hours:
             res.add(
-                "V6",
+                "6",
                 "error",
                 f"onset-to-death decreases down the chain: {prev_line} is "
                 f"{prev_hours:g}h but {line} is {hours:g}h. The originating "
@@ -512,27 +510,27 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
         prev_hours, prev_line = hours, line
     if n_unknown and "interval_undocumented" not in (cert.get("review", {}).get("flags") or []):
         res.add(
-            "V6",
+            "6",
             "warning",
             f"{n_unknown} Part I interval(s) are unknown but the "
             "'interval_undocumented' review flag was not set",
             "review.flags",
         )
 
-    # ---- V7: Part II disjoint from Part I ---------------------------------
+    # ---- Rule 7: Part II disjoint from Part I -------------------------------
     p1_terms = {_norm(c.get("certified_term", "")) for c in part1}
     for i, c in enumerate(part2):
         if _norm(c.get("certified_term", "")) in p1_terms:
             res.add(
-                "V7",
+                "7",
                 "error",
                 f"{c.get('certified_term')!r} appears in both Part I and Part II",
                 f"part2[{i}]",
             )
     if len(part2) > 4:
-        res.add("V7", "warning", f"Part II has {len(part2)} entries", "part2")
+        res.add("7", "warning", f"Part II has {len(part2)} entries", "part2")
 
-    # ---- V10 on the free-text fields ---------------------------------------
+    # ---- Rule 10 on the free-text fields -------------------------------------
     # The reviewer note and the decline reason go to a human verbatim, so they
     # are the likeliest place for a record header to leak.
     note = (cert.get("review", {}) or {}).get("note") or ""
@@ -540,7 +538,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
         kind = _pii(blob)
         if kind:
             res.add(
-                "V10",
+                "10",
                 "error",
                 f"{what} contains a possible {kind}; describe the clinical reason, not the person",
                 what,
@@ -549,7 +547,7 @@ def apply_rules(cert: dict, source_fields: dict[str, str]) -> Findings:  # noqa:
     # ---- note length (constrained decoding cannot express this) ------------
     if len(note) > NOTE_MAX_CHARS:
         res.add(
-            "V5",
+            "5",
             "warning",
             f"review.note is {len(note)} chars; cap is {NOTE_MAX_CHARS}",
             "review.note",
@@ -576,7 +574,7 @@ def validate_schema(cert: dict) -> list[str]:
 
 
 def check_rules(cert: dict, fields: dict[str, str]) -> RuleCheck:
-    """Schema conformance and the rules V1-V10 against the notes."""
+    """Schema conformance and the rules 1 to 10 against the notes."""
     schema_errors = validate_schema(cert)
     res = apply_rules(cert, fields)
     review = cert.get("review") or {}
@@ -659,7 +657,7 @@ def fix_rules(
     keeps_question = (
         validation is None
         or (new_validation is not None and new_validation.assessment == validation.assessment)
-        or "V8" in validation.broken_rules
+        or "8" in validation.broken_rules
     )
     if new_validation is not None and keeps_question:
         new_validation.rules_fixed = True

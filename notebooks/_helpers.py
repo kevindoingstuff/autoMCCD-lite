@@ -161,7 +161,7 @@ def render_mccd(mccd: dict | Result, codes: dict | None = None, title: str = "")
 
 def _find_span(span: str, text: str) -> tuple[int, int] | None:
     """Where `span` sits in `text`, tolerating the same layout differences
-    V1 tolerates: whitespace, case, typographic quotes and dashes."""
+    Rule 1 tolerates: whitespace, case, typographic quotes and dashes."""
     key = _span_key(span)
     if not key:
         return None
@@ -187,7 +187,7 @@ def _find_span(span: str, text: str) -> tuple[int, int] | None:
 
 def highlight_spans(record: Record, mccd: dict | Result) -> HTML:
     """The record text with every evidence span the model cited highlighted
-    and labelled with the line it supports. This is V1 made visible: a span
+    and labelled with the line it supports. This is rule 1 made visible: a span
     the highlighter cannot find is a span the validator rejects."""
     if isinstance(mccd, Result):
         mccd = mccd.certificate or {}
@@ -228,7 +228,7 @@ def highlight_spans(record: Record, mccd: dict | Result) -> HTML:
         for l, t, c in dict.fromkeys(legend)
     )
     miss_html = "".join(
-        f"<div style='color:#b3261e'>✗ {l}: span not found verbatim: <i>{html.escape(s)}</i> (V1 fires)</div>"
+        f"<div style='color:#b3261e'>✗ {l}: span not found verbatim: <i>{html.escape(s)}</i> (rule 1 fires)</div>"
         for l, s in missing
     )
     return HTML(

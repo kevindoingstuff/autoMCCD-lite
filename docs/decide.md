@@ -70,16 +70,16 @@ You provide the draft, the rule check (`RuleCheck`), the coding (`Coding`) and t
 | `declined:out_of_scope` | The model assessed the record as out of scope: an external cause, an undetermined manner of death, or a case for forensic expertise. The only reason. | `src/automccd_lite/decide.py:49` |
 | `declined:insufficient` | The model assessed the record as insufficient information. The only reason. | `src/automccd_lite/decide.py:51` |
 | `schema:invalid` | The certificate does not match the output schema. | `src/automccd_lite/decide.py:55` |
-| `rule:V1` | Rule V1, exact quote, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:158` |
-| `rule:V2` | Rule V2, mode of dying, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:159` |
-| `rule:V3` | Rule V3, one cause per line, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:160` |
-| `rule:V4` | Rule V4, no abbreviations, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:161` |
-| `rule:V5` | Rule V5, chain shape, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:162` |
-| `rule:V6` | Rule V6, interval order, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:163` |
-| `rule:V7` | Rule V7, Part II overlap, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:164` |
-| `rule:V8` | Rule V8, decline consistency, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:165` |
-| `rule:V9` | Rule V9, no codes in terms, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:166` |
-| `rule:V10` | Rule V10, no identifiers, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:167` |
+| `rule:1` | Rule 1, exact quote, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:158` |
+| `rule:2` | Rule 2, mode of dying, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:159` |
+| `rule:3` | Rule 3, one cause per line, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:160` |
+| `rule:4` | Rule 4, no abbreviations, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:161` |
+| `rule:5` | Rule 5, chain shape, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:162` |
+| `rule:6` | Rule 6, interval order, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:163` |
+| `rule:7` | Rule 7, Part II overlap, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:164` |
+| `rule:8` | Rule 8, decline consistency, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:165` |
+| `rule:9` | Rule 9, no codes in terms, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:166` |
+| `rule:10` | Rule 10, no identifiers, broke with an error. | `src/automccd_lite/decide.py:56`, `src/automccd_lite/rules.py:167` |
 | `fix:rules` | The rules fix ran, whether its certificate was adopted or rejected. | `src/automccd_lite/decide.py:58` |
 | `fix:terms` | The terms fix changed at least one Part I term. | `src/automccd_lite/decide.py:60` |
 | `model:low_confidence` | The model's own confidence in `review.confidence` is not `high`. | `src/automccd_lite/decide.py:62` |

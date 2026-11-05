@@ -14,7 +14,7 @@ The Check step tests the drafted certificate against ten rules and codes it with
 
 The step runs in four parts:
 
-1. **Check the rules**: `check_rules` validates the certificate against the schema and the rules V1 to V10, using the text of your notes.
+1. **Check the rules**: `check_rules` validates the certificate against the schema and the rules 1 to 10, using the text of your notes.
 2. **Fix the rules**: `fix_rules` asks the model once for a corrected certificate when a rule broke or the reply did not parse.
 3. **Fix the terms**: `fix_terms` asks the model once to restate the Part I terms that code under `check.min_match_score`.
 4. **Code the terms**: `code_terms` codes each term through the term cache, then calls the cause selector (DORIS) and the quality checks (CoDEdit) twice.
@@ -30,7 +30,7 @@ You provide the draft from Step 1 and your record's notes; the step produces a r
 
 | Field | Type | Description | Source |
 |---|---|---|---|
-| `fields` | `dict[str, str]` | Note name to note text; rule V1 looks up each evidence span here. | `src/automccd_lite/models.py:62` |
+| `fields` | `dict[str, str]` | Note name to note text; rule 1 looks up each evidence span here. | `src/automccd_lite/models.py:62` |
 | `demographics` | `dict` | Sex and the age as an ISO-8601 duration, sent to the cause selector and the quality checks. | `src/automccd_lite/models.py:71` |
 
 3. `data/code_cache.json` (JSON, one entry per term, keyed by the term in lower case with single spaces)
@@ -55,8 +55,8 @@ You provide the draft from Step 1 and your record's notes; the step produces a r
 |---|---|---|---|
 | `schema_ok` | `bool` | The certificate matches the output schema. | `src/automccd_lite/models.py:121` |
 | `rules_passed` | `bool` | No rule broke with an error. | `src/automccd_lite/models.py:122` |
-| `broken_rules` | `list[str]` | The ids of the rules with an error, e.g. `["V2"]`. | `src/automccd_lite/models.py:123` |
-| `messages` | `list[str]` | Every error and warning, readable, e.g. `V2 mode of dying (error, 1a): ...`. | `src/automccd_lite/models.py:124` |
+| `broken_rules` | `list[str]` | The ids of the rules with an error, e.g. `["2"]`. | `src/automccd_lite/models.py:123` |
+| `messages` | `list[str]` | Every error and warning, readable, e.g. `Rule 2 mode of dying (error, 1a): ...`. | `src/automccd_lite/models.py:124` |
 | `assessment`, `decline_reason`, `confidence`, `flags` | copied from the certificate | What the model concluded and how sure it was. | `src/automccd_lite/models.py:125` |
 | `model_chain` | `list[str]` | The Part I terms, 1a first. | `src/automccd_lite/models.py:129` |
 | `rules_fixed`, `before_fix`, `fix_rejected` | `bool`, `dict`, `str` | Whether the rules fix was adopted, the state before it, or why it was rejected. | `src/automccd_lite/models.py:131` |
@@ -83,7 +83,7 @@ You provide the draft from Step 1 and your record's notes; the step produces a r
 
 ```
 src/automccd_lite/
-├── rules.py               # check_rules, the rules V1 to V10, RULE_NAMES, fix_rules
+├── rules.py               # check_rules, the rules 1 to 10, RULE_NAMES, fix_rules
 └── coding.py              # WhoClient, CodeCache, code_terms, fix_terms
 data/
 └── code_cache.json        # one autocode entry per term, tracked in git
@@ -126,10 +126,10 @@ record = Record(**json.load(open("data/examples/S01.json", encoding="utf-8")))
 deps = build_deps()  # src/automccd_lite/pipeline.py:50
 draft = draft_certificate(record, deps.ask)
 
-check = check_rules(draft.certificate, record.fields)  # src/automccd_lite/rules.py:578
+check = check_rules(draft.certificate, record.fields)  # src/automccd_lite/rules.py:576
 print(check.rules_passed, check.messages)
 if needs_fix(draft, check):
-    draft, check = fix_rules(record, draft, check, deps.ask)  # src/automccd_lite/rules.py:649
+    draft, check = fix_rules(record, draft, check, deps.ask)  # src/automccd_lite/rules.py:647
 
 if check.assessment == "certifiable":
     min_score = settings().check.min_match_score
@@ -164,8 +164,8 @@ You should see the rule messages, then the ICD-11 codes per Part, the underlying
 
 | Component | Lives in | Description |
 |---|---|---|
-| check_rules | `src/automccd_lite/rules.py:578` | Tests the certificate against the schema and the rules V1 to V10. |
-| fix_rules | `src/automccd_lite/rules.py:649` | Gives the model one chance to fix what failed. |
+| check_rules | `src/automccd_lite/rules.py:576` | Tests the certificate against the schema and the rules 1 to 10. |
+| fix_rules | `src/automccd_lite/rules.py:647` | Gives the model one chance to fix what failed. |
 | fix_terms | `src/automccd_lite/coding.py:344` | Gives the model one chance to restate weakly coded Part I terms. |
 | code_terms | `src/automccd_lite/coding.py:254` | Codes every term and asks the cause selector and the quality checks about the certificate. |
 
@@ -177,8 +177,8 @@ The rule checker gives a verdict the model cannot argue with: the certificate is
 
 #### Inputs and Outputs
 
-- In: the certificate dict and `record.fields` (`src/automccd_lite/rules.py:578`)
-- Out: a `RuleCheck`, with at most five schema errors in `messages` (`src/automccd_lite/rules.py:585`)
+- In: the certificate dict and `record.fields` (`src/automccd_lite/rules.py:576`)
+- Out: a `RuleCheck`, with at most five schema errors in `messages` (`src/automccd_lite/rules.py:583`)
 
 #### The Rules
 
@@ -186,24 +186,24 @@ The rule id and name come from `RULE_NAMES`; the "Checked at" line is where the 
 
 | Rule | Name | What it checks | Severity | Source |
 |---|---|---|---|---|
-| V1 | exact quote | Each evidence span appears word for word in the note its `evidence_field` names, up to whitespace, case, typographic quotes and dashes, and hyphens a line break made. An inferred condition (`clinical_inference`, `absent`) needs no span but needs a `review.note`. | error; warning for an inferred condition | `src/automccd_lite/rules.py:158`, checked at `src/automccd_lite/rules.py:372` |
-| V2 | mode of dying | No Part I line is a mode of dying such as cardiac arrest, respiratory failure or old age; line 1a is not a bare "heart failure" or "shock" without a qualifier such as "congestive" or "septic". | error | `src/automccd_lite/rules.py:159`, checked at `src/automccd_lite/rules.py:412` |
-| V3 | one cause per line | No term joins two conditions with "and", "with", "plus", a comma, a semicolon, a slash or "+", except in names such as "chronic obstructive pulmonary disease". | error in Part I, warning in Part II | `src/automccd_lite/rules.py:160`, checked at `src/automccd_lite/rules.py:438` |
-| V4 | no abbreviations | No listed abbreviation (MI, CVA, COPD, CKD and more) in upper case; HIV, AIDS and TB are allowed. | error | `src/automccd_lite/rules.py:161`, checked at `src/automccd_lite/rules.py:452` |
-| V5 | chain shape | Part I has no empty or repeated term and at most five lines: five is a warning, six an error. A `review.note` over 300 characters is a warning. | error, or warning | `src/automccd_lite/rules.py:162`, checked at `src/automccd_lite/rules.py:329` |
-| V6 | interval order | The known Part I intervals do not decrease from 1a down. An unknown interval is skipped, with a warning when the `interval_undocumented` flag is missing. | error | `src/automccd_lite/rules.py:163`, checked at `src/automccd_lite/rules.py:484` |
-| V7 | Part II overlap | No Part II term repeats a Part I term; more than four Part II entries is a warning. | error | `src/automccd_lite/rules.py:164`, checked at `src/automccd_lite/rules.py:522` |
-| V8 | decline consistency | A declined certificate has no Part I chain and states a decline reason; a certifiable one has a chain and no decline reason. | error | `src/automccd_lite/rules.py:165`, checked at `src/automccd_lite/rules.py:301` |
-| V9 | no codes in terms | No ICD-10 or ICD-11 code inside a certified term; coding is the WHO tools' work. | error | `src/automccd_lite/rules.py:166`, checked at `src/automccd_lite/rules.py:461` |
-| V10 | no identifiers | No phone number, NIC, email or street address in a term, an evidence span, `review.note` or `decline_reason`. Names have no pattern and are not checked. | error | `src/automccd_lite/rules.py:167`, checked at `src/automccd_lite/rules.py:472` |
+| 1 | exact quote | Each evidence span appears word for word in the note its `evidence_field` names, up to whitespace, case, typographic quotes and dashes, and hyphens a line break made. An inferred condition (`clinical_inference`, `absent`) needs no span but needs a `review.note`. | error; warning for an inferred condition | `src/automccd_lite/rules.py:158`, checked at `src/automccd_lite/rules.py:370` |
+| 2 | mode of dying | No Part I line is a mode of dying such as cardiac arrest, respiratory failure or old age; line 1a is not a bare "heart failure" or "shock" without a qualifier such as "congestive" or "septic". | error | `src/automccd_lite/rules.py:159`, checked at `src/automccd_lite/rules.py:410` |
+| 3 | one cause per line | No term joins two conditions with "and", "with", "plus", a comma, a semicolon, a slash or "+", except in names such as "chronic obstructive pulmonary disease". | error in Part I, warning in Part II | `src/automccd_lite/rules.py:160`, checked at `src/automccd_lite/rules.py:436` |
+| 4 | no abbreviations | No listed abbreviation (MI, CVA, COPD, CKD and more) in upper case; HIV, AIDS and TB are allowed. | error | `src/automccd_lite/rules.py:161`, checked at `src/automccd_lite/rules.py:450` |
+| 5 | chain shape | Part I has no empty or repeated term and at most five lines: five is a warning, six an error. A `review.note` over 300 characters is a warning. | error, or warning | `src/automccd_lite/rules.py:162`, checked at `src/automccd_lite/rules.py:329` |
+| 6 | interval order | The known Part I intervals do not decrease from 1a down. An unknown interval is skipped, with a warning when the `interval_undocumented` flag is missing. | error | `src/automccd_lite/rules.py:163`, checked at `src/automccd_lite/rules.py:482` |
+| 7 | Part II overlap | No Part II term repeats a Part I term; more than four Part II entries is a warning. | error | `src/automccd_lite/rules.py:164`, checked at `src/automccd_lite/rules.py:520` |
+| 8 | decline consistency | A declined certificate has no Part I chain and states a decline reason; a certifiable one has a chain and no decline reason. | error | `src/automccd_lite/rules.py:165`, checked at `src/automccd_lite/rules.py:301` |
+| 9 | no codes in terms | No ICD-10 or ICD-11 code inside a certified term; coding is the WHO tools' work. | error | `src/automccd_lite/rules.py:166`, checked at `src/automccd_lite/rules.py:459` |
+| 10 | no identifiers | No phone number, NIC, email or street address in a term, an evidence span, `review.note` or `decline_reason`. Names have no pattern and are not checked. | error | `src/automccd_lite/rules.py:167`, checked at `src/automccd_lite/rules.py:470` |
 
 #### Things to Note
 
-- "Congestive heart failure" on line 1a passes V2: only the unqualified "heart failure" fails, because the WHO avoid-list asks for the type to be named, and the S17 reference certificate puts congestive heart failure on 1a (`src/automccd_lite/rules.py:51`).
+- "Congestive heart failure" on line 1a passes rule 2: only the unqualified "heart failure" fails, because the WHO avoid-list asks for the type to be named, and the S17 reference certificate puts congestive heart failure on 1a (`src/automccd_lite/rules.py:51`).
 
 ### fix_rules
 
-The rules fix gives the model one bounded second chance when the certificate failed a rule or the schema, or the reply did not parse. The fix request carries your rendered record, the previous answer (up to 6000 characters) and the failures in short form, and asks for the corrected object in full with only the failures changed (`fix_message`). The fixed certificate replaces the first one only if it still answers the same question: it parses, and it keeps the assessment unless the first draft broke V8 itself. Adopted or rejected, Step 3 adds `fix:rules`, so a fixed certificate never goes `auto`.
+The rules fix gives the model one bounded second chance when the certificate failed a rule or the schema, or the reply did not parse. The fix request carries your rendered record, the previous answer (up to 6000 characters) and the failures in short form, and asks for the corrected object in full with only the failures changed (`fix_message`). The fixed certificate replaces the first one only if it still answers the same question: it parses, and it keeps the assessment unless the first draft broke rule 8 itself. Adopted or rejected, Step 3 adds `fix:rules`, so a fixed certificate never goes `auto`.
 
 ![fix_rules](_static/diagrams/check/fix-rules.drawio.png)
 
@@ -211,9 +211,9 @@ The rules fix gives the model one bounded second chance when the certificate fai
 
 | Direction | What | Source |
 |---|---|---|
-| In | The record, the draft, its `RuleCheck` (or `None` when the reply did not parse) and the `Ask` | `src/automccd_lite/rules.py:649` |
-| Out | The fixed draft and its new `RuleCheck`, with `rules_fixed` and `before_fix` set | `src/automccd_lite/rules.py:664` |
-| Out | The first draft and its `RuleCheck`, with `fix_rejected` set, when the fix did not parse or changed the assessment | `src/automccd_lite/rules.py:677` |
+| In | The record, the draft, its `RuleCheck` (or `None` when the reply did not parse) and the `Ask` | `src/automccd_lite/rules.py:647` |
+| Out | The fixed draft and its new `RuleCheck`, with `rules_fixed` and `before_fix` set | `src/automccd_lite/rules.py:662` |
+| Out | The first draft and its `RuleCheck`, with `fix_rejected` set, when the fix did not parse or changed the assessment | `src/automccd_lite/rules.py:675` |
 
 #### Configuration
 
@@ -275,7 +275,7 @@ The coder turns the certificate's words into ICD-11 codes and asks the WHO's too
 ![Step 2 sequence](_static/diagrams/check/sequence.drawio.png)
 
 1. `certify_record` runs the step only for a draft whose status is `ok` or `unparsable` (`src/automccd_lite/pipeline.py:80`).
-2. `check_rules` tests the certificate against the schema and the rules V1 to V10 when the draft has one (`src/automccd_lite/pipeline.py:82`).
+2. `check_rules` tests the certificate against the schema and the rules 1 to 10 when the draft has one (`src/automccd_lite/pipeline.py:82`).
 3. `fix_rules` runs once when the reply did not parse or the check failed, and `check.fix_rules_attempts` is above zero (`src/automccd_lite/pipeline.py:83`).
 4. A certificate whose assessment is not `certifiable` stops here, with no coding (`src/automccd_lite/pipeline.py:85`).
 5. `fix_terms` codes the Part I terms through the cache and asks for restated terms when any scores low (`src/automccd_lite/pipeline.py:88`).

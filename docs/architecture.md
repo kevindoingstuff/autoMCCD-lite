@@ -47,13 +47,13 @@ The model writes the certificate and nothing else, because it is the only part t
 The model call uses strict JSON schema decoding, so the reply has the certificate's shape by construction and no parser has to guess at its structure. Step 2 still checks the schema again, because the check costs microseconds and catches an endpoint that does not enforce strict mode.
 
 - The call sends the schema with `strict: True` (`src/automccd_lite/draft.py:129`).
-- Step 2 checks the schema before the rules (`src/automccd_lite/rules.py:580`).
+- Step 2 checks the schema before the rules (`src/automccd_lite/rules.py:578`).
 
 ### Evidence Spans Make the Medicine Checkable
 
-Every certified line carries the exact words of your record that support it (the evidence span) and the name of the note they came from. A quote can be checked by string comparison even when the diagnosis cannot, so an invented diagnosis needs an invented quote, and rule V1 (exact quote) catches that quote.
+Every certified line carries the exact words of your record that support it (the evidence span) and the name of the note they came from. A quote can be checked by string comparison even when the diagnosis cannot, so an invented diagnosis needs an invented quote, and rule 1 (exact quote) catches that quote.
 
-- V1 is the first of the ten rules that `check_rules` runs (`src/automccd_lite/rules.py:578`).
+- Rule 1 is the first of the ten rules that `check_rules` runs (`src/automccd_lite/rules.py:576`).
 
 ### The WHO Tools Do the Coding
 
@@ -72,13 +72,13 @@ When a rule breaks, the model gets its draft back with the list of failures and 
 Each fix has a guard. A rules fix is kept only if it keeps the same assessment, so the model cannot fix a quote by declaring your record out of scope. A restated term is kept only if it codes with a higher match score than the original, so a fix cannot make the coding worse. A certificate that needed a fix never routes `auto`, because a human must see what the model changed.
 
 - Set the attempts with `check.fix_rules_attempts` and `check.fix_terms_attempts` (e.g. `0` turns a fix off) (`config/default.yaml:16`).
-- The rules fix keeps the new certificate only when it answers the same question (`src/automccd_lite/rules.py:659`).
+- The rules fix keeps the new certificate only when it answers the same question (`src/automccd_lite/rules.py:657`).
 - The terms fix puts a restated term back when it does not code better (`src/automccd_lite/coding.py:382`).
 - A fix adds `fix:rules` or `fix:terms` to the reasons (`src/automccd_lite/decide.py:58`).
 
 ### Reasons Instead of a Score
 
-Step 3 has no confidence score and no threshold: every problem becomes a reason code in the form `source:what`, such as `rule:V2` or `quality:FER-CE-931`, and any reason means `review`. A reviewer reads the list as a worklist, and you can trust that `auto` means every check passed, where a score needs a tuned threshold that hides which check failed. The full list of reasons is on the [Step 3. Decide](decide.md) page.
+Step 3 has no confidence score and no threshold: every problem becomes a reason code in the form `source:what`, such as `rule:2` or `quality:FER-CE-931`, and any reason means `review`. A reviewer reads the list as a worklist, and you can trust that `auto` means every check passed, where a score needs a tuned threshold that hides which check failed. The full list of reasons is on the [Step 3. Decide](decide.md) page.
 
 - Each broken rule becomes one `rule:<id>` reason (`src/automccd_lite/decide.py:56`).
 
